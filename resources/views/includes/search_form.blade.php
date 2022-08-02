@@ -33,8 +33,8 @@
 		<div class="srcsubfld additional_fields">
 			<div class="row">
         <div class="col-lg-{{((bool)$siteSetting->country_specific_site)? 6:3}}">
-			<label for="">{{__('Select Functional Area')}}</label>
-            {!! Form::select('functional_area_id[]', ['' => __('Select Functional Area')]+$functionalAreas, Request::get('functional_area_id', null), array('class'=>'form-control', 'id'=>'functional_area_id')) !!}
+			<label for="">{{__('Select Category')}}</label>
+            {!! Form::select('functional_area_id[]', ['' => __('Select Category')]+$functionalAreas, Request::get('functional_area_id', null), array('class'=>'form-control', 'id'=>'functional_area_id')) !!}
         </div>
 
         @if((bool)$siteSetting->country_specific_site)

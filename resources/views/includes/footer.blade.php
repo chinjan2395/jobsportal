@@ -36,7 +36,7 @@
             <!--Quick Links menu end-->
 
             <div class="col-md-3 col-sm-6">
-                <h5>{{__('Jobs By Functional Area')}}</h5>
+                <h5>{{__('Jobs By Category')}}</h5>
                 <!--Quick Links menu Start-->
                 <ul class="quicklinks">
                     @php

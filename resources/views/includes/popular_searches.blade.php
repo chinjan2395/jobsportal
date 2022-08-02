@@ -6,7 +6,7 @@
 					<div class="col-md-4"><h3>{{__('Browse Jobs By')}}</h3></div>
 					<div class="col-md-8">
 						<ul class="nav nav-tabs" id="myTab" role="tablist">
-						  <li class="nav-item"><a data-toggle="tab" href="#byfunctional" class="nav-link active" aria-expanded="true">{{__('Functional Area')}}</a></li>
+						  <li class="nav-item"><a data-toggle="tab" href="#byfunctional" class="nav-link active" aria-expanded="true">{{__('Category')}}</a></li>
 						  <li class="nav-item"><a data-toggle="tab" class="nav-link" href="#bycities" aria-expanded="false">{{__('Cities')}}</a></li>
 						  <li class="nav-item"><a data-toggle="tab" href="#byindustries" class="nav-link" aria-expanded="false">{{__('Industries')}}</a></li>
 						</ul>

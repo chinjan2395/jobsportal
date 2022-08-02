@@ -312,7 +312,7 @@
 
 
         <div class="widget">
-            <h4 class="widget-title">{{__('Jobs By Functional Areas')}}</h4>
+            <h4 class="widget-title">{{__('Jobs By Categorys')}}</h4>
             <ul class="optionlist view_more_ul">
                 @if(isset($functionalAreaIdsArray) && count($functionalAreaIdsArray))
                 @foreach($functionalAreaIdsArray as $key=>$functional_area_id)

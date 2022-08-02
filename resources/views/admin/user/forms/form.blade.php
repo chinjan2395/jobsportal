@@ -124,8 +124,8 @@
         {!! APFrmErrHelp::showErrors($errors, 'industry_id') !!}                                       
     </div>
     <div class="form-group {!! APFrmErrHelp::hasError($errors, 'functional_area_id') !!}">
-        {!! Form::label('functional_area_id', 'Functional Area', ['class' => 'bold']) !!}                    
-        {!! Form::select('functional_area_id', [''=>'Select Functional Area']+$functionalAreas, null, array('class'=>'form-control', 'id'=>'functional_area_id')) !!}
+        {!! Form::label('functional_area_id', 'Category', ['class' => 'bold']) !!}
+        {!! Form::select('functional_area_id', [''=>'Select Category']+$functionalAreas, null, array('class'=>'form-control', 'id'=>'functional_area_id')) !!}
         {!! APFrmErrHelp::showErrors($errors, 'functional_area_id') !!}                                       
     </div>
     <div class="form-group {!! APFrmErrHelp::hasError($errors, 'current_salary') !!}">

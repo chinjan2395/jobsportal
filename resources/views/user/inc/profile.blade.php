@@ -206,8 +206,8 @@
     </div>
     <div class="col-md-6">
         <div class="formrow {!! APFrmErrHelp::hasError($errors, 'functional_area_id') !!}">
-			<label for="">{{__('Functional Area')}}</label>
-			{!! Form::select('functional_area_id', [''=>__('Select Functional Area')]+$functionalAreas, null, array('class'=>'form-control', 'id'=>'functional_area_id')) !!}
+			<label for="">{{__('Category')}}</label>
+			{!! Form::select('functional_area_id', [''=>__('Select Category')]+$functionalAreas, null, array('class'=>'form-control', 'id'=>'functional_area_id')) !!}
             {!! APFrmErrHelp::showErrors($errors, 'functional_area_id') !!} </div>
     </div>
     <div class="col-md-4">

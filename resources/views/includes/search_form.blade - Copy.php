@@ -4,7 +4,7 @@
 		<div class="srchbox">
 		<div class="row srcsubfld additional_fields">
 		<div class="col-md-{{((bool)$siteSetting->country_specific_site)? 6:3}}">
-            {!! Form::select('functional_area_id[]', ['' => __('Select Functional Area')]+$functionalAreas, Request::get('functional_area_id', null), array('class'=>'form-control', 'id'=>'functional_area_id')) !!}
+            {!! Form::select('functional_area_id[]', ['' => __('Select Category')]+$functionalAreas, Request::get('functional_area_id', null), array('class'=>'form-control', 'id'=>'functional_area_id')) !!}
         </div>
 
         @if((bool)$siteSetting->country_specific_site)
@@ -46,7 +46,7 @@
 		<div class="srchbox">
 		<div class="row srcsubfld additional_fields">
         <div class="col-md-{{((bool)$siteSetting->country_specific_site)? 6:3}}">
-            {!! Form::select('functional_area_id[]', ['' => __('Select Functional Area')]+$functionalAreas, Request::get('functional_area_id', null), array('class'=>'form-control', 'id'=>'functional_area_id')) !!}
+            {!! Form::select('functional_area_id[]', ['' => __('Select Category')]+$functionalAreas, Request::get('functional_area_id', null), array('class'=>'form-control', 'id'=>'functional_area_id')) !!}
         </div>
 
         @if((bool)$siteSetting->country_specific_site)

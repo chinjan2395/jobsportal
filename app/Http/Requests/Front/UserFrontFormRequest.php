@@ -82,7 +82,7 @@ class UserFrontFormRequest extends Request
            // 'job_experience_id.required' => __('Please select experience'),
            // 'career_level_id.required' => __('Please select career level'),
             'industry_id.required' => __('Please select industry'),
-            'functional_area_id.required' => __('Please select functional area'),
+            'functional_area_id.required' => __('Please select Category'),
            // 'current_salary.required' => __('Please enter current salary'),
            // 'expected_salary.required' => __('Please enter expected salary'),
            // 'salary_currency.required' => __('Please select salary currency'),

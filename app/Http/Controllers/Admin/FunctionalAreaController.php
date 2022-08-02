@@ -65,7 +65,7 @@ class FunctionalAreaController extends Controller
             $functionalArea->functional_area_id = $request->input('functional_area_id');
         }
         $functionalArea->update();
-        flash('Functional Area has been added!')->success();
+        flash('Category has been added!')->success();
         return \Redirect::route('edit.functional.area', array($functionalArea->id));
     }
 
@@ -93,7 +93,7 @@ class FunctionalAreaController extends Controller
             $functionalArea->functional_area_id = $request->input('functional_area_id');
         }
         $functionalArea->update();
-        flash('Functional Area has been updated!')->success();
+        flash('Category has been updated!')->success();
         return \Redirect::route('edit.functional.area', array($functionalArea->id));
     }
 

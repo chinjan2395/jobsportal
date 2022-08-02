@@ -14,12 +14,12 @@
         <div class="page-bar">
             <ul class="page-breadcrumb">
                 <li> <a href="{{ route('admin.home') }}">Home</a> <i class="fa fa-circle"></i> </li>
-                <li> <span>Functional Areas</span> </li>
+                <li> <span>Categories</span> </li>
             </ul>
         </div>
         <!-- END PAGE BAR --> 
         <!-- BEGIN PAGE TITLE-->
-        <h3 class="page-title">Manage Functional Areas <small>Functional Areas</small> </h3>
+        <h3 class="page-title">Manage Categories <small>Categories</small> </h3>
         <!-- END PAGE TITLE--> 
         <!-- END PAGE HEADER-->
         <div class="row">
@@ -27,8 +27,8 @@
                 <!-- Begin: life time stats -->
                 <div class="portlet light portlet-fit portlet-datatable bordered">
                     <div class="portlet-title">
-                        <div class="caption"> <i class="icon-settings font-dark"></i> <span class="caption-subject font-dark sbold uppercase">Functional Areas</span> </div>
-                        <div class="actions"> <a href="{{ route('create.functional.area') }}" class="btn btn-xs btn-success"><i class="glyphicon glyphicon-plus"></i> Add New Functional Area</a> </div>
+                        <div class="caption"> <i class="icon-settings font-dark"></i> <span class="caption-subject font-dark sbold uppercase">Categories</span> </div>
+                        <div class="actions"> <a href="{{ route('create.functional.area') }}" class="btn btn-xs btn-success"><i class="glyphicon glyphicon-plus"></i> Add New Category</a> </div>
                     </div>
                     <div class="portlet-body">
                         <div class="table-container">
@@ -37,7 +37,7 @@
                                     <thead>
                                         <tr role="row" class="filter"> 
                                             <td>{!! Form::select('lang', ['' => 'Select Language']+$languages, config('default_lang'), array('id'=>'lang', 'class'=>'form-control')) !!}</td>
-                                            <td><input type="text" class="form-control" name="functional_area" id="functional_area" autocomplete="off" placeholder="Functional Area"></td>                      
+                                            <td><input type="text" class="form-control" name="functional_area" id="functional_area" autocomplete="off" placeholder="Category"></td>
                                             <td><select name="is_active" id="is_active"  class="form-control">
                                                     <option value="-1">Is Active?</option>
                                                     <option value="1" selected="selected">Active</option>
@@ -45,7 +45,7 @@
                                                 </select></td></tr>
                                         <tr role="row" class="heading">                                            
                                             <th>Language</th>
-                                            <th>Functional Area</th>
+                                            <th>Category</th>
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
@@ -108,7 +108,7 @@
     function deleteFunctionalArea(id, is_default) {
         var msg = 'Are you sure?';
         if (is_default == 1) {
-            msg = 'Are you sure? You are going to delete default Functional Area, all other non default Functional Areas will be deleted too!';
+            msg = 'Are you sure? You are going to delete default Category, all other non default Categorys will be deleted too!';
         }
         if (confirm(msg)) {
             $.post("{{ route('delete.functional.area') }}", {id: id, _method: 'DELETE', _token: '{{ csrf_token() }}'})
