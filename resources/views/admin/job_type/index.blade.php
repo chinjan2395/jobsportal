@@ -35,16 +35,14 @@
                             <form method="post" role="form" id="jobType-search-form">
                                 <table class="table table-striped table-bordered table-hover"  id="jobTypeDatatableAjax">
                                     <thead>
-                                        <tr role="row" class="filter"> 
-                                            <td>{!! Form::select('lang', ['' => 'Select Language']+$languages, config('default_lang'), array('id'=>'lang', 'class'=>'form-control')) !!}</td>
+                                        <tr role="row" class="filter">
                                             <td><input type="text" class="form-control" name="job_type" id="job_type" autocomplete="off" placeholder="Job Type"></td>                      
                                             <td><select name="is_active" id="is_active"  class="form-control">
                                                     <option value="-1">Is Active?</option>
                                                     <option value="1" selected="selected">Active</option>
                                                     <option value="0">In Active</option>
                                                 </select></td></tr>
-                                        <tr role="row" class="heading">                                            
-                                            <th>Language</th>
+                                        <tr role="row" class="heading">
                                             <th>Job Type</th>
                                             <th>Actions</th>
                                         </tr>
@@ -78,21 +76,15 @@
             ajax: {
                 url: '{!! route('fetch.data.job.types') !!}',
                 data: function (d) {
-                    d.lang = $('#lang').val();
                     d.job_type = $('input[name=job_type]').val();
                     d.is_active = $('#is_active').val();
                 }
             }, columns: [
-                {data: 'lang', name: 'lang'},
                 {data: 'job_type', name: 'job_type'},
                 {data: 'action', name: 'action', orderable: false, searchable: false}
             ]
         });
         $('#jobType-search-form').on('submit', function (e) {
-            oTable.draw();
-            e.preventDefault();
-        });
-        $('#lang').on('change', function (e) {
             oTable.draw();
             e.preventDefault();
         });

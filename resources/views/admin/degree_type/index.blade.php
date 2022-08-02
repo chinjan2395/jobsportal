@@ -36,10 +36,9 @@
                                 <table class="table table-striped table-bordered table-hover"  id="degreeTypeDatatableAjax">
                                     <thead>                                        
                                         <tr role="row" class="filter">
-                                            <td>{!! Form::select('lang', ['' => 'Select Language']+$languages, config('default_lang'), array('id'=>'lang', 'class'=>'form-control')) !!}</td><td>{!! Form::select('degree_level_id', ['' => 'Select Degree Level']+$degreeLevels, null, array('id'=>'degree_level_id', 'class'=>'form-control')) !!}</td><td><input type="text" class="form-control" name="degree_type" id="degree_type" autocomplete="off" placeholder="Degree Type"></td><td><select name="is_active" id="is_active"  class="form-control"><option value="-1">Is Active?</option><option value="1" selected="selected">Active</option><option value="0">In Active</option></select></td>
                                         </tr>
                                         <tr role="row" class="heading">
-                                            <th>Language</th><th>Degree Level</th><th>Degree Type</th><th>Actions</th>
+                                            <th>Degree Level</th><th>Degree Type</th><th>Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -71,20 +70,15 @@
             ajax: {
                 url: '{!! route('fetch.data.degree.types') !!}',
                 data: function (d) {
-                    d.lang = $('#lang').val();
                     d.degree_level_id = $('#degree_level_id').val();
                     d.degree_type = $('#degree_type').val();
                     d.is_active = $('#is_active').val();
                 }
             }, columns: [
-                {data: 'lang', name: 'lang'}, {data: 'degree_level_id', name: 'degree_level_id'}, {data: 'degree_type', name: 'degree_type'}, {data: 'action', name: 'action', orderable: false, searchable: false}
+                {data: 'degree_level_id', name: 'degree_level_id'}, {data: 'degree_type', name: 'degree_type'}, {data: 'action', name: 'action', orderable: false, searchable: false}
             ]
         });
         $('#degreeType-search-form').on('submit', function (e) {
-            oTable.draw();
-            e.preventDefault();
-        });
-        $('#lang').on('change', function (e) {
             oTable.draw();
             e.preventDefault();
         });
