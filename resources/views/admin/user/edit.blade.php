@@ -35,6 +35,7 @@
                             <li><a href="#Education" data-toggle="tab" aria-expanded="false">Education</a></li>
                             <li><a href="#Skills" data-toggle="tab" aria-expanded="false">Skills</a></li>
                             <li><a href="#Languages" data-toggle="tab" aria-expanded="false">Languages</a></li>
+                            <li><a href="#Ratings" data-toggle="tab" aria-expanded="false">Rating</a></li>
                         </ul>
 
                         <div class="tab-content">              
@@ -46,6 +47,7 @@
                             <div class="tab-pane fade" id="Education"> @include('admin.user.forms.education.education') </div>
                             <div class="tab-pane fade" id="Skills"> @include('admin.user.forms.skill.skills') </div>
                             <div class="tab-pane fade" id="Languages"> @include('admin.user.forms.language.languages') </div>
+                            <div class="tab-pane fade" id="Ratings"> @include('admin.user.forms.rating.ratings') </div>
                         </div>
 
                     </div>
