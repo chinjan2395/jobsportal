@@ -58,5 +58,12 @@ Route::post('store-profile-language/{id}', array_merge(['uses' => 'Admin\UserCon
 Route::post('get-profile-language-edit-form/{id}', array_merge(['uses' => 'Admin\UserController@getProfileLanguageEditForm'], $all_users))->name('get.profile.language.edit.form');
 Route::put('update-profile-language/{language_id}/{user_id}', array_merge(['uses' => 'Admin\UserController@updateProfileLanguage'], $all_users))->name('update.profile.language');
 Route::delete('delete-profile-language', array_merge(['uses' => 'Admin\UserController@deleteProfileLanguage'], $all_users))->name('delete.profile.language');
+/* * *********************************** */
+Route::post('show-profile-ratings/{id}', array_merge(['uses' => 'Admin\UserController@showProfileRatings'], $all_users))->name('show.profile.ratings');
+Route::post('get-profile-rating-form/{id}', array_merge(['uses' => 'Admin\UserController@getProfileRatingForm'], $all_users))->name('get.profile.rating.form');
+Route::post('store-profile-rating/{id}', array_merge(['uses' => 'Admin\UserController@storeProfileRating'], $all_users))->name('store.profile.rating');
+Route::post('get-profile-rating-edit-form/{id}', array_merge(['uses' => 'Admin\UserController@getProfileRatingEditForm'], $all_users))->name('get.profile.rating.edit.form');
+Route::put('update-profile-rating/{rating_id}/{user_id}', array_merge(['uses' => 'Admin\UserController@updateProfileRating'], $all_users))->name('update.profile.rating');
+Route::delete('delete-profile-rating', array_merge(['uses' => 'Admin\UserController@deleteProfileRating'], $all_users))->name('delete.profile.rating');
 /* * ****** End User ********** */
 ?>
