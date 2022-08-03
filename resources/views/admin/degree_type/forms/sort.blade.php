@@ -3,7 +3,7 @@
 <div class="form-body">
     <h3>Drag and Drop to Sort Degree Types</h3>
     <div class="form-group">
-        {!! Form::select('lang', ['' => 'Select Language']+$languages, config('default_lang'), array('class'=>'form-control', 'id'=>'lang', 'onchange'=>'refreshDegreeTypeSortData();')) !!}
+        {!! Form::select('lang', ['' => 'Select Language']+$languages, config('default_lang'), array('class'=>'form-control hide', 'id'=>'lang', 'onchange'=>'refreshDegreeTypeSortData();')) !!}
     </div>
     <div class="form-group">
         {!! Form::select('degree_level_id', ['' => 'Select Degree Level']+$degreeLevels, null, array('class'=>'form-control', 'id'=>'degree_level_id', 'onchange'=>'refreshDegreeTypeSortData();')) !!}

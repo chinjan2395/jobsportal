@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Traits\ProfileRatingTrait;
 use File;
 use ImgUploader;
 use Auth;
@@ -59,6 +60,7 @@ class UserController extends Controller
     use ProfileEducationTrait;
     use ProfileSkillTrait;
     use ProfileLanguageTrait;
+    use ProfileRatingTrait;
     use Skills;
     use JobSeekerPackageTrait;
 

@@ -35,8 +35,7 @@
                             <form method="post" role="form" id="careerLevel-search-form">
                                 <table class="table table-striped table-bordered table-hover"  id="careerLevelDatatableAjax">
                                     <thead>
-                                        <tr role="row" class="filter"> 
-                                            <td>{!! Form::select('lang', ['' => 'Select Language']+$languages, config('default_lang'), array('id'=>'lang', 'class'=>'form-control')) !!}</td>
+                                        <tr role="row" class="filter">
                                             <td><input type="text" class="form-control" name="career_level" id="career_level" autocomplete="off" placeholder="Career Level"></td>                      
                                             <td><select name="is_active" id="is_active"  class="form-control">
                                                     <option value="-1">Is Active?</option>
@@ -44,7 +43,7 @@
                                                     <option value="0">In Active</option>
                                                 </select></td></tr>
                                         <tr role="row" class="heading">                                            
-                                            <th>Language</th>
+{{--                                            <th>Language</th>--}}
                                             <th>Career Level</th>
                                             <th>Actions</th>
                                         </tr>
@@ -78,21 +77,15 @@
             ajax: {
                 url: '{!! route('fetch.data.career.levels') !!}',
                 data: function (d) {
-                    d.lang = $('#lang').val();
                     d.career_level = $('input[name=career_level]').val();
                     d.is_active = $('#is_active').val();
                 }
             }, columns: [
-                {data: 'lang', name: 'lang'},
                 {data: 'career_level', name: 'career_level'},
                 {data: 'action', name: 'action', orderable: false, searchable: false}
             ]
         });
         $('#careerLevel-search-form').on('submit', function (e) {
-            oTable.draw();
-            e.preventDefault();
-        });
-        $('#lang').on('change', function (e) {
             oTable.draw();
             e.preventDefault();
         });

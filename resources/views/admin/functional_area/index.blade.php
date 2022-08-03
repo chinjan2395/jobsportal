@@ -35,16 +35,14 @@
                             <form method="post" role="form" id="functionalArea-search-form">
                                 <table class="table table-striped table-bordered table-hover"  id="functionalAreaDatatableAjax">
                                     <thead>
-                                        <tr role="row" class="filter"> 
-                                            <td>{!! Form::select('lang', ['' => 'Select Language']+$languages, config('default_lang'), array('id'=>'lang', 'class'=>'form-control')) !!}</td>
+                                        <tr role="row" class="filter">
                                             <td><input type="text" class="form-control" name="functional_area" id="functional_area" autocomplete="off" placeholder="Category"></td>
                                             <td><select name="is_active" id="is_active"  class="form-control">
                                                     <option value="-1">Is Active?</option>
                                                     <option value="1" selected="selected">Active</option>
                                                     <option value="0">In Active</option>
                                                 </select></td></tr>
-                                        <tr role="row" class="heading">                                            
-                                            <th>Language</th>
+                                        <tr role="row" class="heading">
                                             <th>Category</th>
                                             <th>Actions</th>
                                         </tr>
@@ -78,21 +76,15 @@
             ajax: {
                 url: '{!! route('fetch.data.functional.areas') !!}',
                 data: function (d) {
-                    d.lang = $('#lang').val();
                     d.functional_area = $('input[name=functional_area]').val();
                     d.is_active = $('#is_active').val();
                 }
             }, columns: [
-                {data: 'lang', name: 'lang'},
                 {data: 'functional_area', name: 'functional_area'},
                 {data: 'action', name: 'action', orderable: false, searchable: false}
             ]
         });
         $('#functionalArea-search-form').on('submit', function (e) {
-            oTable.draw();
-            e.preventDefault();
-        });
-        $('#lang').on('change', function (e) {
             oTable.draw();
             e.preventDefault();
         });

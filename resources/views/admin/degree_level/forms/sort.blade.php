@@ -2,7 +2,7 @@
 @include('flash::message')
 <div class="form-body">
     <h3>Drag and Drop to Sort Degree Levels</h3>
-    {!! Form::select('lang', ['' => 'Select Language']+$languages, config('default_lang'), array('class'=>'form-control', 'id'=>'lang', 'onchange'=>'refreshDegreeLevelSortData();')) !!}
+    {!! Form::select('lang', ['' => 'Select Language']+$languages, config('default_lang'), array('class'=>'form-control hide', 'id'=>'lang', 'onchange'=>'refreshDegreeLevelSortData();')) !!}
     <div id="degreeLevelSortDataDiv"></div>
 </div>
 @push('scripts') 
