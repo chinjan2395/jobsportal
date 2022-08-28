@@ -204,6 +204,8 @@ trait JobTrait
 
         $job->salary_period_id = $request->input('salary_period_id');
 
+        $job->automatic_reply = $request->input('automatic_reply');
+
         return $job;
 
     }
