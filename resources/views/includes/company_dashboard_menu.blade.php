@@ -8,7 +8,7 @@
         <li class="{{ Request::url() == route('posted.jobs') ? 'active' : '' }}"><a href="{{ route('posted.jobs') }}"><i class="fa fa-black-tie" aria-hidden="true"></i> {{__('Company Jobs')}}</a></li>
 
         <li class="{{ Request::url() == route('company.packages') ? 'active' : '' }}"><a href="{{ route('company.packages') }}"><i class="fa fa-user" aria-hidden="true"></i> {{__('CV Search Packages')}}</a></li>
-        
+
         <li class="{{ Request::url() == route('company.unloced-users') ? 'active' : '' }}"><a href="{{ route('company.unloced-users') }}"><i class="fa fa-user" aria-hidden="true"></i> {{__('Unlocked Users')}}</a></li>
 
         <li class="{{ Request::url() == route('company.messages') ? 'active' : '' }}"><a href="{{route('company.messages')}}"><i class="fa fa-envelope-o" aria-hidden="true"></i> {{__('Company Messages')}}</a></li>
@@ -18,7 +18,4 @@
         </li>
     </ul>
 	</div>
-    <div class="row">
-        <div class="col-md-12">{!! $siteSetting->dashboard_page_ad !!}</div>
-    </div>
 </div>
