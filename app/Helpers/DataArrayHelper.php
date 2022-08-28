@@ -2,35 +2,36 @@
 
 namespace App\Helpers;
 
-use Request;
-use App\Language;
-use App\DegreeLevel;
-use App\DegreeType;
-use App\User;
-use App\Gender;
+use App\CareerLevel;
 use App\Category;
+use App\City;
+use App\Company;
 use App\Country;
 use App\CountryDetail;
-use App\State;
-use App\City;
-use App\CareerLevel;
-use App\Industry;
+use App\DegreeLevel;
+use App\DegreeType;
 use App\FunctionalArea;
-use App\MajorSubject;
-use App\ResultType;
-use App\LanguageLevel;
-use App\JobSkill;
+use App\Gender;
+use App\Industry;
 use App\JobExperience;
-use App\JobType;
 use App\JobShift;
+use App\JobSkill;
 use App\JobTitle;
-use App\Company;
+use App\JobType;
+use App\Language;
+use App\LanguageLevel;
+use App\MajorSubject;
 use App\MaritalStatus;
 use App\OwnershipType;
+use App\Rating;
+use App\ResultType;
 use App\SalaryPeriod;
-use App\Video;
-use App\Testimonial;
 use App\Slider;
+use App\State;
+use App\Testimonial;
+use App\User;
+use App\Video;
+use Request;
 
 class DataArrayHelper
 {
@@ -270,6 +271,13 @@ class DataArrayHelper
     {
         $array = Language::select('languages.native', 'languages.iso_code')->active()->sorted()->pluck('languages.native', 'languages.iso_code')->toArray();
         return $array;
+    }
+
+    /*     * **************************** */
+
+    public static function ratingsArray()
+    {
+        return Rating::select(['id', 'title', 'stars'])->active()->get()->pluck('title','id')->toArray();
     }
 
     /*     * **************************** */
