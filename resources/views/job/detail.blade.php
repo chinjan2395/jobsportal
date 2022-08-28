@@ -112,6 +112,10 @@ $company = $job->getCompany();
                 @if(Auth::check() && Auth::user()->isFavouriteJob($job->slug)) <a href="{{route('remove.from.favourite', $job->slug)}}" class="btn"><i class="fa fa-floppy-o" aria-hidden="true"></i> {{__('Favourite Job')}} </a> @else <a href="{{route('add.to.favourite', $job->slug)}}" class="btn"><i class="fa fa-floppy-o" aria-hidden="true"></i> {{__('Add to Favourite')}}</a> @endif
                 <a href="{{route('report.abuse', $job->slug)}}" class="btn report"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> {{__('Report Abuse')}}</a>
             </div>
+            <div class="jobButtons">
+                <a href="{{route('feedback.job', $job->slug)}}" class="btn"><i class="fa fa-envelope" aria-hidden="true"></i> {{__('Feedback')}}</a>
+                <a href="{{route('enquiry.job', $job->slug)}}" class="btn"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> {{__('Enquiry')}}</a>
+            </div>
         </div>
 				
 				
