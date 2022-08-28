@@ -67,9 +67,10 @@ class CompanyController extends Controller
     {
         return view('company_home');
     }
+
     public function company_listing()
     {
-        $data['companies']=Company::paginate(20);
+        $data['companies'] = Company::paginate(20);
         return view('company.listing')->with($data);
     }
 
@@ -80,10 +81,10 @@ class CompanyController extends Controller
         $ownershipTypes = DataArrayHelper::defaultOwnershipTypesArray();
         $company = Company::findOrFail(Auth::guard('company')->user()->id);
         return view('company.edit_profile')
-                        ->with('company', $company)
-                        ->with('countries', $countries)
-                        ->with('industries', $industries)
-                        ->with('ownershipTypes', $ownershipTypes);
+            ->with('company', $company)
+            ->with('countries', $countries)
+            ->with('industries', $industries)
+            ->with('ownershipTypes', $ownershipTypes);
     }
 
     public function updateCompanyProfile(CompanyFrontFormRequest $request)
@@ -123,30 +124,27 @@ class CompanyController extends Controller
         $company->country_id = $request->input('country_id');
         $company->state_id = $request->input('state_id');
         $company->city_id = $request->input('city_id');
-		$company->is_subscribed = $request->input('is_subscribed', 0);
-		
+        $company->is_subscribed = $request->input('is_subscribed', 0);
+
         $company->slug = Str::slug($company->name, '-') . '-' . $company->id;
         $company->update();
-		/*************************/
-		Subscription::where('email', 'like', $company->email)->delete();
-		if((bool)$company->is_subscribed)
-		{			
-			$subscription = new Subscription();
-			$subscription->email = $company->email;
-			$subscription->name = $company->name;
-			$subscription->save();
-			/*************************/
-			Newsletter::subscribeOrUpdate($subscription->email, ['FNAME'=>$subscription->name]);
-			/*************************/
-		}
-		else
-		{
-			/*************************/
-			Newsletter::unsubscribe($company->email);
-			/*************************/
-		}
+        /*************************/
+        Subscription::where('email', 'like', $company->email)->delete();
+        if ((bool)$company->is_subscribed) {
+            $subscription = new Subscription();
+            $subscription->email = $company->email;
+            $subscription->name = $company->name;
+            $subscription->save();
+            /*************************/
+            Newsletter::subscribeOrUpdate($subscription->email, ['FNAME' => $subscription->name]);
+            /*************************/
+        } else {
+            /*************************/
+            Newsletter::unsubscribe($company->email);
+            /*************************/
+        }
 
-        
+
         flash(__('Company has been updated'))->success();
         return \Redirect::route('company.profile');
     }
@@ -168,13 +166,13 @@ class CompanyController extends Controller
         $data['job_id'] = $job_id;
         $data['company_id'] = $company_id;
         FavouriteApplicant::where('user_id', $user_id)
-                ->where('job_id', '=', $job_id)
-                ->where('company_id', '=', $company_id)
-                ->delete();
+            ->where('job_id', '=', $job_id)
+            ->where('company_id', '=', $company_id)
+            ->delete();
 
         flash(__('Job seeker has been removed from favorites list'))->success();
         return \Redirect::route('applicant.profile', $application_id);
-    } 
+    }
 
 
     public function hireFromFavouriteApplicant(Request $request, $application_id, $user_id, $job_id, $company_id)
@@ -183,9 +181,9 @@ class CompanyController extends Controller
         $data['job_id'] = $job_id;
         $data['company_id'] = $company_id;
         $fev = FavouriteApplicant::where('user_id', $user_id)
-                ->where('job_id', '=', $job_id)
-                ->where('company_id', '=', $company_id)
-                ->first();
+            ->where('job_id', '=', $job_id)
+            ->where('company_id', '=', $company_id)
+            ->first();
         $fev->status = 'hired';
         $fev->update();
         $job = Job::findOrFail($job_id);
@@ -203,11 +201,11 @@ class CompanyController extends Controller
         $data['job_id'] = $job_id;
         $data['company_id'] = $company_id;
         $fev = FavouriteApplicant::where('user_id', $user_id)
-                ->where('job_id', '=', $job_id)
-                ->where('company_id', '=', $company_id)
-                ->first();
+            ->where('job_id', '=', $job_id)
+            ->where('company_id', '=', $company_id)
+            ->first();
         $fev->status = null;
-        $fev->update();        
+        $fev->update();
 
         flash(__('Job seeker has been removed from hired list'))->success();
         return \Redirect::route('applicant.profile', $application_id);
@@ -220,8 +218,8 @@ class CompanyController extends Controller
         $seo = $this->getCompanySEO($company);
         /*         * ************************************************** */
         return view('company.detail')
-                        ->with('company', $company)
-                        ->with('seo', $seo);
+            ->with('company', $company)
+            ->with('seo', $seo);
     }
 
     public function sendContactForm(Request $request)
@@ -323,7 +321,7 @@ class CompanyController extends Controller
     {
         $jobs = Auth::guard('company')->user()->jobs()->paginate(10);
         return view('job.company_posted_jobs')
-                        ->with('jobs', $jobs);
+            ->with('jobs', $jobs);
     }
 
     public function listAppliedUsers(Request $request, $job_id)
@@ -331,17 +329,17 @@ class CompanyController extends Controller
         $job_applications = JobApply::where('job_id', '=', $job_id)->get();
 
         return view('job.job_applications')
-                        ->with('job_applications', $job_applications);
+            ->with('job_applications', $job_applications);
     }
 
     public function listHiredUsers(Request $request, $job_id)
     {
         $company_id = Auth::guard('company')->user()->id;
-        $user_ids = FavouriteApplicant::where('job_id', '=', $job_id)->where('company_id', '=', $company_id)->where('status','hired')->pluck('user_id')->toArray();
+        $user_ids = FavouriteApplicant::where('job_id', '=', $job_id)->where('company_id', '=', $company_id)->where('status', 'hired')->pluck('user_id')->toArray();
         $job_applications = JobApply::where('job_id', '=', $job_id)->whereIn('user_id', $user_ids)->get();
 
         return view('job.hired_applications')
-                        ->with('job_applications', $job_applications);
+            ->with('job_applications', $job_applications);
     }
 
     public function listRejectedUsers(Request $request, $job_id)
@@ -349,17 +347,17 @@ class CompanyController extends Controller
         $job_applications = JobApplyRejected::where('job_id', '=', $job_id)->get();
 
         return view('job.job_rejected_users')
-                        ->with('job_applications', $job_applications);
+            ->with('job_applications', $job_applications);
     }
 
     public function listFavouriteAppliedUsers(Request $request, $job_id)
     {
         $company_id = Auth::guard('company')->user()->id;
-        $user_ids = FavouriteApplicant::where('job_id', '=', $job_id)->where('company_id', '=', $company_id)->where('status',null)->pluck('user_id')->toArray();
+        $user_ids = FavouriteApplicant::where('job_id', '=', $job_id)->where('company_id', '=', $company_id)->where('status', null)->pluck('user_id')->toArray();
         $job_applications = JobApply::where('job_id', '=', $job_id)->whereIn('user_id', $user_ids)->get();
 
         return view('job.job_applications')
-                        ->with('job_applications', $job_applications);
+            ->with('job_applications', $job_applications);
     }
 
     public function applicantProfile($application_id)
@@ -379,16 +377,17 @@ class CompanyController extends Controller
         $is_applicant = 'yes';
         /*         * ********************************************** */
         return view('user.applicant_profile')
-                        ->with('job_application', $job_application)
-                        ->with('user', $user)
-                        ->with('job', $job)
-                        ->with('company', $company)
-                        ->with('profileCv', $profileCv)
-                        ->with('ratings', $ratings)
-                        ->with('page_title', 'Applicant Profile')
-                        ->with('form_title', 'Contact Applicant')
-                        ->with('is_applicant', $is_applicant);
+            ->with('job_application', $job_application)
+            ->with('user', $user)
+            ->with('job', $job)
+            ->with('company', $company)
+            ->with('profileCv', $profileCv)
+            ->with('ratings', $ratings)
+            ->with('page_title', 'Applicant Profile')
+            ->with('form_title', 'Contact Applicant')
+            ->with('is_applicant', $is_applicant);
     }
+
     public function rejectApplicantProfile($application_id)
     {
 
@@ -407,11 +406,11 @@ class CompanyController extends Controller
         $job = $rej->getJob();
 
         $job_application->delete();
-        Mail::send(new JobSeekerRejectedMailable($job,$rej));
+        Mail::send(new JobSeekerRejectedMailable($job, $rej));
 
 
         flash(__('Job seeker has been rejected successfully'))->success();
-        return \Redirect::route('rejected-users',$job->id);
+        return \Redirect::route('rejected-users', $job->id);
     }
 
     public function userProfile($id)
@@ -427,11 +426,11 @@ class CompanyController extends Controller
         $user->update();
         /*         * ********************************************** */
         return view('user.applicant_profile')
-                        ->with('user', $user)
-                        ->with('profileCv', $profileCv)
-                        ->with('page_title', 'Job Seeker Profile')
-                        ->with('ratings', $ratings)
-                        ->with('form_title', 'Contact Job Seeker');
+            ->with('user', $user)
+            ->with('profileCv', $profileCv)
+            ->with('page_title', 'Job Seeker Profile')
+            ->with('ratings', $ratings)
+            ->with('form_title', 'Contact Job Seeker');
     }
 
     public function companyFollowers()
@@ -441,21 +440,21 @@ class CompanyController extends Controller
         $users = User::whereIn('id', $userIdsArray)->get();
 
         return view('company.follower_users')
-                        ->with('users', $users)
-                        ->with('company', $company);
+            ->with('users', $users)
+            ->with('company', $company);
     }
 
     public function companyMessages()
     {
         $company = Company::findOrFail(Auth::guard('company')->user()->id);
         $messages = CompanyMessage::where('company_id', '=', $company->id)
-                ->orderBy('is_read', 'asc')
-                ->orderBy('created_at', 'desc')
-                ->get();
+            ->orderBy('is_read', 'asc')
+            ->orderBy('created_at', 'desc')
+            ->get();
 
         return view('company.company_messages')
-                        ->with('company', $company)
-                        ->with('messages', $messages);
+            ->with('company', $company)
+            ->with('messages', $messages);
     }
 
     public function companyMessageDetail($message_id)
@@ -465,11 +464,11 @@ class CompanyController extends Controller
         $message->update(['is_read' => 1]);
 
         return view('company.company_message_detail')
-                        ->with('company', $company)
-                        ->with('message', $message);
+            ->with('company', $company)
+            ->with('message', $message);
     }
 
-    
+
     public function resume_search_packages()
 
     {
@@ -485,6 +484,7 @@ class CompanyController extends Controller
         //dd($data['success_package']);
         return view('company_resume_search_packages')->with($data);
     }
+
     public function unlocked_users()
 
     {
@@ -509,19 +509,19 @@ class CompanyController extends Controller
                 $newString = $user_id;
             }
 
-            $cvsSearch->availed_cvs_ids  = $newString;
+            $cvsSearch->availed_cvs_ids = $newString;
             $cvsSearch->availed_cvs_quota += 1;
             $cvsSearch->update();
 
             $unlock = Unlocked_users::where('company_id', Auth::guard('company')->user()->id)->first();
             if (null !== ($unlock)) {
-                $unlock->unlocked_users_ids  = $newString;
+                $unlock->unlocked_users_ids = $newString;
                 $unlock->update();
             } else {
                 $unlock = new Unlocked_users();
 
-                $unlock->company_id  = Auth::guard('company')->user()->id;
-                $unlock->unlocked_users_ids  = $newString;
+                $unlock->company_id = Auth::guard('company')->user()->id;
+                $unlock->unlocked_users_ids = $newString;
                 $unlock->save();
             }
             return redirect()->back();
@@ -529,6 +529,7 @@ class CompanyController extends Controller
             return redirect('/company-packages');
         }
     }
+
     function addtoString($str, $item)
     {
         $parts = explode(',', $str);
