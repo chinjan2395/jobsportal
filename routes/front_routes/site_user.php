@@ -69,6 +69,10 @@ Route::post('get-front-profile-language-edit-form/{id}', 'UserController@getFron
 Route::put('update-front-profile-language/{language_id}/{user_id}', 'UserController@updateFrontProfileLanguage')->name('update.front.profile.language');
 Route::delete('delete-front.profile-language', 'UserController@deleteProfileLanguage')->name('delete.front.profile.language');
 /*************************************/
+/* * *********************************** */
+Route::post('store-front-profile-rating/{id}', array_merge(['uses' => 'Admin\UserController@storeFrontProfileRating']))->name('store.front.profile.rating');
+Route::post('show-applicant-profile-rating/{id}', array_merge(['uses' => 'Admin\UserController@showApplicantProfileRatings']))->name('show.applicant.profile.ratings');
+/*************************************/
 
 
 Route::get('my-alerts', 'UserController@myAlerts')->name('my-alerts');

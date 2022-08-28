@@ -9,3 +9,11 @@ Route::get('report-abuse-thanks', 'ContactController@reportAbuseThanks')->name('
 Route::get('report-abuse-company/{company_slug}', 'ContactController@reportAbuseCompany')->name('report.abuse.company');
 Route::post('report-abuse-company/{company_slug}', 'ContactController@reportAbuseCompanyPost')->name('report.abuse.company');
 Route::get('report-abuse-company-thanks', 'ContactController@reportAbuseCompanyThanks')->name('report.abuse.company.thanks');
+
+Route::get('feedback-job/{job_slug}', 'ContactController@feedbackOnJob')->name('feedback.job');
+Route::post('feedback-job/{job_slug}', 'ContactController@feedbackOnJobPost')->name('feedback.job');
+Route::get('feedback-job-thanks', 'ContactController@feedbackOnJobThanks')->name('feedback.job.thanks');
+
+Route::get('enquiry-job/{job_slug}', 'ContactController@enquiryOnJob')->name('enquiry.job');
+Route::post('enquiry-job/{job_slug}', 'ContactController@enquiryOnJobPost')->name('enquiry.job');
+Route::get('enquiry-job-thanks', 'ContactController@enquiryOnJobThanks')->name('enquiry.job.thanks');
