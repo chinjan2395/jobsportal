@@ -2,10 +2,9 @@
 
 namespace App\Listeners;
 
-use Mail;
+use Illuminate\Support\Facades\Mail;
 use App\Events\JobApplied;
 use App\Mail\JobAppliedJobSeekerMailable;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
 class JobAppliedJobSeekerListener implements ShouldQueue
@@ -24,7 +23,7 @@ class JobAppliedJobSeekerListener implements ShouldQueue
     /**
      * Handle the event.
      *
-     * @param  CompanyRegistered  $event
+     * @param JobApplied $event
      * @return void
      */
     public function handle(JobApplied $event)
