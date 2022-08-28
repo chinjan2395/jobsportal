@@ -256,6 +256,11 @@ class User extends Authenticatable
 
     }
 
+    public function profileRatings()
+    {
+        return $this->hasMany('App\ProfileRating', 'user_id', 'id');
+    }
+
 
 
     public function favouriteJobs()
