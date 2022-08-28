@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Company;
 
-use Mail;
+use App\Job;
+use App\Mail\HireFromAppliedJobMailable;
+use Illuminate\Support\Facades\Mail;
 use Hash;
 use File;
 use ImgUploader;
@@ -185,7 +187,11 @@ class CompanyController extends Controller
                 ->where('company_id', '=', $company_id)
                 ->first();
         $fev->status = 'hired';
-        $fev->update();        
+        $fev->update();
+        $job = Job::findOrFail($job_id);
+        $user = User::findOrFail($user_id);
+
+        Mail::send(new HireFromAppliedJobMailable($job, $user));
 
         flash(__('Job seeker has been Hired from favorites list'))->success();
         return \Redirect::route('applicant.profile', $application_id);
@@ -364,6 +370,7 @@ class CompanyController extends Controller
         $job = $job_application->getJob();
         $company = $job->getCompany();
         $profileCv = $job_application->getProfileCv();
+        $ratings = DataArrayHelper::ratingsArray();
 
         /*         * ********************************************** */
         $num_profile_views = $user->num_profile_views + 1;
@@ -377,6 +384,7 @@ class CompanyController extends Controller
                         ->with('job', $job)
                         ->with('company', $company)
                         ->with('profileCv', $profileCv)
+                        ->with('ratings', $ratings)
                         ->with('page_title', 'Applicant Profile')
                         ->with('form_title', 'Contact Applicant')
                         ->with('is_applicant', $is_applicant);
@@ -411,6 +419,7 @@ class CompanyController extends Controller
 
         $user = User::findOrFail($id);
         $profileCv = $user->getDefaultCv();
+        $ratings = DataArrayHelper::ratingsArray();
 
         /*         * ********************************************** */
         $num_profile_views = $user->num_profile_views + 1;
@@ -421,6 +430,7 @@ class CompanyController extends Controller
                         ->with('user', $user)
                         ->with('profileCv', $profileCv)
                         ->with('page_title', 'Job Seeker Profile')
+                        ->with('ratings', $ratings)
                         ->with('form_title', 'Contact Job Seeker');
     }
 
