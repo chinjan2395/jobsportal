@@ -4,6 +4,7 @@ namespace App\Traits;
 
 use Auth;
 use DB;
+use Illuminate\Support\Facades\Log;
 use Input;
 use Redirect;
 use App\User;
@@ -25,8 +26,7 @@ trait ProfileRatingTrait
 
 
                 $html .= '<tr id="rating_' . $rating->id . '">
-						<td><span class="text text-success">' . $rating->getRating('lang') . '</span></td>
-						<td><span class="text text-success">' . $rating->getRatingLevel('rating_level') . '</span></td>
+						<td><span class="text text-success">' . $rating->getRating('title') . '</span></td>
 						<td><a href="javascript:;" onclick="showProfileRatingEditModal(' . $rating->id . ');" class="text text-warning">' . __('Edit') . '</a>&nbsp;|&nbsp;<a href="javascript:;" onclick="delete_profile_rating(' . $rating->id . ');" class="text text-danger">' . __('Delete') . '</a></td>
 								</tr>';
             endforeach;
@@ -38,14 +38,20 @@ trait ProfileRatingTrait
     public function showApplicantProfileRatings(Request $request, $user_id)
     {
         $user = User::find($user_id);
-        $html = '<div class="col-mid-12"><table class="table table-bordered table-condensed">';
+        $html = '<div class="col-mid-12"><table class="table table-bordered table-condensed">
+                <tr>
+                <td width="130"><span class="text text-bold">Rating</span></td>
+                <td><span class="text text-bold">Description</span></td>
+                </tr>';
         if (isset($user) && count($user->profileRatings)):
             foreach ($user->profileRatings as $rating):
 
 
-                $html .= '<tr id="rating_' . $rating->id . '">
-						<td><span class="text text-success">' . $rating->getRating('lang') . '</span></td>
-						<td><span class="text text-success">' . $rating->getRatingLevel('rating_level') . '</span></td></tr>';
+                $html .= '
+                <tr id="rating_' . $rating->id . '">
+						<td><span class="text text-success">' . $rating->getRating('title') . '</span></td>
+						<td><span class="text">' . $rating->reason . '</span></td>
+						</tr>';
             endforeach;
         endif;
 
@@ -56,13 +62,10 @@ trait ProfileRatingTrait
     {
 
         $ratings = DataArrayHelper::ratingsArray();
-        $ratingLevels = DataArrayHelper::defaultRatingLevelsArray();
-
         $user = User::find($user_id);
         $returnHTML = view('admin.user.forms.rating.rating_modal')
                 ->with('user', $user)
                 ->with('ratings', $ratings)
-                ->with('ratingLevels', $ratingLevels)
                 ->render();
         return response()->json(array('success' => true, 'html' => $returnHTML));
     }
@@ -71,18 +74,16 @@ trait ProfileRatingTrait
     {
 
         $ratings = DataArrayHelper::ratingsArray();
-        $ratingLevels = DataArrayHelper::langRatingLevelsArray();
 
         $user = User::find($user_id);
         $returnHTML = view('user.forms.rating.rating_modal')
                 ->with('user', $user)
                 ->with('ratings', $ratings)
-                ->with('ratingLevels', $ratingLevels)
                 ->render();
         return response()->json(array('success' => true, 'html' => $returnHTML));
     }
 
-    public function storeRatingRating(ProfileRatingFormRequest $request, $user_id)
+    public function storeProfileRating(ProfileRatingFormRequest $request, $user_id)
     {
 
         $profileRating = new ProfileRating();
@@ -98,10 +99,11 @@ trait ProfileRatingTrait
 
         $profileRating = new ProfileRating();
         $profileRating = $this->assignRatingValues($profileRating, $request, $user_id);
-        $profileRating->save();
-        /*         * ************************************ */
-        $returnHTML = view('user.forms.rating.rating_thanks')->render();
-        return response()->json(array('success' => true, 'status' => 200, 'html' => $returnHTML), 200);
+        if ($profileRating->save() == true) {
+            $arr = array('msg' => 'Your rating have successfully been posted. ', 'status' => true);
+            return Response()->json($arr);
+        }
+        return Response()->json(array('msg' => 'Something went wrong. ', 'status' => false));
     }
 
     public function getProfileRatingEditForm(Request $request, $user_id)
@@ -109,7 +111,6 @@ trait ProfileRatingTrait
         $profile_rating_id = $request->input('profile_rating_id');
 
         $ratings = DataArrayHelper::ratingsArray();
-        $ratingLevels = DataArrayHelper::defaultRatingLevelsArray();
 
         $profileRating = ProfileRating::find($profile_rating_id);
         $user = User::find($user_id);
@@ -118,7 +119,6 @@ trait ProfileRatingTrait
                 ->with('user', $user)
                 ->with('profileRating', $profileRating)
                 ->with('ratings', $ratings)
-                ->with('ratingLevels', $ratingLevels)
                 ->render();
         return response()->json(array('success' => true, 'html' => $returnHTML));
     }
@@ -128,7 +128,6 @@ trait ProfileRatingTrait
         $profile_rating_id = $request->input('profile_rating_id');
 
         $ratings = DataArrayHelper::ratingsArray();
-        $ratingLevels = DataArrayHelper::langRatingLevelsArray();
 
         $profileRating = ProfileRating::find($profile_rating_id);
         $user = User::find($user_id);
@@ -137,7 +136,6 @@ trait ProfileRatingTrait
                 ->with('user', $user)
                 ->with('profileRating', $profileRating)
                 ->with('ratings', $ratings)
-                ->with('ratingLevels', $ratingLevels)
                 ->render();
         return response()->json(array('success' => true, 'html' => $returnHTML));
     }
@@ -170,7 +168,7 @@ trait ProfileRatingTrait
     {
         $profileRating->user_id = $user_id;
         $profileRating->rating_id = $request->input('rating_id');
-        $profileRating->rating_level_id = $request->input('rating_level_id');
+        $profileRating->reason = $request->input('reason');
         return $profileRating;
     }
 
