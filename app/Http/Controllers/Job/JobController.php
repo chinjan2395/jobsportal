@@ -306,7 +306,9 @@ class JobController extends Controller
             $user->update();
         }
         /*         * ******************************* */
-        event(new JobApplied($job, $jobApply));
+        if ($job->automatic_reply) {
+            event(new JobApplied($job, $jobApply));
+        }
 
         flash(__('You have successfully applied for this job'))->success();
         return \Redirect::route('job.detail', $job_slug);
