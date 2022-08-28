@@ -118,7 +118,7 @@
         <div class="formrow {!! APFrmErrHelp::hasError($errors, 'job_experience_id') !!}" id="job_experience_id_div"> {!! Form::select('job_experience_id', ['' => __('Select Required job experience')]+$jobExperiences, null, array('class'=>'form-control', 'id'=>'job_experience_id')) !!}
             {!! APFrmErrHelp::showErrors($errors, 'job_experience_id') !!} </div>
     </div>
-    <div class="col-md-6">
+    <div class="col-md-3">
         <div class="formrow {!! APFrmErrHelp::hasError($errors, 'is_freelance') !!}"> {!! Form::label('is_freelance', __('Is Freelance?'), ['class' => 'bold']) !!}
             <div class="radio-list">
                 <?php
@@ -137,6 +137,26 @@
                     {{__('No')}} </label>
             </div>
             {!! APFrmErrHelp::showErrors($errors, 'is_freelance') !!} </div>
+    </div>
+    <div class="col-md-3">
+        <div class="formrow {!! APFrmErrHelp::hasError($errors, 'automatic_reply') !!}"> {!! Form::label('automatic_reply', __('Automatic reply to candidate?'), ['class' => 'bold']) !!}
+            <div class="radio-list">
+                <?php
+                $is_automatic_reply_1 = '';
+                $is_automatic_reply_2 = 'checked="checked"';
+                if (old('automatic_reply', ((isset($job)) ? $job->automatic_reply : 0)) == 1) {
+                    $is_automatic_reply_1 = 'checked="checked"';
+                    $is_automatic_reply_2 = '';
+                }
+                ?>
+                <label class="radio-inline">
+                    <input id="automatic_reply_yes" name="automatic_reply" type="radio" value="1" {{$is_automatic_reply_1}}>
+                    {{__('Yes')}} </label>
+                <label class="radio-inline">
+                    <input id="automatic_reply_no" name="automatic_reply" type="radio" value="0" {{$is_automatic_reply_2}}>
+                    {{__('No')}} </label>
+            </div>
+            {!! APFrmErrHelp::showErrors($errors, 'automatic_reply') !!} </div>
     </div>
     <div class="col-md-12">
         <div class="formrow">
