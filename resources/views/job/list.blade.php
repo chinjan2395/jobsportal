@@ -184,22 +184,6 @@
 
 				
 
-				<div class="col-lg-3 col-sm-6 pull-right">
-
-                    <!-- Sponsord By -->
-
-                    <div class="sidebar">
-
-                        <h4 class="widget-title">{{__('Sponsord By')}}</h4>
-
-                        <div class="gad">{!! $siteSetting->listing_page_vertical_ad !!}</div>
-
-                    </div>
-
-                </div>
-
-				
-
             </div>
 
         </form>
