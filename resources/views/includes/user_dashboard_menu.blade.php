@@ -38,8 +38,5 @@
         </li>
     </ul>
 		</div>
-    <div class="row">
-        <div class="col-md-12">{!! $siteSetting->dashboard_page_ad !!}</div>
-    </div>
 		
 </div>
