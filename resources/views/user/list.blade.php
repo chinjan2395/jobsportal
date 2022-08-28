@@ -110,16 +110,7 @@
                             </div>
                         </div>
                     </div>
-                    <!-- Pagination end --> 
-                    <div class=""><br />{!! $siteSetting->listing_page_horizontal_ad !!}</div>
 
-                </div>
-				<div class="col-lg-3">
-                    <!-- Sponsord By -->
-                    <div class="sidebar">
-                        <h4 class="widget-title">{{__('Sponsord By')}}</h4>
-                        <div class="gad">{!! $siteSetting->listing_page_vertical_ad !!}</div>
-                    </div>
                 </div>
             </div>
         </form>
