@@ -76,6 +76,26 @@
         </div>
         {!! APFrmErrHelp::showErrors($errors, 'is_freelance') !!}
     </div>
+    <div class="form-group {!! APFrmErrHelp::hasError($errors, 'automatic_reply') !!}">
+        {!! Form::label('automatic_reply', 'Automatic reply to candidate?', ['class' => 'bold']) !!}
+        <div class="radio-list">
+            <?php
+            $automatic_reply_1 = '';
+            $automatic_reply_2 = 'checked="checked"';
+            if (old('automatic_reply', ((isset($job)) ? $job->automatic_reply : 0)) == 1) {
+                $automatic_reply_1 = 'checked="checked"';
+                $automatic_reply_2 = '';
+            }
+            ?>
+            <label class="radio-inline">
+                <input id="automatic_reply_yes" name="automatic_reply" type="radio" value="1" {{$automatic_reply_1}}>
+                Yes </label>
+            <label class="radio-inline">
+                <input id="automatic_reply_no" name="automatic_reply" type="radio" value="0" {{$automatic_reply_2}}>
+                No </label>
+        </div>
+        {!! APFrmErrHelp::showErrors($errors, 'automatic_reply') !!}
+    </div>
     <div class="form-group {!! APFrmErrHelp::hasError($errors, 'career_level_id') !!}" id="career_level_id_div">
         {!! Form::label('career_level_id', 'Career level', ['class' => 'bold']) !!}                    
         {!! Form::select('career_level_id', ['' => 'Select Career level']+$careerLevels, null, array('class'=>'form-control', 'id'=>'career_level_id')) !!}

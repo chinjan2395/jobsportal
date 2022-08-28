@@ -6,11 +6,9 @@
             $rating_id = (isset($profileRating) ? $profileRating->rating_id : null);
             ?>
             {!! Form::select('rating_id', [''=>'Select rating']+$ratings, $rating_id, array('class'=>'form-control', 'id'=>'rating_id')) !!} <span class="help-block rating_id-error"></span> </div>
-        <div class="form-group" id="div_rating_level_id">
-            <label for="rating_level_id" class="bold">Rating Level</label>
-            <?php
-            $rating_level_id = (isset($profileRating) ? $profileRating->rating_level_id : null);
-            ?>
-            {!! Form::select('rating_level_id', [''=>'Select Rating Level']+$ratingLevels, $rating_level_id, array('class'=>'form-control', 'id'=>'rating_level_id')) !!} <span class="help-block rating_level_id-error"></span> </div>
+
+        <div class="formrow" id="div_reason">
+            <input class="form-control" id="reason" placeholder="{{__('Reason')}}" name="reason" type="text" value="{{(isset($profileRating)? $profileRating->reason:'')}}">
+            <span class="help-block title-error"></span> </div>
     </div>
 </div>

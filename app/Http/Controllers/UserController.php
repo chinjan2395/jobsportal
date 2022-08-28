@@ -9,7 +9,6 @@ use File;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\UploadedFile;
 use ImgUploader;
-use Carbon\Carbon;
 use Redirect;
 use Newsletter;
 use App\User;
@@ -17,21 +16,8 @@ use App\Subscription;
 use App\ApplicantMessage;
 use App\Company;
 use App\FavouriteCompany;
-use App\Gender;
-use App\MaritalStatus;
-use App\Country;
-use App\State;
-use App\City;
-use App\JobExperience;
-use App\JobApply;
-use App\CareerLevel;
-use App\Industry;
 use App\Alert;
-use App\FunctionalArea;
-use App\Http\Requests;
 use Illuminate\Http\Request;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use App\Http\Controllers\Controller;
 use App\Traits\CommonUserFunctions;
 use App\Traits\ProfileSummaryTrait;
 use App\Traits\ProfileCvsTrait;
@@ -73,12 +59,14 @@ class UserController extends Controller
 
         $user = User::findOrFail($id);
         $profileCv = $user->getDefaultCv();
+        $ratings = DataArrayHelper::ratingsArray();
 
         return view('user.applicant_profile')
-                        ->with('user', $user)
-                        ->with('profileCv', $profileCv)
-                        ->with('page_title', $user->getName())
-                        ->with('form_title', 'Contact ' . $user->getName());
+            ->with('user', $user)
+            ->with('profileCv', $profileCv)
+            ->with('page_title', $user->getName())
+            ->with('ratings', $ratings)
+            ->with('form_title', 'Contact ' . $user->getName());
     }
 
     public function myProfile()
@@ -95,16 +83,16 @@ class UserController extends Controller
         $upload_max_filesize = UploadedFile::getMaxFilesize() / (1048576);
         $user = User::findOrFail(Auth::user()->id);
         return view('user.edit_profile')
-                        ->with('genders', $genders)
-                        ->with('maritalStatuses', $maritalStatuses)
-                        ->with('nationalities', $nationalities)
-                        ->with('countries', $countries)
-                        ->with('jobExperiences', $jobExperiences)
-                        ->with('careerLevels', $careerLevels)
-                        ->with('industries', $industries)
-                        ->with('functionalAreas', $functionalAreas)
-                        ->with('user', $user)
-                        ->with('upload_max_filesize', $upload_max_filesize);
+            ->with('genders', $genders)
+            ->with('maritalStatuses', $maritalStatuses)
+            ->with('nationalities', $nationalities)
+            ->with('countries', $countries)
+            ->with('jobExperiences', $jobExperiences)
+            ->with('careerLevels', $careerLevels)
+            ->with('industries', $industries)
+            ->with('functionalAreas', $functionalAreas)
+            ->with('user', $user)
+            ->with('upload_max_filesize', $upload_max_filesize);
     }
 
     public function updateMyProfile(UserFrontFormRequest $request)
@@ -117,16 +105,15 @@ class UserController extends Controller
             $fileName = ImgUploader::UploadImage('user_images', $image, $request->input('name'), 300, 300, false);
             $user->image = $fileName;
         }
-		
-		if ($request->hasFile('cover_image')) {
-			$is_deleted = $this->deleteUserCoverImage($user->id);
+
+        if ($request->hasFile('cover_image')) {
+            $is_deleted = $this->deleteUserCoverImage($user->id);
             $cover_image = $request->file('cover_image');
             $fileName_cover_image = ImgUploader::UploadImage('user_images', $cover_image, $request->input('name'), 1140, 250, false);
             $user->cover_image = $fileName_cover_image;
         }
-		
-		
-		
+
+
         /*         * ************************************** */
         $user->first_name = $request->input('first_name');
         $user->middle_name = $request->input('middle_name');
@@ -158,31 +145,28 @@ class UserController extends Controller
         $user->salary_currency = $request->input('salary_currency');
         $user->video_link = $request->video_link;
         $user->street_address = $request->input('street_address');
-		$user->is_subscribed = $request->input('is_subscribed', 0);
-		
+        $user->is_subscribed = $request->input('is_subscribed', 0);
+
         $user->update();
 
         $this->updateUserFullTextSearch($user);
-		/*************************/
-		Subscription::where('email', 'like', $user->email)->delete();
-		if((bool)$user->is_subscribed)
-		{			
-			$subscription = new Subscription();
-			$subscription->email = $user->email;
-			$subscription->name = $user->name;
-			$subscription->save();
-			
-			/*************************/
-			Newsletter::subscribeOrUpdate($subscription->email, ['FNAME'=>$subscription->name]);
-			/*************************/
-		}
-		else
-		{
-			/*************************/
-			Newsletter::unsubscribe($user->email);
-			/*************************/
-		}
-		
+        /*************************/
+        Subscription::where('email', 'like', $user->email)->delete();
+        if ((bool)$user->is_subscribed) {
+            $subscription = new Subscription();
+            $subscription->email = $user->email;
+            $subscription->name = $user->name;
+            $subscription->save();
+
+            /*************************/
+            Newsletter::subscribeOrUpdate($subscription->email, ['FNAME' => $subscription->name]);
+            /*************************/
+        } else {
+            /*************************/
+            Newsletter::unsubscribe($user->email);
+            /*************************/
+        }
+
         flash(__('You have updated your profile successfully'))->success();
         return \Redirect::route('my.profile');
     }
@@ -212,21 +196,21 @@ class UserController extends Controller
         $companies = Company::whereIn('slug', $companiesSlugArray)->get();
 
         return view('user.following_companies')
-                        ->with('user', $user)
-                        ->with('companies', $companies);
+            ->with('user', $user)
+            ->with('companies', $companies);
     }
 
     public function myMessages()
     {
         $user = User::findOrFail(Auth::user()->id);
         $messages = ApplicantMessage::where('user_id', '=', $user->id)
-                ->orderBy('is_read', 'asc')
-                ->orderBy('created_at', 'desc')
-                ->get();
+            ->orderBy('is_read', 'asc')
+            ->orderBy('created_at', 'desc')
+            ->get();
 
         return view('user.applicant_messages')
-                        ->with('user', $user)
-                        ->with('messages', $messages);
+            ->with('user', $user)
+            ->with('messages', $messages);
     }
 
     public function applicantMessageDetail($message_id)
@@ -236,8 +220,8 @@ class UserController extends Controller
         $message->update(['is_read' => 1]);
 
         return view('user.applicant_message_detail')
-                        ->with('user', $user)
-                        ->with('message', $message);
+            ->with('user', $user)
+            ->with('message', $message);
     }
 
     public function myAlerts()
@@ -249,6 +233,7 @@ class UserController extends Controller
         return view('user.applicant_alerts')
             ->with('alerts', $alerts);
     }
+
     public function delete_alert($id)
     {
         $alert = Alert::findOrFail($id);

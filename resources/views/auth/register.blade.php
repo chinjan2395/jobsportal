@@ -38,7 +38,7 @@
 
                             <li class="nav-item"><a class="nav-link {{($c_or_e == 'candidate')? 'active':''}}" data-toggle="tab" href="#candidate" aria-expanded="true">{{__('Candidate')}}</a></li>
 
-                            <li class="nav-item"><a class="nav-link {{($c_or_e == 'employer')? 'active':''}}" data-toggle="tab" href="#employer" aria-expanded="false">{{__('Employer')}}</a></li>
+{{--                            <li class="nav-item"><a class="nav-link {{($c_or_e == 'employer')? 'active':''}}" data-toggle="tab" href="#employer" aria-expanded="false">{{__('Employer')}}</a></li>--}}
 
                         </ul>
 
@@ -127,12 +127,12 @@
 
                                     @if ($errors->has('terms_of_use')) <span class="help-block"> <strong>{{ $errors->first('terms_of_use') }}</strong> </span> @endif </div>
 
-                             <div
+                             {{--<div
                                     class="form-group col-12 col-sm-12 col-md-10 text-center mx-auto mobile-padding-no {{ $errors->has('g-recaptcha-response') ? ' has-error' : '' }}">
                                     {!! app('captcha')->display() !!}
                                     @if ($errors->has('g-recaptcha-response')) <span class="help-block">
                                         <strong>{{ $errors->first('g-recaptcha-response') }}</strong> </span> @endif
-                                </div>
+                                </div>--}}
 
                                 <input type="submit" class="btn" value="{{__('Register')}}">
 
@@ -206,12 +206,12 @@
 
                                     @if ($errors->has('terms_of_use')) <span class="help-block"> <strong>{{ $errors->first('terms_of_use') }}</strong> </span> @endif </div>
 
-                            <div
+                            {{--<div
                                     class="form-group col-12 col-sm-12 col-md-10 text-center mx-auto mobile-padding-no {{ $errors->has('g-recaptcha-response') ? ' has-error' : '' }}">
                                     {!! app('captcha')->display() !!}
                                     @if ($errors->has('g-recaptcha-response')) <span class="help-block">
                                         <strong>{{ $errors->first('g-recaptcha-response') }}</strong> </span> @endif
-                                </div>
+                                </div>--}}
 
                                 <input type="submit" class="btn" value="{{__('Register')}}">
 
@@ -241,4 +241,4 @@
 
 @include('includes.footer')
 
-@endsection 
+@endsection

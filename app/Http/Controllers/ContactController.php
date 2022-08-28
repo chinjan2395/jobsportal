@@ -2,21 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use Mail;
+
+use App\FeedbackAndEnquiry;
+use App\Mail\EnquiryJob;
+use App\Mail\FeedbackJob;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use View;
 use DB;
 use Auth;
 use Input;
 use Carbon\Carbon;
-use Redirect;
+use Illuminate\Support\Facades\Redirect;
 use App\Seo;
 use App\Job;
 use App\Company;
 use App\ContactMessage;
-use App\Http\Requests;
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Http\Request;
 use App\ReportAbuseMessage;
 use App\ReportAbuseCompanyMessage;
 use App\SendToFriendMessage;
@@ -135,6 +136,64 @@ class ContactController extends Controller
     {
         $seo = SEO::where('seo.page_title', 'like', 'report_abuse')->first();
         return view('contact.report_abuse_company_page_thanks')->with('seo', $seo);
+    }
+
+    /*     * ******************************************************** */
+
+    public function feedbackOnJob($slug)
+    {
+        $job = Job::where('slug', $slug)->first();
+        return view('contact.feedback_on_job')->with('job', $job)->with('slug', $slug);
+    }
+
+    public function feedbackOnJobPost(Request $request)
+    {
+        $data['your_name'] = $request->input('your_name');
+        $data['your_email'] = $request->input('your_email');
+        $data['company_url'] = $request->input('company_url');
+        FeedbackAndEnquiry::create([
+            'user_id' => \Illuminate\Support\Facades\Auth::id(),
+            'actionable_type' => Company::class,
+            'actionable_id' => $request->input('job_id'),
+            'action' => 'feedback',
+            'content' => $request->input('content'),
+        ]);
+        Mail::send(new FeedbackJob($data));
+        return Redirect::route('feedback.job.thanks');
+    }
+
+    public function feedbackOnJobThanks()
+    {
+        return view('contact.feedback_on_job_page_thanks');
+    }
+
+    /*     * ******************************************************** */
+
+    public function enquiryOnJob($slug)
+    {
+        $job = Job::where('slug', $slug)->first();
+        return view('contact.enquiry_on_job')->with('job', $job)->with('slug', $slug);
+    }
+
+    public function enquiryOnJobPost(Request $request)
+    {
+        $data['your_name'] = $request->input('your_name');
+        $data['your_email'] = $request->input('your_email');
+        $data['company_url'] = $request->input('company_url');
+        FeedbackAndEnquiry::create([
+            'user_id' => \Illuminate\Support\Facades\Auth::id(),
+            'actionable_type' => Company::class,
+            'actionable_id' => $request->input('job_id'),
+            'action' => 'enquiry',
+            'content' => $request->input('content'),
+        ]);
+        Mail::send(new EnquiryJob($data));
+        return Redirect::route('enquiry.job.thanks');
+    }
+
+    public function enquiryOnJobThanks()
+    {
+        return view('contact.enquiry_on_job_page_thanks');
     }
 
 }

@@ -20,12 +20,7 @@
         {!! Form::label('cms_page_ad', 'CMS Page Below Content Ad', ['class' => 'bold']) !!}                    
         {!! Form::textarea('cms_page_ad', null, array('class'=>'form-control', 'id'=>'cms_page_ad', 'placeholder'=>'CMS Page Below Content Ad')) !!}
         {!! APFrmErrHelp::showErrors($errors, 'cms_page_ad') !!}                                       
-    </div>    
-    <div class="form-group {!! APFrmErrHelp::hasError($errors, 'listing_page_vertical_ad') !!}">
-        {!! Form::label('listing_page_vertical_ad', 'Listing Page Sidebar Verticle Ad', ['class' => 'bold']) !!}                    
-        {!! Form::textarea('listing_page_vertical_ad', null, array('class'=>'form-control', 'id'=>'listing_page_vertical_ad', 'placeholder'=>'Listing Page Sidebar Verticle Ad')) !!}
-        {!! APFrmErrHelp::showErrors($errors, 'listing_page_vertical_ad') !!}                                       
-    </div>    
+    </div>
     <div class="form-group {!! APFrmErrHelp::hasError($errors, 'listing_page_horizontal_ad') !!}">
         {!! Form::label('listing_page_horizontal_ad', 'Listing Page Below Listings Horizantal Ad', ['class' => 'bold']) !!}                    
         {!! Form::textarea('listing_page_horizontal_ad', null, array('class'=>'form-control', 'id'=>'listing_page_horizontal_ad', 'placeholder'=>'Listing Page Below Listings Horizantal Ad')) !!}

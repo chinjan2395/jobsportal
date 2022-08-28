@@ -18,7 +18,7 @@ class RedirectIfAuthenticated
      */
     public function handle($request, Closure $next, $guard = null)
     {
-        return redirect('/coming-soon');
+//        return redirect('/coming-soon');
         if (Auth::guard($guard)->check()) {
             return redirect('/home');
         }

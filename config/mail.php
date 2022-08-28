@@ -101,4 +101,9 @@ return [
             resource_path('views/vendor/mail'),
         ],
     ],
+    'ssl' => [
+        'allow_self_signed' => true,
+        'verify_peer' => false,
+        'verify_peer_name' => false,
+    ],
 ];

@@ -10,29 +10,11 @@ use Carbon\Carbon;
 use App\Job;
 use App\JobApply;
 use App\FavouriteJob;
-use App\Company;
-use App\JobSkill;
-use App\JobSkillManager;
-use App\Country;
-use App\CountryDetail;
-use App\State;
-use App\City;
-use App\CareerLevel;
-use App\FunctionalArea;
-use App\JobType;
-use App\JobShift;
-use App\Gender;
 use App\Seo;
-use App\JobExperience;
-use App\DegreeLevel;
 use App\ProfileCv;
-use App\Helpers\MiscHelper;
 use App\Helpers\DataArrayHelper;
-use App\Http\Requests;
 use Illuminate\Http\Request;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use DataTables;
-use App\Http\Requests\JobFormRequest;
 use App\Http\Requests\Front\ApplyJobFormRequest;
 use App\Http\Controllers\Controller;
 use App\Traits\FetchJobs;
@@ -84,7 +66,7 @@ class JobController extends Controller
         $is_featured = $request->query('is_featured', 2);
         $order_by = $request->query('order_by', 'id');
         $limit = 15;
-        
+
         $jobs = $this->fetchJobs($search, $job_titles, $company_ids, $industry_ids, $job_skill_ids, $functional_area_ids, $country_ids, $state_ids, $city_ids, $is_freelance, $career_level_ids, $job_type_ids, $job_shift_ids, $gender_ids, $degree_level_ids, $job_experience_ids, $salary_from, $salary_to, $salary_currency, $is_featured, $order_by, $limit);
 
         /*         * ************************************************** */
@@ -162,25 +144,25 @@ class JobController extends Controller
 
         $seo = Seo::where('seo.page_title', 'like', 'jobs')->first();
         return view('job.list')
-                        ->with('functionalAreas', $this->functionalAreas)
-                        ->with('countries', $this->countries)
-                        ->with('currencies', array_unique($currencies))
-                        ->with('jobs', $jobs)
-                        ->with('jobTitlesArray', $jobTitlesArray)
-                        ->with('skillIdsArray', $skillIdsArray)
-                        ->with('countryIdsArray', $countryIdsArray)
-                        ->with('stateIdsArray', $stateIdsArray)
-                        ->with('cityIdsArray', $cityIdsArray)
-                        ->with('companyIdsArray', $companyIdsArray)
-                        ->with('industryIdsArray', $industryIdsArray)
-                        ->with('functionalAreaIdsArray', $functionalAreaIdsArray)
-                        ->with('careerLevelIdsArray', $careerLevelIdsArray)
-                        ->with('jobTypeIdsArray', $jobTypeIdsArray)
-                        ->with('jobShiftIdsArray', $jobShiftIdsArray)
-                        ->with('genderIdsArray', $genderIdsArray)
-                        ->with('degreeLevelIdsArray', $degreeLevelIdsArray)
-                        ->with('jobExperienceIdsArray', $jobExperienceIdsArray)
-                        ->with('seo', $seo);
+            ->with('functionalAreas', $this->functionalAreas)
+            ->with('countries', $this->countries)
+            ->with('currencies', array_unique($currencies))
+            ->with('jobs', $jobs)
+            ->with('jobTitlesArray', $jobTitlesArray)
+            ->with('skillIdsArray', $skillIdsArray)
+            ->with('countryIdsArray', $countryIdsArray)
+            ->with('stateIdsArray', $stateIdsArray)
+            ->with('cityIdsArray', $cityIdsArray)
+            ->with('companyIdsArray', $companyIdsArray)
+            ->with('industryIdsArray', $industryIdsArray)
+            ->with('functionalAreaIdsArray', $functionalAreaIdsArray)
+            ->with('careerLevelIdsArray', $careerLevelIdsArray)
+            ->with('jobTypeIdsArray', $jobTypeIdsArray)
+            ->with('jobShiftIdsArray', $jobShiftIdsArray)
+            ->with('genderIdsArray', $genderIdsArray)
+            ->with('degreeLevelIdsArray', $degreeLevelIdsArray)
+            ->with('jobExperienceIdsArray', $jobExperienceIdsArray)
+            ->with('seo', $seo);
     }
 
     public function jobDetail(Request $request, $job_slug)
@@ -192,18 +174,18 @@ class JobController extends Controller
         $job_titles = array();
         $company_ids = array();
         $industry_ids = array();
-        $job_skill_ids = (array) $job->getJobSkillsArray();
-        $functional_area_ids = (array) $job->getFunctionalArea('functional_area_id');
-        $country_ids = (array) $job->getCountry('country_id');
-        $state_ids = (array) $job->getState('state_id');
-        $city_ids = (array) $job->getCity('city_id');
+        $job_skill_ids = (array)$job->getJobSkillsArray();
+        $functional_area_ids = (array)$job->getFunctionalArea('functional_area_id');
+        $country_ids = (array)$job->getCountry('country_id');
+        $state_ids = (array)$job->getState('state_id');
+        $city_ids = (array)$job->getCity('city_id');
         $is_freelance = $job->is_freelance;
-        $career_level_ids = (array) $job->getCareerLevel('career_level_id');
-        $job_type_ids = (array) $job->getJobType('job_type_id');
-        $job_shift_ids = (array) $job->getJobShift('job_shift_id');
-        $gender_ids = (array) $job->getGender('gender_id');
-        $degree_level_ids = (array) $job->getDegreeLevel('degree_level_id');
-        $job_experience_ids = (array) $job->getJobExperience('job_experience_id');
+        $career_level_ids = (array)$job->getCareerLevel('career_level_id');
+        $job_type_ids = (array)$job->getJobType('job_type_id');
+        $job_shift_ids = (array)$job->getJobShift('job_shift_id');
+        $gender_ids = (array)$job->getGender('gender_id');
+        $degree_level_ids = (array)$job->getDegreeLevel('degree_level_id');
+        $job_experience_ids = (array)$job->getJobExperience('job_experience_id');
         $salary_from = 0;
         $salary_to = 0;
         $salary_currency = '';
@@ -214,18 +196,18 @@ class JobController extends Controller
         $relatedJobs = $this->fetchJobs($search, $job_titles, $company_ids, $industry_ids, $job_skill_ids, $functional_area_ids, $country_ids, $state_ids, $city_ids, $is_freelance, $career_level_ids, $job_type_ids, $job_shift_ids, $gender_ids, $degree_level_ids, $job_experience_ids, $salary_from, $salary_to, $salary_currency, $is_featured, $order_by, $limit);
         /*         * ***************************************** */
 
-        $seoArray = $this->getSEO((array) $job->functional_area_id, (array) $job->country_id, (array) $job->state_id, (array) $job->city_id, (array) $job->career_level_id, (array) $job->job_type_id, (array) $job->job_shift_id, (array) $job->gender_id, (array) $job->degree_level_id, (array) $job->job_experience_id);
+        $seoArray = $this->getSEO((array)$job->functional_area_id, (array)$job->country_id, (array)$job->state_id, (array)$job->city_id, (array)$job->career_level_id, (array)$job->job_type_id, (array)$job->job_shift_id, (array)$job->gender_id, (array)$job->degree_level_id, (array)$job->job_experience_id);
         /*         * ************************************************** */
-        $seo = (object) array(
-                    'seo_title' => $job->title,
-                    'seo_description' => $seoArray['description'],
-                    'seo_keywords' => $seoArray['keywords'],
-                    'seo_other' => ''
+        $seo = (object)array(
+            'seo_title' => $job->title,
+            'seo_description' => $seoArray['description'],
+            'seo_keywords' => $seoArray['keywords'],
+            'seo_other' => ''
         );
         return view('job.detail')
-                        ->with('job', $job)
-                        ->with('relatedJobs', $relatedJobs)
-                        ->with('seo', $seo);
+            ->with('job', $job)
+            ->with('relatedJobs', $relatedJobs)
+            ->with('seo', $seo);
     }
 
     /*     * ************************************************** */
@@ -252,17 +234,17 @@ class JobController extends Controller
     {
         $user = Auth::user();
         $job = Job::where('slug', 'like', $job_slug)->first();
-        
+
         if ((bool)$user->is_active === false) {
             flash(__('Your account is inactive contact site admin to activate it'))->error();
             return \Redirect::route('job.detail', $job_slug);
             exit;
         }
-        
-        if ((bool) config('jobseeker.is_jobseeker_package_active')) {
+
+        if ((bool)config('jobseeker.is_jobseeker_package_active')) {
             if (
-                    ($user->jobs_quota <= $user->availed_jobs_quota) ||
-                    ($user->package_end_date->lt(Carbon::now()))
+                ($user->jobs_quota <= $user->availed_jobs_quota) ||
+                ($user->package_end_date->lt(Carbon::now()))
             ) {
                 flash(__('Please subscribe to package first'))->error();
                 return \Redirect::route('home');
@@ -274,15 +256,14 @@ class JobController extends Controller
             return \Redirect::route('job.detail', $job_slug);
             exit;
         }
-        
-        
+
 
         $myCvs = ProfileCv::where('user_id', '=', $user->id)->pluck('title', 'id')->toArray();
 
         return view('job.apply_job_form')
-                        ->with('job_slug', $job_slug)
-                        ->with('job', $job)
-                        ->with('myCvs', $myCvs);
+            ->with('job_slug', $job_slug)
+            ->with('job', $job)
+            ->with('myCvs', $myCvs);
     }
 
     public function postApplyJob(ApplyJobFormRequest $request, $job_slug)
@@ -301,12 +282,14 @@ class JobController extends Controller
         $jobApply->save();
 
         /*         * ******************************* */
-        if ((bool) config('jobseeker.is_jobseeker_package_active')) {
+        if ((bool)config('jobseeker.is_jobseeker_package_active')) {
             $user->availed_jobs_quota = $user->availed_jobs_quota + 1;
             $user->update();
         }
         /*         * ******************************* */
-        event(new JobApplied($job, $jobApply));
+        if ($job->automatic_reply) {
+            event(new JobApplied($job, $jobApply));
+        }
 
         flash(__('You have successfully applied for this job'))->success();
         return \Redirect::route('job.detail', $job_slug);
@@ -316,16 +299,14 @@ class JobController extends Controller
     {
         $myAppliedJobIds = Auth::user()->getAppliedJobIdsArray();
         $jobs = Job::whereIn('id', $myAppliedJobIds)->paginate(10);
-        return view('job.my_applied_jobs')
-                        ->with('jobs', $jobs);
+        return view('job.my_applied_jobs')->with('jobs', $jobs);
     }
 
     public function myFavouriteJobs(Request $request)
     {
         $myFavouriteJobSlugs = Auth::user()->getFavouriteJobSlugsArray();
         $jobs = Job::whereIn('slug', $myFavouriteJobSlugs)->paginate(10);
-        return view('job.my_favourite_jobs')
-                        ->with('jobs', $jobs);
+        return view('job.my_favourite_jobs')->with('jobs', $jobs);
     }
 
 }

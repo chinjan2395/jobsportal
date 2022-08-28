@@ -52,43 +52,61 @@ if(null!==($package)){
 		</div>
 		
 		<!-- Buttons -->
-            <div class="userlinkstp">  
-                          
+            <div class="userlinkstp">
+
                 <?php if($true == TRUE){ ?>
 
-                @if(isset($job) && isset($company))               
+                @if(isset($job) && isset($company))
 
-                @if(Auth::guard('company')->check() && Auth::guard('company')->user()->isHiredApplicant($user->id, $job->id, $company->id))
-                <a href="{{route('remove.hire.from.favourite.applicant', [$job_application->id, $user->id, $job->id, $company->id])}}" class="btn"><i class="fa fa-floppy-o" aria-hidden="true"></i> {{__('Remove From Hired List')}} </a>
-                @else
-                @if(Auth::guard('company')->check() && Auth::guard('company')->user()->isFavouriteApplicant($user->id, $job->id, $company->id))
+                    @if(Auth::guard('company')->check() && Auth::guard('company')->user()->isHiredApplicant($user->id, $job->id, $company->id))
+                        <a href="{{route('remove.hire.from.favourite.applicant', [$job_application->id, $user->id, $job->id, $company->id])}}"
+                           class="btn btn-sm"><i class="fa fa-floppy-o"
+                                          aria-hidden="true"></i> {{__('Remove From Hired List')}} </a>
+                    @else
+                        @if(Auth::guard('company')->check() && Auth::guard('company')->user()->isFavouriteApplicant($user->id, $job->id, $company->id))
 
-                <a href="{{route('remove.from.favourite.applicant', [$job_application->id, $user->id, $job->id, $company->id])}}" class="btn"><i class="fa fa-floppy-o" aria-hidden="true"></i> {{__('Shortlisted')}} </a>
+                            <a href="{{route('remove.from.favourite.applicant', [$job_application->id, $user->id, $job->id, $company->id])}}"
+                               class="btn btn-sm"><i class="fa fa-floppy-o" aria-hidden="true"></i> {{__('Shortlisted')}} </a>
 
-                @if(isset($is_applicant)) 
-                <a style="color:#fff" href="{{route('reject.applicant.profile', [$job_application->id])}}" class="btn btn-warning"><i class="fa fa-floppy-o" aria-hidden="true"></i> {{__('Reject')}}</a>    
-                @endif   
+                            @if(isset($is_applicant))
+                                <a style="color:#fff"
+                                   href="{{route('reject.applicant.profile', [$job_application->id])}}"
+                                   class="btn btn-warning"><i class="fa fa-floppy-o"
+                                                              aria-hidden="true"></i> {{__('Reject')}}</a>
+                            @endif
 
-                @else
+                        @else
 
-                <a href="{{route('add.to.favourite.applicant', [$job_application->id, $user->id, $job->id, $company->id])}}" class="btn"><i class="fa fa-floppy-o" aria-hidden="true"></i> {{__('Shortlist')}}</a>
+                            <a href="{{route('add.to.favourite.applicant', [$job_application->id, $user->id, $job->id, $company->id])}}"
+                               class="btn btn-sm"><i class="fa fa-floppy-o" aria-hidden="true"></i> {{__('Shortlist')}}</a>
+
+                        @endif
+                            @if(Auth::guard('company')->check() && Auth::guard('company')->user()->isFavouriteApplicant($user->id, $job->id, $company->id))
+
+                                <a href="{{route('hire.from.favourite.applicant', [$job_application->id, $user->id, $job->id, $company->id])}}"
+                                   class="btn btn-sm"><i class="fa fa-floppy-o"
+                                                  aria-hidden="true"></i> {{__('Hire This Candidate')}}
+                                </a>
+                            @endif
+                    @endif
+
 
                 @endif
 
 
-                <a href="{{route('hire.from.favourite.applicant', [$job_application->id, $user->id, $job->id, $company->id])}}" class="btn"><i class="fa fa-floppy-o" aria-hidden="true"></i> {{__('Hire This Candidate')}} </a>
-                @endif
 
-                
-                @endif
+                @if(null !== $profileCv)<a href="{{asset('cvs/'.$profileCv->cv_file)}}" class="btn btn-sm"><i
+                            class="fa fa-download" aria-hidden="true"></i> {{__('Download CV')}}</a>@endif
 
+                <a href="javascript:;" onclick="send_message()" class="btn btn-sm"><i class="fa fa-envelope"
+                                                                               aria-hidden="true"></i> {{__('Send Message')}}
+                </a>
 
+                <a href="javascript:;" onclick="rate_candidate()" class="btn btn-sm"><i class="fa fa-star"
+                                                                                 aria-hidden="true"></i> {{__('Rate Candidate')}}
+                </a>
 
-                @if(null !== $profileCv)<a href="{{asset('cvs/'.$profileCv->cv_file)}}" class="btn"><i class="fa fa-download" aria-hidden="true"></i> {{__('Download CV')}}</a>@endif
-
-                <a href="javascript:;" onclick="send_message()" class="btn"><i class="fa fa-envelope" aria-hidden="true"></i> {{__('Send Message')}}</a>
-				
-				<?php } ?>
+                <?php } ?>
                 @if(Auth::guard('company')->user())
                 
                  <?php if($true == FALSE){?>
@@ -136,6 +154,14 @@ if(null!==($package)){
                     <div class="contentbox">
                         <h3>{{__('Experience')}}</h3>
                         <div class="" id="experience_div"></div>            
+                    </div>
+                </div>
+
+                <!-- Experience start -->
+                <div class="job-header">
+                    <div class="contentbox">
+                        <h3>{{__('Ratings')}}</h3>
+                        <div class="" id="rating_div"></div>
                     </div>
                 </div>
 
@@ -270,6 +296,41 @@ if(null!==($package)){
 
     </div>
 </div>
+<div class="modal fade" id="rate_candidate" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <form action="" id="rate-candidate-form">
+                @csrf
+                <input type="hidden" name="seeker_id" id="seeker_id" value="{{$user->id}}">
+                <div class="modal-header">
+                    <h4 class="modal-title">Rate Candidate</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-body">
+                        <div class="form-group" id="div_rating_id">
+                            <?php
+                            $rating_id = null;
+                            ?>
+                            {!! Form::select('rating_id', [''=>'Select rating']+$ratings, $rating_id, array('class'=>'form-control', 'id'=>'rating_id')) !!} <span class="help-block rating_id-error"></span> </div>
+
+                        <div class="formrow" id="div_reason">
+                            <input class="form-control" id="reason" placeholder="{{__('Reason')}}" name="reason" type="text" value="">
+                            <span class="help-block title-error"></span> </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>
 @include('includes.footer')
 @endsection
 @push('styles')
@@ -319,6 +380,7 @@ if(null!==($package)){
     showExperience();
     showSkills();
     showLanguages();
+    showRatings();
     });
     function showProjects()
     {
@@ -353,6 +415,13 @@ if(null!==($package)){
     $.post("{{ route('show.applicant.profile.skills', $user->id) }}", {user_id: {{$user->id}}, _method: 'POST', _token: '{{ csrf_token() }}'})
             .done(function (response) {
             $('#skill_div').html(response);
+            });
+    }
+    function showRatings()
+    {
+        $.post("{{ route('show.applicant.profile.ratings', $user->id) }}", {user_id: {{$user->id}}, _method: 'POST', _token: '{{ csrf_token() }}'})
+            .done(function (response) {
+                $('#rating_div').html(response);
             });
     }
 
@@ -402,6 +471,66 @@ if(null!==($package)){
                     success: function(response) {
                         $("#send-form").trigger("reset");
                         $('#sendmessage').modal('hide');
+                        swal({
+                            title: "Success",
+                            text: response["msg"],
+                            icon: "success",
+                            button: "OK",
+                        });
+                    }
+                });
+                @endif
+            }
+        })
+    }
+
+    function rate_candidate() {
+        const el = document.createElement('div');
+        el.innerHTML = "Please <a class='btn' href='{{route('login')}}' onclick='set_session()'>log in</a> as a Employer and try again."
+        @if(null!==(Auth::guard('company')->user()))
+        $('#rate_candidate').modal('show');
+        @else
+        swal({
+            title: "You are not Loged in",
+            content: el,
+            icon: "error",
+            button: "OK",
+        });
+        @endif
+    }
+
+    if ($("#rate-candidate-form").length > 0) {
+        $("#rate-candidate-form").validate({
+            validateHiddenInputs: true,
+            ignore: "",
+
+            rules: {
+                rating_id: {
+                    required: true
+                },
+                reason: {
+                    maxlength: 5000
+                },
+            },
+            messages: {
+                rating_id: {
+                    required: "Rating is required",
+                }
+            },
+            submitHandler: function (form) {
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+                @if(null !== (Auth::guard('company')->user()))
+                $.ajax({
+                    url: "{{ route('store.front.profile.rating', [$user->id]) }}",
+                    type: "POST",
+                    data: $('#rate-candidate-form').serialize(),
+                    success: function (response) {
+                        $("#rate-candidate-form").trigger("reset");
+                        $('#rate_candidate').modal('hide');
                         swal({
                             title: "Success",
                             text: response["msg"],
