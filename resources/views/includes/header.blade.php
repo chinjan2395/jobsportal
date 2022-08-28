@@ -60,7 +60,7 @@
                             <li class="nav-item"><a href="{{route('login')}}" class="nav-link">{{__('Sign in')}}</a> </li>
 							<li class="nav-item"><a href="{{route('register')}}" class="nav-link register">{{__('Register')}}</a> </li>                            
                             @endif
-                            <li class="dropdown userbtn"><a href="{{url('/')}}"><img src="{{asset('/')}}images/lang.png" alt="" class="userimg" /></a>
+                            {{--<li class="dropdown userbtn"><a href="{{url('/')}}"><img src="{{asset('/')}}images/lang.png" alt="" class="userimg" /></a>
                                 <ul class="dropdown-menu">
                                     @foreach($siteLanguages as $siteLang)
                                     <li><a href="javascript:;" onclick="event.preventDefault(); document.getElementById('locale-form-{{$siteLang->iso_code}}').submit();" class="nav-link">{{$siteLang->native}}</a>
@@ -73,7 +73,7 @@
                                     </li>
                                     @endforeach
                                 </ul>
-                            </li>
+                            </li>--}}
                         </ul>
 
                         <!-- Nav collapes end --> 

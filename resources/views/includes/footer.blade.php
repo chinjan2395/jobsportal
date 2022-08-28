@@ -90,7 +90,7 @@
                 <div class="bttxt">{{__('Copyright')}} &copy; {{date('Y')}} {{ $siteSetting->site_name }}. {{__('All Rights Reserved')}}. {{__('Design by')}}: Us</div>
             </div>
             <div class="col-md-4">
-                <div class="paylogos"><img src="{{asset('/')}}images/payment-icons.png" alt="" /></div>	
+{{--                <div class="paylogos"><img src="{{asset('/')}}images/payment-icons.png" alt="" /></div>--}}
             </div>
         </div>
 
