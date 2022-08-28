@@ -45,7 +45,7 @@ class IndexController extends Controller
      */
     public function index()
     {
-        return view('coming-soon');
+//        return view('coming-soon');
         $topCompanyIds = $this->getCompanyIdsAndNumJobs(16);
         $topFunctionalAreaIds = $this->getFunctionalAreaIdsAndNumJobs(32);
         $topIndustryIds = $this->getIndustryIdsFromCompanies(32);
