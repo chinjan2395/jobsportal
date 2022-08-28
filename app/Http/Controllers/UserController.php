@@ -73,11 +73,13 @@ class UserController extends Controller
 
         $user = User::findOrFail($id);
         $profileCv = $user->getDefaultCv();
+        $ratings = DataArrayHelper::ratingsArray();
 
         return view('user.applicant_profile')
                         ->with('user', $user)
                         ->with('profileCv', $profileCv)
                         ->with('page_title', $user->getName())
+                        ->with('ratings', $ratings)
                         ->with('form_title', 'Contact ' . $user->getName());
     }
 
