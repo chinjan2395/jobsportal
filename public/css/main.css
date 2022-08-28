@@ -2229,8 +2229,9 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#000000",endCo
 	margin-left: 10px;
 	color: #17d27c;
 	font-weight: 600;
-	padding: 10px 30px;
-	font-size: 14px;border-radius: 40px;
+	padding: 10px 24px;
+	font-size: 12px;
+	border-radius: 40px;
 	border: 1px solid #17d27c;
 	position: relative;
 	z-index: 2
