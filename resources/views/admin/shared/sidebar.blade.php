@@ -34,9 +34,9 @@
         @include('admin/shared/side_bars/site_user')
         {{--@include('admin/shared/side_bars/cms')
         @include('admin/shared/side_bars/blogs')
-        @include('admin/shared/side_bars/seo')
+        @include('admin/shared/side_bars/seo')--}}
         @include('admin/shared/side_bars/faq')
-        @include('admin/shared/side_bars/video')
+        {{--@include('admin/shared/side_bars/video')
         @include('admin/shared/side_bars/testimonial')
         @include('admin/shared/side_bars/slider')--}}
 
