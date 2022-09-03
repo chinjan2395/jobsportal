@@ -360,6 +360,11 @@ class Company extends Authenticatable
 
     }
 
+    public function events()
+    {
+        return $this->hasMany('App\CompanyEvent', 'company_id');
+    }
+
 
 
     public function getPackage($field = '')
