@@ -11,6 +11,9 @@
 
         <li class="{{ Request::url() == route('company.unloced-users') ? 'active' : '' }}"><a href="{{ route('company.unloced-users') }}"><i class="fa fa-user" aria-hidden="true"></i> {{__('Unlocked Users')}}</a></li>
 
+        <li class="{{ Request::url() == route('post.event') ? 'active' : '' }}"><a href="{{ route('post.event') }}"><i class="fa fa-user" aria-hidden="true"></i> {{__('Post Event')}}</a></li>
+        <li class="{{ Request::url() == route('posted.events') ? 'active' : '' }}"><a href="{{ route('posted.events') }}"><i class="fa fa-user" aria-hidden="true"></i> {{__('Company Events')}}</a></li>
+
         <li class="{{ Request::url() == route('company.messages') ? 'active' : '' }}"><a href="{{route('company.messages')}}"><i class="fa fa-envelope-o" aria-hidden="true"></i> {{__('Company Messages')}}</a></li>
         <li class="{{ Request::url() == route('company.followers') ? 'active' : '' }}"><a href="{{route('company.followers')}}"><i class="fa fa-users" aria-hidden="true"></i> {{__('Company Followers')}}</a></li>
         <li><a href="{{ route('company.logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i class="fa fa-sign-out" aria-hidden="true"></i> {{__('Logout')}}</a>

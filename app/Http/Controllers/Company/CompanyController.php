@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Company;
 
 use App\Job;
 use App\Mail\HireFromAppliedJobMailable;
+use App\Traits\CompanyEventTrait;
 use Illuminate\Support\Facades\Mail;
 use Hash;
 use File;
@@ -19,27 +20,17 @@ use App\User;
 use App\Company;
 use App\CompanyMessage;
 use App\ApplicantMessage;
-use App\Country;
-use App\CountryDetail;
 use App\JobApplyRejected;
-use App\State;
-use App\City;
 use App\Unlocked_users;
-use App\Industry;
-use App\FavouriteCompany;
 use App\Package;
 use App\FavouriteApplicant;
-use App\OwnershipType;
 use App\JobApply;
 use Carbon\Carbon;
-use App\Helpers\MiscHelper;
 use App\Helpers\DataArrayHelper;
-use App\Http\Requests;
 use App\Mail\CompanyContactMail;
 use App\Mail\ApplicantContactMail;
 use App\Mail\JobSeekerRejectedMailable;
 use Illuminate\Http\Request;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Http\Requests\Front\CompanyFrontFormRequest;
 use App\Http\Controllers\Controller;
 use App\Traits\CompanyTrait;
@@ -49,8 +40,9 @@ use Illuminate\Support\Str;
 class CompanyController extends Controller
 {
 
-    use CompanyTrait;
     use Cron;
+    use CompanyTrait;
+    use CompanyEventTrait;
 
     /**
      * Create a new controller instance.
@@ -173,7 +165,6 @@ class CompanyController extends Controller
         flash(__('Job seeker has been removed from favorites list'))->success();
         return \Redirect::route('applicant.profile', $application_id);
     }
-
 
     public function hireFromFavouriteApplicant(Request $request, $application_id, $user_id, $job_id, $company_id)
     {
@@ -467,7 +458,6 @@ class CompanyController extends Controller
             ->with('company', $company)
             ->with('message', $message);
     }
-
 
     public function resume_search_packages()
 

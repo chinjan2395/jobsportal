@@ -64,7 +64,7 @@ $company = $job->getCompany();
                             </li>
                             <li class="row">
                                 <div class="col-md-4 col-xs-5">{{__('Company')}}:</div>
-                                <div class="col-md-8 col-xs-7"><a href="{{route('company.detail', $company->id)}}">{{$company->name}}</a></div>
+                                <div class="col-md-8 col-xs-7"><a href="{{route('company.detail', $company->slug)}}">{{$company->name}}</a></div>
                             </li>
                             <li class="row">
                                 <div class="col-md-4 col-xs-5">{{__('Type')}}:</div>

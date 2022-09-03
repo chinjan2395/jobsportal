@@ -31,3 +31,11 @@ Route::get('append-messages', 'CompanyMessagesController@append_messages')->name
 Route::get('append-only-messages', 'CompanyMessagesController@appendonly_messages')->name('append-only-message');
 Route::post('company-submit-messages', 'CompanyMessagesController@submit_message')->name('company.submit-message');
 Route::get('company-message-detail/{id}', 'Company\CompanyController@companyMessageDetail')->name('company.message.detail');
+
+Route::get('event/{slug}', 'Company\CompanyController@eventDetail')->name('event.detail');
+Route::get('post-event', 'Company\CompanyController@createFrontCompanyEvent')->name('post.event');
+Route::get('events', 'Company\CompanyController@eventsBySearch')->name('posted.events');
+Route::post('store-front-event', 'Company\CompanyController@storeFrontCompanyEvent')->name('store.front.event');
+Route::get('edit-front-event/{id}', 'Company\CompanyController@editFrontCompanyEvent')->name('edit.front.event');
+Route::put('update-front-event/{id}', 'Company\CompanyController@updateFrontCompanyEvent')->name('update.front.event');
+Route::delete('delete-front-event', 'Company\CompanyController@deleteCompanyEvent')->name('delete.front.event');
