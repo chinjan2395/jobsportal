@@ -1,9 +1,7 @@
 <?php
 
 
-
 namespace App\Http\Controllers\Admin;
-
 
 
 use Hash;
@@ -59,11 +57,9 @@ use App\Traits\CompanyPackageTrait;
 use Illuminate\Support\Str;
 
 
-
 class CompanyController extends Controller
 
 {
-
 
 
     use CompanyTrait;
@@ -71,15 +67,10 @@ class CompanyController extends Controller
     use CompanyPackageTrait;
 
 
-
     /**
-
      * Create a new controller instance.
-
      *
-
      * @return void
-
      */
 
     public function __construct()
@@ -89,7 +80,6 @@ class CompanyController extends Controller
         //
 
     }
-
 
 
     public function indexCompanies()
@@ -103,8 +93,8 @@ class CompanyController extends Controller
     public function indexCompaniesHistory()
 
     {
-        $packages = Package::where('package_for','employer')->pluck('package_title','id')->toArray();
-        return view('admin.company.payment_history')->with('packages',$packages);
+        $packages = Package::where('package_for', 'employer')->pluck('package_title', 'id')->toArray();
+        return view('admin.company.payment_history')->with('packages', $packages);
 
     }
 
@@ -115,68 +105,57 @@ class CompanyController extends Controller
         $companies = Company::select('*');
 
         return Datatables::of($companies)
+            ->filter(function ($query) use ($request) {
 
-                        ->filter(function ($query) use ($request) {
+                if ($request->has('name') && !empty($request->name)) {
 
-                            if ($request->has('name') && !empty($request->name)) {
+                    $query->where('companies.name', 'like', "%{$request->get('name')}%");
 
-                                $query->where('companies.name', 'like', "%{$request->get('name')}%");
+                }
 
-                            }
+                if ($request->has('payment_method') && !empty($request->payment_method)) {
 
-                            if ($request->has('payment_method') && !empty($request->payment_method)) {
+                    $query->where('companies.payment_method', 'like', "%{$request->get('payment_method')}%");
 
-                                $query->where('companies.payment_method', 'like', "%{$request->get('payment_method')}%");
+                }
 
-                            }
+                if ($request->has('package') && !empty($request->package)) {
 
-                            if ($request->has('package') && !empty($request->package)) {
+                    $query->where('companies.package_id', $request->get('package'));
 
-                                $query->where('companies.package_id',$request->get('package'));
+                }
 
-                            }
-
-                            $query->where('package_start_date','!=','')->orderBy('package_start_date', 'DESC');
-
-                            
-                           
-
-                        })
-
-                        ->addColumn('payment_method', function ($companies) {
-
-                            return $companies->payment_method;
-
-                        })
-
-                        ->addColumn('package', function ($companies) {
-                            $package = Package::findOrFail($companies->package_id);
-                            return $package->package_title;
-
-                        })
-
-                        ->addColumn('package_start_date', function ($companies) {
-                            
-                            return date('d-m-Y',strtotime($companies->package_start_date));
-
-                        })
-
-                        ->addColumn('package_end_date', function ($companies) {
-                            
-                            return date('d-m-Y',strtotime($companies->package_end_date));
-
-                        })
+                $query->where('package_start_date', '!=', '')->orderBy('package_start_date', 'DESC');
 
 
-                        ->rawColumns(['package_start_date', 'package_end_date'])
+            })
+            ->addColumn('payment_method', function ($companies) {
 
-                        ->setRowId(function($companies) {
+                return $companies->payment_method;
 
-                            return 'companyDtRow' . $companies->id;
+            })
+            ->addColumn('package', function ($companies) {
+                $package = Package::findOrFail($companies->package_id);
+                return $package->package_title;
 
-                        })
+            })
+            ->addColumn('package_start_date', function ($companies) {
 
-                        ->make(true);
+                return date('d-m-Y', strtotime($companies->package_start_date));
+
+            })
+            ->addColumn('package_end_date', function ($companies) {
+
+                return date('d-m-Y', strtotime($companies->package_end_date));
+
+            })
+            ->rawColumns(['package_start_date', 'package_end_date'])
+            ->setRowId(function ($companies) {
+
+                return 'companyDtRow' . $companies->id;
+
+            })
+            ->make(true);
 
         //$query = $dataTable->getQuery()->get();
 
@@ -197,19 +176,13 @@ class CompanyController extends Controller
         $packages = Package::select('id', DB::raw("CONCAT(`package_title`, ', $', `package_price`, ', Days:', `package_num_days`, ', Listings:', `package_num_listings`) AS package_detail"))->where('package_for', 'like', 'employer')->pluck('package_detail', 'id')->toArray();
 
 
-
         return view('admin.company.add')
-
-                        ->with('countries', $countries)
-
-                        ->with('industries', $industries)
-
-                        ->with('ownershipTypes', $ownershipTypes)
-
-                        ->with('packages', $packages);
+            ->with('countries', $countries)
+            ->with('industries', $industries)
+            ->with('ownershipTypes', $ownershipTypes)
+            ->with('packages', $packages);
 
     }
-
 
 
     public function storeCompany(CompanyFormRequest $request)
@@ -319,7 +292,6 @@ class CompanyController extends Controller
     }
 
 
-
     public function editCompany($id)
 
     {
@@ -329,7 +301,6 @@ class CompanyController extends Controller
         $industries = DataArrayHelper::defaultIndustriesArray();
 
         $ownershipTypes = DataArrayHelper::defaultOwnershipTypesArray();
-
 
 
         $company = Company::findOrFail($id);
@@ -347,21 +318,14 @@ class CompanyController extends Controller
         }
 
 
-
         return view('admin.company.edit')
-
-                        ->with('company', $company)
-
-                        ->with('countries', $countries)
-
-                        ->with('industries', $industries)
-
-                        ->with('ownershipTypes', $ownershipTypes)
-
-                        ->with('packages', $packages);
+            ->with('company', $company)
+            ->with('countries', $countries)
+            ->with('industries', $industries)
+            ->with('ownershipTypes', $ownershipTypes)
+            ->with('packages', $packages);
 
     }
-
 
 
     public function updateCompany($id, CompanyFormRequest $request)
@@ -443,11 +407,9 @@ class CompanyController extends Controller
         $company->is_featured = $request->input('is_featured');
 
 
-
         $company->slug = Str::slug($company->name, '-') . '-' . $company->id;
 
         $company->update();
-
 
 
         /*         * ************************************ */
@@ -479,7 +441,6 @@ class CompanyController extends Controller
     }
 
 
-
     public function deleteCompany(Request $request)
 
     {
@@ -505,138 +466,133 @@ class CompanyController extends Controller
     }
 
 
-
     public function fetchCompaniesData(Request $request)
 
     {
 
         $companies = Company::select([
 
-                    'companies.id',
+            'companies.id',
 
-                    'companies.name',
+            'companies.name',
 
-                    'companies.email',
+            'companies.email',
 
-                    'companies.password',
+            'companies.password',
 
-                    'companies.ceo',
+            'companies.ceo',
 
-                    'companies.industry_id',
+            'companies.industry_id',
 
-                    'companies.ownership_type_id',
+            'companies.ownership_type_id',
 
-                    'companies.description',
+            'companies.description',
 
-                    'companies.location',
+            'companies.location',
 
-                    'companies.no_of_offices',
+            'companies.no_of_offices',
 
-                    'companies.website',
+            'companies.website',
 
-                    'companies.no_of_employees',
+            'companies.no_of_employees',
 
-                    'companies.established_in',
+            'companies.established_in',
 
-                    'companies.fax',
+            'companies.fax',
 
-                    'companies.phone',
+            'companies.phone',
 
-                    'companies.logo',
+            'companies.logo',
 
-                    'companies.country_id',
+            'companies.country_id',
 
-                    'companies.state_id',
+            'companies.state_id',
 
-                    'companies.city_id',
+            'companies.city_id',
 
-                    'companies.is_active',
+            'companies.is_active',
 
-                    'companies.is_featured',
+            'companies.is_featured',
 
         ]);
 
         return Datatables::of($companies)
+            ->filter(function ($query) use ($request) {
 
-                        ->filter(function ($query) use ($request) {
+                if ($request->has('name') && !empty($request->name)) {
 
-                            if ($request->has('name') && !empty($request->name)) {
+                    $query->where('companies.name', 'like', "%{$request->get('name')}%");
 
-                                $query->where('companies.name', 'like', "%{$request->get('name')}%");
+                }
 
-                            }
+                if ($request->has('email') && !empty($request->email)) {
 
-                            if ($request->has('email') && !empty($request->email)) {
+                    $query->where('companies.email', 'like', "%{$request->get('email')}%");
 
-                                $query->where('companies.email', 'like', "%{$request->get('email')}%");
+                }
 
-                            }
+                if ($request->has('is_active') && $request->is_active != -1) {
 
-                            if ($request->has('is_active') && $request->is_active != -1) {
+                    $query->where('companies.is_active', '=', "{$request->get('is_active')}");
 
-                                $query->where('companies.is_active', '=', "{$request->get('is_active')}");
+                }
 
-                            }
+                if ($request->has('is_featured') && $request->is_featured != -1) {
 
-                            if ($request->has('is_featured') && $request->is_featured != -1) {
+                    $query->where('companies.is_featured', '=', "{$request->get('is_featured')}");
 
-                                $query->where('companies.is_featured', '=', "{$request->get('is_featured')}");
+                }
 
-                            }
+            })
+            ->addColumn('is_active', function ($companies) {
 
-                        })
+                return ((bool)$companies->is_active) ? 'Yes' : 'No';
 
-                        ->addColumn('is_active', function ($companies) {
+            })
+            ->addColumn('is_featured', function ($companies) {
 
-                            return ((bool) $companies->is_active) ? 'Yes' : 'No';
+                return ((bool)$companies->is_featured) ? 'Yes' : 'No';
 
-                        })
+            })
+            ->addColumn('action', function ($companies) {
 
-                        ->addColumn('is_featured', function ($companies) {
+                /*                             * ************************* */
 
-                            return ((bool) $companies->is_featured) ? 'Yes' : 'No';
+                $activeTxt = 'Make Active';
 
-                        })
+                $activeHref = 'makeActive(' . $companies->id . ');';
 
-                        ->addColumn('action', function ($companies) {
+                $activeIcon = 'square-o';
 
-                            /*                             * ************************* */
+                if ((int)$companies->is_active == 1) {
 
-                            $activeTxt = 'Make Active';
+                    $activeTxt = 'Make InActive';
 
-                            $activeHref = 'makeActive(' . $companies->id . ');';
+                    $activeHref = 'makeNotActive(' . $companies->id . ');';
 
-                            $activeIcon = 'square-o';
+                    $activeIcon = 'check-square-o';
 
-                            if ((int) $companies->is_active == 1) {
+                }
 
-                                $activeTxt = 'Make InActive';
+                /*                             * ************************* */
 
-                                $activeHref = 'makeNotActive(' . $companies->id . ');';
+                $featuredTxt = 'Make Featured';
 
-                                $activeIcon = 'check-square-o';
+                $featuredHref = 'makeFeatured(' . $companies->id . ');';
 
-                            }
+                $featuredIcon = 'square-o';
 
-                            /*                             * ************************* */
+                if ((int)$companies->is_featured == 1) {
 
-                            $featuredTxt = 'Make Featured';
+                    $featuredTxt = 'Make Not Featured';
 
-                            $featuredHref = 'makeFeatured(' . $companies->id . ');';
+                    $featuredHref = 'makeNotFeatured(' . $companies->id . ');';
 
-                            $featuredIcon = 'square-o';
+                    $featuredIcon = 'check-square-o';
 
-                            if ((int) $companies->is_featured == 1) {
+                }
 
-                                $featuredTxt = 'Make Not Featured';
-
-                                $featuredHref = 'makeNotFeatured(' . $companies->id . ');';
-
-                                $featuredIcon = 'check-square-o';
-
-                            }
-
-                            return '
+                return '
 
 				<div class="btn-group">
 
@@ -680,24 +636,20 @@ class CompanyController extends Controller
 
 				</div>';
 
-                        })
+            })
+            ->rawColumns(['action', 'is_active', 'is_featured'])
+            ->setRowId(function ($companies) {
 
-                        ->rawColumns(['action', 'is_active', 'is_featured'])
+                return 'companyDtRow' . $companies->id;
 
-                        ->setRowId(function($companies) {
-
-                            return 'companyDtRow' . $companies->id;
-
-                        })
-
-                        ->make(true);
+            })
+            ->make(true);
 
         //$query = $dataTable->getQuery()->get();
 
         //return $query;
 
     }
-
 
 
     public function makeActiveCompany(Request $request)
@@ -725,7 +677,6 @@ class CompanyController extends Controller
     }
 
 
-
     public function makeNotActiveCompany(Request $request)
 
     {
@@ -749,7 +700,6 @@ class CompanyController extends Controller
         }
 
     }
-
 
 
     public function makeFeaturedCompany(Request $request)
@@ -777,7 +727,6 @@ class CompanyController extends Controller
     }
 
 
-
     public function makeNotFeaturedCompany(Request $request)
 
     {
@@ -801,7 +750,6 @@ class CompanyController extends Controller
         }
 
     }
-
 
 
 }
