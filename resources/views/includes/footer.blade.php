@@ -11,31 +11,31 @@
 
 
 
-{{--<div class="footerWrap">
+<div class="footerWrap">
     <div class="container">
         <div class="row"> 
 
             <!--Quick Links-->
-            <div class="col-md-3 col-sm-6">
+            <div class="col-md-6 col-sm-6">
                 <h5>{{__('Quick Links')}}</h5>
                 <!--Quick Links menu Start-->
                 <ul class="quicklinks">
                     <li><a href="{{ route('index') }}">{{__('Home')}}</a></li>
-                    <li><a href="{{ route('contact.us') }}">{{__('Contact Us')}}</a></li>
+{{--                    <li><a href="{{ route('contact.us') }}">{{__('Contact Us')}}</a></li>--}}
                     <li class="postad"><a href="{{ route('post.job') }}">{{__('Post a Job')}}</a></li>
                     <li><a href="{{ route('faq') }}">{{__('FAQs')}}</a></li>
-                    @foreach($show_in_footer_menu as $footer_menu)
+                    {{--@foreach($show_in_footer_menu as $footer_menu)
                     @php
                     $cmsContent = App\CmsContent::getContentBySlug($footer_menu->page_slug);
                     @endphp
 
                     <li class="{{ Request::url() == route('cms', $footer_menu->page_slug) ? 'active' : '' }}"><a href="{{ route('cms', $footer_menu->page_slug) }}">{{ $cmsContent->page_title }}</a></li>
-                    @endforeach
+                    @endforeach--}}
                 </ul>
             </div>
             <!--Quick Links menu end-->
 
-            <div class="col-md-3 col-sm-6">
+           {{-- <div class="col-md-3 col-sm-6">
                 <h5>{{__('Jobs By Category')}}</h5>
                 <!--Quick Links menu Start-->
                 <ul class="quicklinks">
@@ -46,10 +46,10 @@
                     <li><a href="{{ route('job.list', ['functional_area_id[]'=>$functionalArea->functional_area_id]) }}">{{$functionalArea->functional_area}}</a></li>
                     @endforeach
                 </ul>
-            </div>
+            </div>--}}
 
             <!--Jobs By Industry-->
-            <div class="col-md-3 col-sm-6">
+            {{--<div class="col-md-3 col-sm-6">
                 <h5>{{__('Jobs By Industry')}}</h5>
                 <!--Industry menu Start-->
                 <ul class="quicklinks">
@@ -62,10 +62,10 @@
                 </ul>
                 <!--Industry menu End-->
                 <div class="clear"></div>
-            </div>
+            </div>--}}
 
             <!--About Us-->
-            <div class="col-md-3 col-sm-12">
+            <div class="col-md-6 col-sm-12">
                 <h5>{{__('Contact Us')}}</h5>
                 <div class="address">{{ $siteSetting->site_street_address }}</div>
                 <div class="email"> <a href="mailto:{{ $siteSetting->mail_to_address }}">{{ $siteSetting->mail_to_address }}</a> </div>
@@ -80,7 +80,7 @@
 
         </div>
     </div>
-</div>--}}
+</div>
 <!--Footer end--> 
 <!--Copyright-->
 <div class="copyright">
