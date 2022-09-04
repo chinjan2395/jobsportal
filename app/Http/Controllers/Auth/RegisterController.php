@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\CompanyReferral;
 use App\User;
-use App\Http\Requests;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Jrean\UserVerification\Traits\VerifiesUsers;
 use Jrean\UserVerification\Facades\UserVerification;
@@ -62,6 +61,24 @@ use RegistersUsers;
         $user->name = $user->getName();
         $user->update();
         /*         * *********************** */
+        /* Referral Code * *********************** */
+        if ($request->input('referral_code') != null || $request->input('referral_code') != "") {
+            $referral_code = CompanyReferral::where('code', '=', $request->input('referral_code'))
+                ->where('is_used', '=', 0)
+                ->get();
+            if ($referral_code->count() > 0) {
+                $referral_code = $referral_code->first();
+                $referral_code->used_by = $user->id;
+                $referral_code->is_used = 1;
+                $referral_code->update();
+            } else {
+                $user->delete();
+                return Redirect::back()
+                    ->withInput($request->all())
+                    ->withErrors(['referral_code' => 'Referral Code not found']);
+            }
+        }
+        /* Referral Code * *********************** */
         event(new Registered($user));
         event(new UserRegistered($user));
         $this->guard()->login($user);

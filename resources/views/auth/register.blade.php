@@ -84,6 +84,23 @@
                                             class="help-block"> <strong>{{ $errors->first('password_confirmation') }}</strong> </span> @endif
                                 </div>
 
+                                <div class="formrow{{ $errors->has('referral_code') ? ' has-error' : '' }}">
+                                    <?php
+                                    $is_checked = '';
+                                    if (old('referral_code', 0)) {
+                                        $is_checked = 'checked="checked"';
+                                    }
+                                    ?>
+                                    <input id="referral_code" type="checkbox" value="1"
+                                           name="has_referral_code" {{$is_checked}} /> {{__('Have Referral Code?')}}
+                                    <div id="referral_code_input" style="margin-top: 10px">
+                                        <input type="text" name="referral_code" class="form-control"
+                                               placeholder="{{__('Referral Code')}}" value="{{old('referral_code')}}">
+                                        @if ($errors->has('referral_code')) <span
+                                                class="help-block"> <strong>{{ $errors->first('referral_code') }}</strong> </span> @endif
+                                    </div>
+                                </div>
+
                                 <div class="formrow{{ $errors->has('is_subscribed') ? ' has-error' : '' }}">
                                     <?php
                                     $is_checked = '';
@@ -104,12 +121,7 @@
                                     @if ($errors->has('terms_of_use')) <span
                                             class="help-block"> <strong>{{ $errors->first('terms_of_use') }}</strong> </span> @endif
                                 </div>
-                                {{--<div
-                                       class="form-group col-12 col-sm-12 col-md-10 text-center mx-auto mobile-padding-no {{ $errors->has('g-recaptcha-response') ? ' has-error' : '' }}">
-                                       {!! app('captcha')->display() !!}
-                                       @if ($errors->has('g-recaptcha-response')) <span class="help-block">
-                                           <strong>{{ $errors->first('g-recaptcha-response') }}</strong> </span> @endif
-                                   </div>--}}
+
                                 <input type="submit" class="btn" value="{{__('Register')}}">
                             </form>
                         </div>
@@ -193,3 +205,19 @@
     </div>
     @include('includes.footer')
 @endsection
+
+@push('scripts')
+    <script>
+        $(function () {
+            @if(!$errors->has('referral_code'))
+                $('#referral_code_input').hide();
+            @endif
+            $('#referral_code').change(function() {
+                $('#referral_code_input').hide();
+                if(this.checked) {
+                    $('#referral_code_input').show();
+                }
+            });
+        });
+    </script>
+@endpush
