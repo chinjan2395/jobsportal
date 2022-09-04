@@ -365,6 +365,11 @@ class Company extends Authenticatable
         return $this->hasMany('App\CompanyEvent', 'company_id');
     }
 
+    public function referrals()
+    {
+        return $this->hasMany('App\CompanyReferral', 'company_id');
+    }
+
 
 
     public function getPackage($field = '')

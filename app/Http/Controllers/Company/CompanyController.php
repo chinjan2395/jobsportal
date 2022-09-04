@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Company;
 use App\Job;
 use App\Mail\HireFromAppliedJobMailable;
 use App\Traits\CompanyEventTrait;
+use App\Traits\CompanyReferralTrait;
 use Illuminate\Support\Facades\Mail;
 use Hash;
 use File;
@@ -43,6 +44,7 @@ class CompanyController extends Controller
     use Cron;
     use CompanyTrait;
     use CompanyEventTrait;
+    use CompanyReferralTrait;
 
     /**
      * Create a new controller instance.
