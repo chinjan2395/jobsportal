@@ -8,6 +8,7 @@ use App\Traits\Active;
 use App\Traits\Featured;
 use App\Traits\JobTrait;
 use App\Traits\CountryStateCity;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Job extends Model
@@ -17,6 +18,7 @@ class Job extends Model
     use featured;
     use JobTrait;
     use CountryStateCity;
+    use HasFactory;
 
     protected $table = 'jobs';
     public $timestamps = true;
