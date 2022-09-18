@@ -14,20 +14,20 @@
                 <div class="col-md-9 col-sm-8">
                     <div class="">
                         <h3>{{__('Referrals')}}</h3>
-                        {{--<div class="row">
+                        <div class="row">
                             <div class="col-md-12">
                                 <div class="userccount" style="padding: 20px;">
                                     <div class="formpanel">
                                         <h5>{{__('Generate Referral')}}</h5>
-                                        @if(isset($event))
-                                            {!! Form::model($event, array('method' => 'put', 'route' => array('update.front.event', $event->id), 'class' => 'form')) !!}
-                                            {!! Form::hidden('id', $event->id) !!}
-                                            {!! Form::hidden('company_id', Auth::guard('company')->user()->id) !!}
-                                        @else
-                                            {!! Form::open(array('method' => 'post', 'route' => array('store.front.referral'), 'class' => 'form')) !!}
-                                            {!! Form::hidden('company_id', Auth::guard('company')->user()->id) !!}
-                                        @endif
+                                        {!! Form::open(array('method' => 'post', 'route' => array('store.front.referral'), 'class' => 'form')) !!}
+                                        {!! Form::hidden('company_id', Auth::guard('company')->user()->id) !!}
                                         <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="formrow">
+                                                    <input type="text" name="code" class="form-control"
+                                                           placeholder="{{__('Enter your code')}}" autocomplete="off"/>
+                                                </div>
+                                            </div>
                                             <div class="col-md-12">
                                                 <div class="formrow">
                                                     <button type="submit" class="btn">{{__('Generate Referral')}}
@@ -40,7 +40,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>--}}
+                        </div>
 
                         {{--<div class="userbtns">
                             <ul class="nav nav-tabs">

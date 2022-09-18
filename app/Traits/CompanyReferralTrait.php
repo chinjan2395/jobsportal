@@ -35,7 +35,8 @@ trait CompanyReferralTrait
 
         $model = new CompanyReferral();
         $model->company_id = $company->id;
-        $model->code = Str::uuid();
+//        $model->code = Str::uuid();
+        $model->code = $request->get('code');
         $model->save();
 
         flash('Referral has been added!')->success();
