@@ -381,7 +381,7 @@ class DataArrayHelper
 
     public static function companiesArray()
     {
-        $array = Company::select('companies.name', 'companies.id')->active()->pluck('companies.name', 'companies.id')->toArray();
+        $array = Company::companyOnly()->select('companies.name', 'companies.id')->active()->pluck('companies.name', 'companies.id')->toArray();
         return $array;
     }
 

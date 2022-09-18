@@ -2,8 +2,10 @@
 
 namespace Database\Factories;
 
-use App\City;
+use App\CareerLevel;
 use App\Country;
+use App\FunctionalArea;
+use App\JobExperience;
 use App\State;
 use App\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -43,11 +45,13 @@ class UserFactory extends Factory
             'gender_id' => $gender,
             'country_id' => Country::where('country', '=', $this->faker->country)->first()->id,
             'state_id' => State::where('state', '=', $this->faker->state)->first()->id,
-            'phone' => $this->faker->phoneNumber,
-            'mobile_num' => $this->faker->phoneNumber,
+            'phone' => $this->faker->e164PhoneNumber,
+            'mobile_num' => $this->faker->e164PhoneNumber,
             'is_active' => $gender,
             'password' => bcrypt('123456'),
             'remember_token' => Str::random(10),
+            'current_salary' =>  $this->faker->numberBetween($min = 10000, $max = 49999),
+            'expected_salary' => $this->faker->numberBetween($min = 40000, $max = 99999)
         ];
     }
 
@@ -59,6 +63,13 @@ class UserFactory extends Factory
     public function configure()
     {
         return $this->afterCreating(function (User $user) {
+
+            $user->update([
+                'job_experience_id' => JobExperience::inRandomOrder()->first()->job_experience_id,
+                'career_level_id' => CareerLevel::inRandomOrder()->first()->id,
+                'industry_id' => CareerLevel::inRandomOrder()->first()->id,
+                'functional_area_id' => FunctionalArea::inRandomOrder()->first()->id,
+            ]);
         });
     }
 }

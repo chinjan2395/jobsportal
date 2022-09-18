@@ -22,7 +22,7 @@ class JobFactory extends Factory
      */
     public function definition()
     {
-        $title = $this->faker->company;
+        $title = $this->faker->jobTitle;
         return [
             'title' => $title,
             'slug' => Str::slug($title),

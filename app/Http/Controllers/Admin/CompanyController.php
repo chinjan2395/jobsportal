@@ -19,12 +19,14 @@ use App\Http\Requests\CompanyFormRequest;
 use App\Http\Controllers\Controller;
 use App\Traits\CompanyTrait;
 use App\Traits\CompanyPackageTrait;
+use App\Traits\CompanyEmployeeTrait;
 use Illuminate\Support\Str;
 
 class CompanyController extends Controller
 {
     use CompanyTrait;
     use CompanyPackageTrait;
+    use CompanyEmployeeTrait;
 
     /**
      * Create a new controller instance.
@@ -270,7 +272,7 @@ class CompanyController extends Controller
 
     public function fetchCompaniesData(Request $request)
     {
-        $companies = Company::select([
+        $companies = Company::companyOnly()->select([
             'companies.id',
             'companies.name',
             'companies.email',
