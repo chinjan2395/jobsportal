@@ -51,10 +51,12 @@
             "app/Helpers/cms.php"
         ],
         "psr-4": {
-            "App\\": "app/"
+            "App\\": "app/",
+            "Database\\Factories\\": "database/factories/",
+            "Database\\Seeders\\": "database/seeders/"
         },
         "classmap": [
-            "database/seeds",
+            "database/seeders",
             "database/factories"
         ]
     },
