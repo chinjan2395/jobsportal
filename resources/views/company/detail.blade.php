@@ -228,41 +228,6 @@
                     </ul>
                 </div>
                 <!-- Opening Jobs end -->
-
-                <!-- Company Event start -->
-                <div class="relatedJobs">
-                    <h3>{{__('Events')}}</h3>
-                    <ul class="searchList">
-                        @if(isset($company->events) && count($company->events))
-                            @foreach($company->events as $event)
-                                @if(null !== $company)
-                                    <li id="job_li_{{$event->id}}">
-                                        <div class="row">
-                                            <div class="col-md-8 col-sm-8">
-                                                <div class="jobimg">{{$company->printCompanyImage()}}</div>
-                                                <div class="jobinfo">
-                                                    <h3><a href="{{route('event.detail', [$event->slug])}}"
-                                                           title="{{$event->title}}">{{$event->title}}</a></h3>
-                                                </div>
-                                                <div class="location">
-                                                    <label class="fulltime"
-                                                           title="Event starts at {{\Illuminate\Support\Carbon::parse($event->start_date)->format('d M H:i, Y')}}">{{\Illuminate\Support\Carbon::parse($event->start_date)->format('d M H:i, Y')}}</label>
-                                                    <label class="partTime"
-                                                           title="Event ends at {{\Illuminate\Support\Carbon::parse($event->end_date)->format('d M H:i, Y')}}">{{\Illuminate\Support\Carbon::parse($event->end_date)->format('d M H:i, Y')}}</label>
-                                                    - <span>{{$companyJob->getCity('city')}}</span>
-                                                </div>
-                                                <div class="clearfix"></div>
-                                            </div>
-                                        </div>
-                                        <p>{{\Illuminate\Support\Str::limit(strip_tags($event->description), 150, '...')}}</p>
-                                    </li>
-                                @endif
-                            @endforeach
-                        @endif
-                    </ul>
-
-                </div>
-                <!-- Company Event end -->
             </div>
 
             <div class="col-md-4">
@@ -318,6 +283,45 @@
                     </div>
 
                 </div>
+
+                @php
+                    $events = $company->events->where('status', true);
+                @endphp
+                @if($events->count()>0)
+                    <div class="job-header">
+                        <div class="jobdetail">
+                            <!-- Company Event start -->
+                            <div class="relatedJobs">
+                                <h3>{{__('Events')}}</h3>
+                                <ul class="searchList">
+                                    @foreach($events as $event)
+                                        @if(null !== $company)
+                                            <li id="job_li_{{$event->id}}">
+                                                <div class="row">
+                                                    <div class="jobimg">{{$company->printCompanyImage()}}</div>
+                                                    <div class="jobinfo">
+                                                        <h3><a href="{{route('event.detail', [$event->slug])}}"
+                                                               title="{{$event->title}}">{{$event->title}}</a></h3>
+                                                    </div>
+                                                    <div class="location">
+                                                        <label class="fulltime"
+                                                               title="Event starts at {{\Illuminate\Support\Carbon::parse($event->start_date)->format('d M H:i, Y')}}">{{\Illuminate\Support\Carbon::parse($event->start_date)->format('d M H:i, Y')}}</label>
+                                                        <label class="partTime"
+                                                               title="Event ends at {{\Illuminate\Support\Carbon::parse($event->end_date)->format('d M H:i, Y')}}">{{\Illuminate\Support\Carbon::parse($event->end_date)->format('d M H:i, Y')}}</label>
+                                                        - <span>{{$companyJob->getCity('city')}}</span>
+                                                    </div>
+                                                    <div class="clearfix"></div>
+                                                </div>
+                                                <p>{{\Illuminate\Support\Str::limit(strip_tags($event->description), 150, '...')}}</p>
+                                            </li>
+                                        @endif
+                                    @endforeach
+                                </ul>
+                            </div>
+                            <!-- Company Event end -->
+                        </div>
+                    </div>
+            @endif
 
 
 

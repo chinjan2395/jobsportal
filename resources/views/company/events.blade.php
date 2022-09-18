@@ -6,6 +6,13 @@
     <!-- Inner Page Title start -->
     @include('includes.inner_page_title', ['page_title'=>__('Company Events')])
     <!-- Inner Page Title end -->
+    <style>
+        .custom-control-input:checked~.custom-control-label::before {
+            color: #fff;
+            border-color: #652bfa;
+            background-color: #652bfa;
+        }
+    </style>
     <div class="listpgWraper">
         <div class="container">
             <div class="row">
@@ -40,6 +47,22 @@
                                                     </div>
                                                     <div class="listbtn"><a href="javascript:;"
                                                                             onclick="deleteJob({{$event->id}});">{{__('Delete')}}</a>
+                                                    </div>
+                                                    <div class="listbtn">
+                                                        @if(isset($event))
+                                                            {!! Form::model($event, array('method' => 'put', 'route' => array('update.front.event', $event->id), 'class' => 'form')) !!}
+                                                            {!! Form::hidden('id', $event->id) !!}
+                                                            {!! Form::hidden('company_id', Auth::guard('company')->user()->id) !!}
+                                                            <div class="custom-control custom-switch">
+                                                                <input type="checkbox" class="custom-control-input"
+                                                                       id="customSwitch1"
+                                                                       name="status"
+                                                                       {{$event->status? 'checked="checked"':''}}
+                                                                       onchange="updateEventStatus(this);">
+                                                                <label class="custom-control-label" for="customSwitch1">Toggle switch to active/inactive event</label>
+                                                            </div>
+                                                            {!! Form::close() !!}
+                                                        @endif
                                                     </div>
                                                 </div>
                                             </div>
@@ -107,6 +130,23 @@
                         }
                     });
             }
+        }
+        function updateEventStatus(event) {
+            $.ajax({
+                url: "{{url('/')}}/update-front-event-status/" + "{{$event->id}}",
+                type: 'PUT',
+                data: {
+                    '_token': "{{ csrf_token() }}",
+                    status: $(event).is(':checked') ? 1 : 0
+                },
+                success: function(response) {
+                    if (response == 'ok') {
+                        location.reload();
+                    } else {
+                        alert('Request Failed!');
+                    }
+                }
+            });
         }
     </script>
 @endpush

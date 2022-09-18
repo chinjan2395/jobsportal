@@ -9,7 +9,7 @@ class CompanyEvent extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['company_id', 'title', 'description', 'start_date', 'end_date', 'slug'];
+    protected $fillable = ['company_id', 'title', 'description', 'start_date', 'end_date', 'slug', 'status'];
     protected $guarded = ['id'];
 
     public function company()
@@ -26,6 +26,11 @@ class CompanyEvent extends Model
                 return $company;
             }
         }
+    }
+
+    public function scopeIsActive($query)
+    {
+        return $query->where('status', 1);
     }
 
 }

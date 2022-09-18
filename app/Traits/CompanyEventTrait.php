@@ -10,6 +10,8 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Str;
 
 
@@ -144,6 +146,15 @@ trait CompanyEventTrait
         /*         * ************************************ */
         flash('Event has been updated!')->success();
         return \Redirect::route('edit.front.event', array($model->id));
+
+    }
+
+    public function updateFrontCompanyEventStatus($id, Request $request)
+    {
+        $model = CompanyEvent::findOrFail($id);
+        $model->status = $request->get('status');
+        $model->update();
+        return response()->json("ok");
 
     }
 
