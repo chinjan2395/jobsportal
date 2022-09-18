@@ -50,13 +50,13 @@
 
 
 
-        {{--<li class="heading">
+        <li class="heading">
             <h3 class="uppercase">Manage Location</h3>
         </li>
         @include('admin/shared/side_bars/country')
-        @include('admin/shared/side_bars/country_detail')
+{{--        @include('admin/shared/side_bars/country_detail')--}}
         @include('admin/shared/side_bars/state')
-        @include('admin/shared/side_bars/city')--}}
+        @include('admin/shared/side_bars/city')
 
 
         {{--<li class="heading">
@@ -72,19 +72,19 @@
 {{--        @include('admin/shared/side_bars/language_level')--}}
         @include('admin/shared/side_bars/career_level')
         @include('admin/shared/side_bars/functional_area')
-{{--        @include('admin/shared/side_bars/gender')--}}
+        @include('admin/shared/side_bars/gender')
         @include('admin/shared/side_bars/industry')
         @include('admin/shared/side_bars/job_experience')
         @include('admin/shared/side_bars/job_skill')
         @include('admin/shared/side_bars/job_type')
-{{--        @include('admin/shared/side_bars/job_shift')--}}
+        @include('admin/shared/side_bars/job_shift')
         @include('admin/shared/side_bars/degree_level')
         @include('admin/shared/side_bars/degree_type')
 {{--        @include('admin/shared/side_bars/major_subject')--}}
 {{--        @include('admin/shared/side_bars/result_type')--}}
 {{--        @include('admin/shared/side_bars/marital_status')--}}
 {{--        @include('admin/shared/side_bars/ownership_type')--}}
-{{--        @include('admin/shared/side_bars/salary_period')--}}
+        @include('admin/shared/side_bars/salary_period')
 
         <li class="heading">
             <h3 class="uppercase">Manage</h3>

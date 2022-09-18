@@ -2,13 +2,15 @@
 
 namespace App;
 
-use App;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class JobSkillManager extends Model
 {
+    use HasFactory;
 
     protected $table = 'manage_job_skills';
+
     public $timestamps = true;
     protected $guarded = ['id'];
     //protected $dateFormat = 'U';

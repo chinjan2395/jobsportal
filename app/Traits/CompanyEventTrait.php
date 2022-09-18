@@ -3,10 +3,9 @@
 
 namespace App\Traits;
 
-use App\Helpers\DataArrayHelper;
+use App\Company;
 use App\Http\Requests\CompanyEventFormRequest;
 use App\CompanyEvent;
-use App\Seo;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -24,8 +23,9 @@ trait CompanyEventTrait
         $company_ids = $request->query('company_id', array());
         $order_by = $request->query('order_by', 'id');
         $limit = 15;
+        $company = $company->is_employee ? Company::findOrFail($company->belongs_to) : $company;
 
-        $events = $company->events()->paginate();
+        $events = $company->events()->paginate(10);
         return view('company.events')
             ->with('events', $events);
     }
@@ -105,7 +105,7 @@ trait CompanyEventTrait
         }
 
         $model = new CompanyEvent();
-        $model->company_id = $company->id;
+        $model->company_id = $company->is_employee ? $company->belongs_to : $company->id;
         $model = $this->assignCompanyEventValues($model, $request);
         $model->save();
 

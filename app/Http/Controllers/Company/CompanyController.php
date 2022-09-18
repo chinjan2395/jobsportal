@@ -312,7 +312,9 @@ class CompanyController extends Controller
 
     public function postedJobs(Request $request)
     {
-        $jobs = Auth::guard('company')->user()->jobs()->paginate(10);
+        $company = Auth::guard('company')->user();
+        $company = $company->is_employee ? Company::findOrFail($company->belongs_to) : $company;
+        $jobs = $company->jobs()->paginate(10);
         return view('job.company_posted_jobs')
             ->with('jobs', $jobs);
     }

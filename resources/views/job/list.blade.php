@@ -25,7 +25,7 @@
                         {
                         ?>
                         <?php if($count_1 == 7) {?>
-                        <li class="inpostad">{!! $siteSetting->listing_page_horizontal_ad !!}</li>
+{{--                        <li class="inpostad">{!! $siteSetting->listing_page_horizontal_ad !!}</li>--}}
                         <?php }else{ ?>
                         <li>
                             <div class="row">

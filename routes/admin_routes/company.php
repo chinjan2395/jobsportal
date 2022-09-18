@@ -31,3 +31,12 @@ Route::put('make-featured-company', array_merge(['uses' => 'Admin\CompanyControl
 Route::put('make-not-featured-company', array_merge(['uses' => 'Admin\CompanyController@makeNotFeaturedCompany'], $all_users))->name('make.not.featured.company');
 
 /* * ****** End Company ********** */
+
+/* * ****** Employee Start ********** */
+Route::get('list-employee', array_merge(['uses' => 'Admin\CompanyController@indexEmployee'], $all_users))->name('list.employee');
+Route::get('fetch-employee', array_merge(['uses' => 'Admin\CompanyController@fetchEmployeesData'], $all_users))->name('fetch.data.employees');
+Route::get('create-employee', array_merge(['uses' => 'Admin\CompanyController@createEmployee'], $all_users))->name('create.employee');
+Route::post('store-employee', array_merge(['uses' => 'Admin\CompanyController@storeEmployee'], $all_users))->name('store.employee');
+Route::get('edit-employee/{id}', array_merge(['uses' => 'Admin\CompanyController@editEmployee'], $all_users))->name('edit.employee');
+Route::put('update-employee/{id}', array_merge(['uses' => 'Admin\CompanyController@updateEmployee'], $all_users))->name('update.employee');
+/* * ****** Employee End ********** */

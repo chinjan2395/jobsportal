@@ -1,9 +1,14 @@
+@php
+    $companyPublicProfile = Auth::guard('company')->user();
+    $companyPublicProfile = $companyPublicProfile->is_employee ? App\Company::findOrFail($companyPublicProfile->belongs_to) : $companyPublicProfile;
+@endphp
+
 <div class="col-md-3 col-sm-4">
 	<div class="usernavwrap">
     <ul class="usernavdash">
         <li class="{{ Request::url() == route('company.home') ? 'active' : '' }}"><a href="{{route('company.home')}}"><i class="fa fa-tachometer" aria-hidden="true"></i> {{__('Dashboard')}}</a></li>
         <li class="{{ Request::url() == route('company.profile') ? 'active' : '' }}"><a href="{{ route('company.profile') }}"><i class="fa fa-pencil" aria-hidden="true"></i> {{__('Edit Profile')}}</a></li>
-        <li><a href="{{ route('company.detail', Auth::guard('company')->user()->slug) }}"><i class="fa fa-address-card-o" aria-hidden="true"></i> {{__('Company Public Profile')}}</a></li>
+        <li><a href="{{ route('company.detail', $companyPublicProfile->slug) }}"><i class="fa fa-address-card-o" aria-hidden="true"></i> {{__('Company Public Profile')}}</a></li>
         <li class="{{ Request::url() == route('post.job') ? 'active' : '' }}"><a href="{{ route('post.job') }}"><i class="fa fa-desktop" aria-hidden="true"></i> {{__('Post Job')}}</a></li>
         <li class="{{ Request::url() == route('posted.jobs') ? 'active' : '' }}"><a href="{{ route('posted.jobs') }}"><i class="fa fa-black-tie" aria-hidden="true"></i> {{__('Company Jobs')}}</a></li>
 

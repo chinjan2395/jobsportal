@@ -5,7 +5,9 @@
             </a></li>
         <li class="nav-item  "><a href="{{ route('create.company') }}" class="nav-link "> <span class="title">Add new Company</span>
             </a></li>
-        {{--<li class="nav-item  "><a href="{{ route('list.payment.hostory') }}" class="nav-link "> <span class="title">List Companies Payment History</span>
-            </a></li>--}}
+        <li class="nav-item  "><a href="{{ route('list.employee') }}" class="nav-link "> <span class="title">List Employees</span>
+            </a></li>
+        <li class="nav-item  "><a href="{{ route('create.employee') }}" class="nav-link "> <span class="title">Add new Employee</span>
+            </a></li>
     </ul>
 </li>

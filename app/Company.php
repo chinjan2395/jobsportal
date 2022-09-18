@@ -20,6 +20,8 @@ use App\Traits\JobTrait;
 
 use App\Traits\CountryStateCity;
 
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 use Illuminate\Notifications\Notifiable;
@@ -46,6 +48,8 @@ class Company extends Authenticatable
 
     use CountryStateCity;
 
+    use HasFactory;
+
 
 
     protected $table = 'companies';
@@ -60,7 +64,7 @@ class Company extends Authenticatable
 
     protected $fillable = [
 
-        'name', 'email', 'password', 'slug',
+        'name', 'email', 'password', 'slug', 'is_employee', 'belongs_to'
 
     ];
 
@@ -71,6 +75,10 @@ class Company extends Authenticatable
     ];
 
 
+    public function scopeCompanyOnly(Builder $query)
+    {
+        return $query->where('is_employee', '=', false);
+    }
 
     public function sendPasswordResetNotification($token)
 
@@ -88,7 +96,7 @@ class Company extends Authenticatable
 
         $logo = (string)$this->logo;
 
-        $logo = (null!==($logo)) ? $logo : 'no-no-image.gif';
+        $logo = (null!=($logo)) ? $logo : 'no-no-image.gif';
         return \ImgUploader::print_image("company_logos/$logo", $width, $height, '/admin_assets/no-image.png', $this->name);
 
     }
@@ -370,6 +378,12 @@ class Company extends Authenticatable
         return $this->hasMany('App\CompanyReferral', 'company_id');
     }
 
+    public function employees()
+    {
+        return $this->hasMany(Company::addGlobalScope('company', function (Builder $builder) {
+            $builder->where('is_employee', '=', true);
+        }), 'company_id');
+    }
 
 
     public function getPackage($field = '')

@@ -14,7 +14,7 @@
                 <div class="col-md-9 col-sm-8">
                     <div class="">
                         <h3>{{__('Referrals')}}</h3>
-                        <div class="row">
+                        {{--<div class="row">
                             <div class="col-md-12">
                                 <div class="userccount" style="padding: 20px;">
                                     <div class="formpanel">
@@ -40,71 +40,16 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div>--}}
 
-                        <div class="userbtns">
+                        {{--<div class="userbtns">
                             <ul class="nav nav-tabs">
                                 <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#un-used" aria-expanded="true">{{__('Un Used')}}</a></li>
                                 <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#used" aria-expanded="false">{{__('Used')}}</a></li>
                             </ul>
-                        </div>
+                        </div>--}}
                         <div class="tab-content">
-                            <div id="un-used" class="formpanel tab-pane active">
-                                <ul class="searchList">
-                                    <!-- referral start -->
-                                    @if(isset($referrals['un_used']) && count($referrals['un_used']))
-                                        @foreach($referrals['un_used'] as $referral)
-                                            @php $company = $referral->getCompany(); @endphp
-                                            @if(null !== $company)
-                                                <li id="job_li_{{$referral->id}}">
-                                                    <div class="row">
-                                                        <div class="col-md-8 col-sm-8">
-                                                            <div class="jobinfo">
-                                                                <h5><i class="fa fa-random"></i> {{$referral->code}}
-                                                                </h5>
-                                                                <div class="companyName"><a
-                                                                            href="{{route('company.detail', $company->slug)}}"
-                                                                            title="{{$company->name}}">{{$company->name}}
-                                                                        -
-                                                                        <small>{{$referral->created_at->format('M d, Y H:i:s')}}</small></a>
-                                                                </div>
-                                                            </div>
-                                                            <div class="clearfix"></div>
-                                                        </div>
-                                                        <div class="col-md-4 col-sm-4">
-                                                            <div class="listbtn">
-                                                                <a href="javascript:void(0)"
-                                                                   onclick="deleteJob({{$referral->id}});">{{__('Delete')}}</a>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <p>{{\Illuminate\Support\Str::limit(strip_tags($referral->description), 150, '...')}}</p>
-                                                </li>
-                                                <!-- referral end -->
-                                            @endif
-                                        @endforeach
-                                    @endif
-                                </ul>
-                                <!-- Pagination Start -->
-                                <div class="pagiWrap">
-                                    <div class="row">
-                                        <div class="col-md-5">
-                                            <div class="showreslt">
-                                                {{__('Showing Pages')}} : {{ $referrals['un_used']->firstItem() }}
-                                                - {{ $referrals['un_used']->lastItem() }} {{__('Total')}} {{ $referrals['un_used']->total() }}
-                                            </div>
-                                        </div>
-                                        <div class="col-md-7 text-right">
-                                            @if(isset($referrals['un_used']) && count($referrals['un_used']))
-                                                {{ $referrals['un_used']->appends(request()->query())->links() }}
-                                            @endif
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- Pagination end -->
-
-                            </div>
-                            <div id="used" class="formpanel tab-pane fade">
+                            <div id="used" class="formpanel tab-pane active">
                                 <ul class="searchList">
                                     <!-- referral start -->
                                     @if(isset($referrals['used']) && count($referrals['used']))
