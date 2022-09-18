@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Job;
 
+use App\CompanyReferral;
+use App\CountryDetail;
 use Auth;
 use DB;
 use Input;
@@ -259,10 +261,12 @@ class JobController extends Controller
 
 
         $myCvs = ProfileCv::where('user_id', '=', $user->id)->pluck('title', 'id')->toArray();
+        $currencies = DataArrayHelper::currenciesArray();
 
         return view('job.apply_job_form')
             ->with('job_slug', $job_slug)
             ->with('job', $job)
+            ->with('currencies', array_unique($currencies))
             ->with('myCvs', $myCvs);
     }
 
@@ -279,6 +283,24 @@ class JobController extends Controller
         $jobApply->current_salary = $request->post('current_salary');
         $jobApply->expected_salary = $request->post('expected_salary');
         $jobApply->salary_currency = $request->post('salary_currency');
+
+        /* Referral Code * *********************** */
+        if ($request->input('referral_code') != null || $request->input('referral_code') != "") {
+            $referral_code = CompanyReferral::where('code', '=', $request->input('referral_code'))
+                ->where('is_used', '=', 0)
+                ->get();
+            if ($referral_code->count() > 0) {
+                $referral_code = $referral_code->first();
+                $referral_code->used_by = $user->id;
+                $referral_code->is_used = 1;
+                $referral_code->update();
+            } else {
+                return \Illuminate\Support\Facades\Redirect::back()
+                    ->withInput($request->all())
+                    ->withErrors(['referral_code' => 'Referral Code not found']);
+            }
+        }
+
         $jobApply->save();
 
         /*         * ******************************* */

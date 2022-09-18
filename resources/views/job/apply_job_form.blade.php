@@ -28,10 +28,31 @@
                                     @if ($errors->has('expected_salary')) <span class="help-block"> <strong>{{ $errors->first('expected_salary') }}</strong> </span> @endif </div>
                             </div>
                             <div class="col-md-12">
-                                <div class="formrow{{ $errors->has('salary_currency') ? ' has-error' : '' }}"> {!! Form::text('salary_currency', Request::get('salary_currency', $siteSetting->default_currency_code), array('class'=>'form-control', 'id'=>'salary_currency', 'placeholder'=>__('Salary Currency'), 'autocomplete'=>'off')) !!}
-                                    @if ($errors->has('salary_currency')) <span class="help-block"> <strong>{{ $errors->first('salary_currency') }}</strong> </span> @endif </div>
+                                <div class="formrow{{ $errors->has('salary_currency') ? ' has-error' : '' }}">
+{{--                                    {!! Form::text('salary_currency', Request::get('salary_currency', $siteSetting->default_currency_code), array('class'=>'form-control', 'id'=>'salary_currency', 'placeholder'=>__('Salary Currency'), 'autocomplete'=>'off')) !!}--}}
+                                    {!! Form::select('salary_currency', ['' =>__('Select Salary Currency')]+$currencies, Request::get('salary_currency'), array('class'=>'form-control', 'id'=>'salary_currency')) !!}
+                                    @if ($errors->has('salary_currency')) <span class="help-block"> <strong>{{ $errors->first('salary_currency') }}</strong> </span> @endif
+                                </div>
                             </div>
                         </div>
+
+                        <div class="formrow{{ $errors->has('referral_code') ? ' has-error' : '' }}">
+                            <?php
+                            $is_checked = '';
+                            if (old('referral_code', 0)) {
+                                $is_checked = 'checked="checked"';
+                            }
+                            ?>
+                            <input id="referral_code" type="checkbox" value="1"
+                                   name="has_referral_code" {{$is_checked}} /> {{__('Have Referral Code?')}}
+                            <div id="referral_code_input" style="margin-top: 10px">
+                                <input type="text" name="referral_code" class="form-control"
+                                       placeholder="{{__('Referral Code')}}" value="{{old('referral_code')}}">
+                                @if ($errors->has('referral_code')) <span
+                                        class="help-block"> <strong>{{ $errors->first('referral_code') }}</strong> </span> @endif
+                            </div>
+                        </div>
+
                         <br>
                         <input type="submit" class="btn" value="{{__('Apply on Job')}}">
                         {!! Form::close() !!} </div>
@@ -55,6 +76,16 @@
             }
         });
 
+        @if(!$errors->has('referral_code'))
+        $('#referral_code_input').hide();
+        @endif
+        $('#referral_code').change(function() {
+            $('#referral_code_input').hide();
+            if(this.checked) {
+                $('#referral_code_input').show();
+            }
+        });
     });
 </script> 
 @endpush
+
