@@ -2,7 +2,9 @@
 
 Route::get('job/{slug}', 'Job\JobController@jobDetail')->name('job.detail');
 Route::get('apply/{slug}', 'Job\JobController@applyJob')->name('apply.job');
+Route::get('refer/{slug}', 'Job\JobController@referJob')->name('refer.job');
 Route::post('apply/{slug}', 'Job\JobController@postApplyJob')->name('post.apply.job');
+Route::post('refer/{slug}', 'Job\JobController@postReferJob')->name('post.refer.job');
 Route::get('jobs', 'Job\JobController@jobsBySearch')->name('job.list');
 Route::get('add-to-favourite-job/{job_slug}', 'Job\JobController@addToFavouriteJob')->name('add.to.favourite');
 Route::get('remove-from-favourite-job/{job_slug}', 'Job\JobController@removeFromFavouriteJob')->name('remove.from.favourite');

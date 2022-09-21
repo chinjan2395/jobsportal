@@ -385,6 +385,11 @@ class Company extends Authenticatable
         }), 'company_id');
     }
 
+    public function unlockedUsers()
+    {
+        return $this->hasMany('App\Unlocked_users', 'company_id');
+    }
+
 
     public function getPackage($field = '')
 

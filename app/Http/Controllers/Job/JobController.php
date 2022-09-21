@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Job;
 
 use App\CompanyReferral;
 use App\CountryDetail;
+use App\User;
 use Auth;
 use DB;
 use Input;
@@ -38,7 +39,7 @@ class JobController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth', ['except' => ['jobsBySearch', 'jobDetail']]);
+        $this->middleware('auth', ['except' => ['jobsBySearch', 'jobDetail', 'referJob', 'postReferJob']]);
 
         $this->functionalAreas = DataArrayHelper::langFunctionalAreasArray();
         $this->countries = DataArrayHelper::langCountriesArray();
@@ -314,6 +315,80 @@ class JobController extends Controller
         }
 
         flash(__('You have successfully applied for this job'))->success();
+        return \Redirect::route('job.detail', $job_slug);
+    }
+
+    public function referJob(Request $request, $job_slug)
+    {
+        $job = Job::where('slug', 'like', $job_slug)->first();
+        $currencies = DataArrayHelper::currenciesArray();
+        $myCvs = [];
+
+        if (null === Auth::guard('company')->user()) {
+            flash(__('Message to update'))->error();
+            return \Redirect::route('job.detail', $job_slug);
+        } else {
+            $company = Auth::guard('company')->user();
+
+            $unlockedUsers = $company->unlockedUsers()->get()->pluck('unlocked_users_ids');
+            if ($request->has('user_id')) {
+                $myCvs = ProfileCv::where('user_id', $request->get('user_id'))
+                ->pluck('title', 'id')
+                    ->toArray();
+            }
+            $users = User::select('users.id', 'users.name')
+                ->whereIn('id', explode(',', $unlockedUsers->first()))
+                ->orderBy('users.name')
+                ->pluck('users.name', 'users.id')
+                ->toArray();
+
+            return view('job.refer_job_form')
+                ->with('users', $users)
+                ->with('job_slug', $job_slug)
+                ->with('job', $job)
+                ->with('currencies', array_unique($currencies))
+                ->with('myCvs', $myCvs);
+        }
+    }
+
+    public function postReferJob(ApplyJobFormRequest $request, $job_slug)
+    {
+        $user_id = $request->get('user_id');
+        $job = Job::where('slug', 'like', $job_slug)->first();
+
+        $jobApply = new JobApply();
+        $jobApply->user_id = $user_id;
+        $jobApply->job_id = $job->id;
+        $jobApply->cv_id = $request->post('cv_id');
+        $jobApply->current_salary = $request->post('current_salary');
+        $jobApply->expected_salary = $request->post('expected_salary');
+        $jobApply->salary_currency = $request->post('salary_currency');
+
+        /* Referral Code * *********************** */
+        if ($request->input('referral_code') != null || $request->input('referral_code') != "") {
+            $referral_code = CompanyReferral::where('code', '=', $request->input('referral_code'))
+                ->where('is_used', '=', 0)
+                ->get();
+            if ($referral_code->count() > 0) {
+                $referral_code = $referral_code->first();
+                $referral_code->used_by = $user_id;
+                $referral_code->is_used = 1;
+                $referral_code->update();
+            } else {
+                return \Illuminate\Support\Facades\Redirect::back()
+                    ->withInput($request->all())
+                    ->withErrors(['referral_code' => 'Referral Code not found']);
+            }
+        }
+
+        $jobApply->save();
+
+        /*         * ******************************* */
+        if ($job->automatic_reply) {
+            event(new JobApplied($job, $jobApply));
+        }
+
+        flash(__('You have successfully referred for this job'))->success();
         return \Redirect::route('job.detail', $job_slug);
     }
 

@@ -152,15 +152,23 @@ $company = $job->getCompany();
             </div>
             <!-- related jobs end -->
 
-            <div class="col-lg-5"> 
+            <div class="col-lg-5">
 				<div class="jobButtons applybox">
 				@if($job->isJobExpired())
                 <span class="jbexpire"><i class="fa fa-paper-plane" aria-hidden="true"></i> {{__('Job is expired')}}</span>
                 @elseif(Auth::check() && Auth::user()->isAppliedOnJob($job->id))
                 <a href="javascript:;" class="btn apply applied"><i class="fa fa-paper-plane" aria-hidden="true"></i> {{__('Already Applied')}}</a>
-                @else
-                <a href="{{route('apply.job', $job->slug)}}" class="btn apply"><i class="fa fa-paper-plane" aria-hidden="true"></i> {{__('Apply Now')}}</a>
-                @endif
+                    @else
+                        @if(null === Auth::guard('company')->user())
+                            <a href="{{route('apply.job', $job->slug)}}" class="btn apply"><i class="fa fa-paper-plane"
+                                                                                              aria-hidden="true"></i> {{__('Apply Now ')}}
+                            </a>
+                        @else
+                            <a href=" {{route('refer.job', $job->slug)}}" class="btn apply"><i class="fa fa-paper-plane"
+                                                                                              aria-hidden="true"></i> {{__('Refer Candidate')}}
+                            </a>
+                        @endif
+                    @endif
 				</div>
 				
 				
