@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Company;
+use App\Employee;
+use App\JobApply;
+use App\JobApplyRejected;
 use App\User;
 use App\Job;
 use Carbon\Carbon;
@@ -37,6 +41,13 @@ class HomeController extends Controller
         $totalFeaturedJobs = Job::where('is_featured', 1)->count();
         $totalTodaysJobs = Job::where('created_at', 'like', $today->toDateString() . '%')->count();
         $recentJobs = Job::orderBy('id', 'DESC')->take(25)->get();
+
+        $companyRegistered = Company::whereMonth('created_at', '=', now()->format('m'))->count();
+        $employeeRegistered = Employee::whereMonth('created_at', '=', now()->format('m'))->count();
+        $jobApplied = JobApply::whereMonth('created_at', '=', now()->format('m'))->count();
+        $jobRejected = JobApplyRejected::whereMonth('created_at', '=', now()->format('m'))->count();
+        $recentCompanies = Company::orderBy('id', 'DESC')->take(25)->get();
+
         return view('admin.home')
                         ->with('totalActiveUsers', $totalActiveUsers)
                         ->with('totalVerifiedUsers', $totalVerifiedUsers)
@@ -45,7 +56,13 @@ class HomeController extends Controller
                         ->with('totalActiveJobs', $totalActiveJobs)
                         ->with('totalFeaturedJobs', $totalFeaturedJobs)
                         ->with('totalTodaysJobs', $totalTodaysJobs)
-                        ->with('recentJobs', $recentJobs);
+                        ->with('recentJobs', $recentJobs)
+                        ->with('companyRegistered', $companyRegistered)
+                        ->with('employeeRegistered', $employeeRegistered)
+                        ->with('jobApplied', $jobApplied)
+                        ->with('jobRejected', $jobRejected)
+                        ->with('recentCompanies', $recentCompanies)
+            ;
     }
 
 }

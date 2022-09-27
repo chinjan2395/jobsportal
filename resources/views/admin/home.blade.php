@@ -40,7 +40,7 @@
                         </div>
                     </a> </div>
             </div>
-            {{--<div class="col-md-6 col-sm-6">
+            <div class="col-md-6 col-sm-6">
                 <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12"> <a class="dashboard-stat dashboard-stat-v2 red" href="#">
                         <div class="visual"> <i class="fa fa-list"></i> </div>
                         <div class="details">
@@ -62,7 +62,43 @@
                             <div class="desc"> Featured Jobs </div>
                         </div>
                     </a> </div>
-            </div>--}}
+            </div>
+
+            <div class="col-md-6 col-sm-6">
+                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12"> <a class="dashboard-stat dashboard-stat-v2 red" href="#">
+                        <div class="visual"> <i class="fa fa-industry"></i> </div>
+                        <div class="details">
+                            <div class="number"> <span data-counter="counterup" data-value="1349">{{ $companyRegistered }}</span> </div>
+                            <div class="desc"> Companies registered this month </div>
+                        </div>
+                    </a> </div>
+                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12"> <a class="dashboard-stat dashboard-stat-v2 blue" href="#">
+                        <div class="visual"> <i class="fa fa-user-plus"></i> </div>
+                        <div class="details">
+                            <div class="number"> <span data-counter="counterup" data-value="1349">{{ $employeeRegistered }}</span> </div>
+                            <div class="desc"> Employees registered this month </div>
+                        </div>
+                    </a> </div>
+                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12"></div>
+            </div>
+
+            <div class="col-md-6 col-sm-6">
+                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12"> <a class="dashboard-stat dashboard-stat-v2 green" href="#">
+                        <div class="visual"> <i class="fa fa-check"></i> </div>
+                        <div class="details">
+                            <div class="number"> <span data-counter="counterup" data-value="1349">{{ $jobApplied }}</span> </div>
+                            <div class="desc"> Jobs applied this month </div>
+                        </div>
+                    </a> </div>
+                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12"> <a class="dashboard-stat dashboard-stat-v2 red" href="#">
+                        <div class="visual"> <i class="fa fa-times"></i> </div>
+                        <div class="details">
+                            <div class="number"> <span data-counter="counterup" data-value="1349">{{ $jobRejected }}</span> </div>
+                            <div class="desc"> Jobs rejected this month </div>
+                        </div>
+                    </a> </div>
+                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12"></div>
+            </div>
         </div>
         <div class="row">
             <div class="col-md-6 col-sm-6">
@@ -95,7 +131,7 @@
                     </div>
                 </div>
             </div>
-            {{--<div class="col-md-6 col-sm-6">
+            <div class="col-md-6 col-sm-6">
                 <div class="portlet light bordered">
                     <div class="portlet-title">
                         <div class="caption"> <i class="icon-share font-dark hide"></i> <span class="caption-subject font-dark bold uppercase">Recent Jobs</span> </div>
@@ -124,7 +160,37 @@
                         </div>
                     </div>
                 </div>
-            </div>--}}
+            </div>
+            <div class="col-md-6 col-sm-6">
+                <div class="portlet light bordered">
+                    <div class="portlet-title">
+                        <div class="caption"> <i class="icon-share font-dark hide"></i> <span class="caption-subject font-dark bold uppercase">Recent Companies</span> </div>
+                    </div>
+                    <div class="portlet-body">
+                        <div class="slimScrol">
+                            <ul class="feeds">
+                                @foreach($recentCompanies as $recentCompany)
+                                    <li>
+                                        <div class="col1">
+                                            <div class="cont">
+                                                <div class="cont-col1">
+                                                    <div class="label label-sm label-info"> <i class="fa fa-check"></i> </div>
+                                                </div>
+                                                <div class="cont-col2">
+                                                    <div class="desc"><a href="{{ route('edit.company', $recentCompany->id) }}"> {{ \Illuminate\Support\Str::limit($recentCompany->name, 50) }} </a> - <i class="fa fa-list" aria-hidden="true"></i> {{ $recentCompany->getIndustry('industry') }} - <i class="fa fa-home" aria-hidden="true"></i> {{ $recentCompany->location}}</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </div>
+                        <div class="scroller-footer">
+                            <div class="btn-arrow-link pull-right"> <a href="{{ route('list.companies') }}">See All Companies</a> <i class="icon-arrow-right"></i> </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <!-- END CONTENT BODY --> 
