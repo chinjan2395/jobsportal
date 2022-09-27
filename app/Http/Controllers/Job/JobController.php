@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Job;
 use App\CompanyReferral;
 use App\CountryDetail;
 use App\User;
-use Auth;
 use DB;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Input;
 use Redirect;
 use Carbon\Carbon;
@@ -39,7 +41,7 @@ class JobController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth', ['except' => ['jobsBySearch', 'jobDetail', 'referJob', 'postReferJob']]);
+        $this->middleware('auth', ['except' => ['jobsBySearch', 'jobDetail', 'referJob', 'postReferJob', 'applyWithoutSignUpJob']]);
 
         $this->functionalAreas = DataArrayHelper::langFunctionalAreasArray();
         $this->countries = DataArrayHelper::langCountriesArray();
@@ -271,6 +273,17 @@ class JobController extends Controller
             ->with('myCvs', $myCvs);
     }
 
+    public function applyWithoutSignUpJob(Request $request, $job_slug)
+    {
+        $job = Job::where('slug', 'like', $job_slug)->first();
+        $currencies = DataArrayHelper::currenciesArray();
+
+        return view('job.refer_job_form')
+            ->with('job_slug', $job_slug)
+            ->with('job', $job)
+            ->with('currencies', array_unique($currencies));
+    }
+
     public function postApplyJob(ApplyJobFormRequest $request, $job_slug)
     {
         $user = Auth::user();
@@ -353,13 +366,35 @@ class JobController extends Controller
 
     public function postReferJob(ApplyJobFormRequest $request, $job_slug)
     {
-        $user_id = $request->get('user_id');
+        $name = $request->get('name');
+        $user = new User();
+        $user->name = $name;
+        $user->email = $request->get('email');
+        $user->first_name = Str::before($name, ' ');
+        $user->last_name = Str::after($name, ' ');
+        $user->is_active = 1;
+        $user->password = Hash::make($request->input('password'));
+
+        $user->saveOrFail();
+
+        $user_id = $user->id;
         $job = Job::where('slug', 'like', $job_slug)->first();
+
+        $profileCv = new ProfileCv();
+        $profileCv->user_id = $user_id;
+        $profileCv->title = $request->get('email').'#'.Str::random(6);
+        $profileCv->is_default = 1;
+
+        if ($request->hasFile('cv_file')) {
+            $cv_file = $request->file('cv_file');
+            $profileCv->cv_file = ImgUploader::UploadDoc('cvs', $cv_file, $request->input('title'));
+        }
+        $profileCv->save();
 
         $jobApply = new JobApply();
         $jobApply->user_id = $user_id;
         $jobApply->job_id = $job->id;
-        $jobApply->cv_id = $request->post('cv_id');
+        $jobApply->cv_id = $profileCv->id;
         $jobApply->current_salary = $request->post('current_salary');
         $jobApply->expected_salary = $request->post('expected_salary');
         $jobApply->salary_currency = $request->post('salary_currency');
@@ -387,8 +422,12 @@ class JobController extends Controller
         if ($job->automatic_reply) {
             event(new JobApplied($job, $jobApply));
         }
-
-        flash(__('You have successfully referred for this job'))->success();
+        if (null === Auth::guard('company')->user()) {
+            Auth::loginUsingID($user->id, true);
+            flash(__('You have successfully applied for this job'))->success();
+        } else {
+            flash(__('You have successfully referred for this job'))->success();
+        }
         return \Redirect::route('job.detail', $job_slug);
     }
 

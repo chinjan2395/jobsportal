@@ -160,8 +160,13 @@ $company = $job->getCompany();
                 <a href="javascript:;" class="btn apply applied"><i class="fa fa-paper-plane" aria-hidden="true"></i> {{__('Already Applied')}}</a>
                     @else
                         @if(null === Auth::guard('company')->user())
-                            <a href="{{route('apply.job', $job->slug)}}" class="btn apply"><i class="fa fa-paper-plane"
-                                                                                              aria-hidden="true"></i> {{__('Apply Now ')}}
+                            @if(null === Auth::user())
+                                <a href="{{route('apply.without.signup', $job->slug)}}" class="btn btn-lg">
+                                    <i class="fa fa-paper-plane" aria-hidden="true"></i> {{__('Apply By Guest')}}
+                                </a>
+                            @endif
+                            <a href="{{route('apply.job', $job->slug)}}" class="btn btn-lg">
+                                <i class="fa fa-paper-plane" aria-hidden="true"></i> {{__('Apply Now')}}
                             </a>
                         @else
                             <a href=" {{route('refer.job', $job->slug)}}" class="btn apply"><i class="fa fa-paper-plane"

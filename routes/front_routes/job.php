@@ -2,6 +2,7 @@
 
 Route::get('job/{slug}', 'Job\JobController@jobDetail')->name('job.detail');
 Route::get('apply/{slug}', 'Job\JobController@applyJob')->name('apply.job');
+Route::get('apply-without-signup/{slug}', 'Job\JobController@applyWithoutSignUpJob')->name('apply.without.signup');
 Route::get('refer/{slug}', 'Job\JobController@referJob')->name('refer.job');
 Route::post('apply/{slug}', 'Job\JobController@postApplyJob')->name('post.apply.job');
 Route::post('refer/{slug}', 'Job\JobController@postReferJob')->name('post.refer.job');

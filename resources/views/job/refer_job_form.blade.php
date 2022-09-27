@@ -15,27 +15,33 @@
                         <!-- Job Information -->
                         <h5>{{$job->title}}</h5>
                         <div class="row">
-                            <div class="col-md-12">
-                                <div class="formrow{{ $errors->has('salary_currency') ? ' has-error' : '' }}">
-                                    {!! Form::select('user_id', ['' =>__('Select Users')]+$users, Request::get('user_id'), array('class'=>'form-control', 'id'=>'user_id')) !!}
-                                    @if ($errors->has('user_id')) <span class="help-block"> <strong>{{ $errors->first('user_id') }}</strong> </span> @endif
+                            <div class="col-md-6">
+                                <div class="formrow{{ $errors->has('name') ? ' has-error' : '' }}"> {!! Form::text('name', null, array('required'=>'required','class'=>'form-control', 'id'=>'name', 'placeholder'=>__('Full Name'))) !!}
+                                    @if ($errors->has('name')) <span class="help-block"> <strong>{{ $errors->first('name') }}</strong> </span> @endif
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="formrow{{ $errors->has('email') ? ' has-error' : '' }}"> {!! Form::email('email', null, array('required'=>'required','class'=>'form-control', 'id'=>'email', 'placeholder'=>__('Email'))) !!}
+                                    @if ($errors->has('email')) <span class="help-block"> <strong>{{ $errors->first('email') }}</strong> </span> @endif
                                 </div>
                             </div>
                             <div class="col-md-12">
-                                <div class="formrow{{ $errors->has('cv_id') ? ' has-error' : '' }}"> {!! Form::select('cv_id', [''=>__('Select CV')]+$myCvs, null, array('class'=>'form-control', 'id'=>'cv_id')) !!}
-                                    @if ($errors->has('cv_id')) <span class="help-block"> <strong>{{ $errors->first('cv_id') }}</strong> </span> @endif </div>
+                                <div class="form-group" id="div_cv_file">
+                                    <input class="form-control" id="cv_file" name="cv_file" type="file" required>
+                                    <span class="help-block cv_file-error"></span> </div>
                             </div>
                             <div class="col-md-6">
-                                <div class="formrow{{ $errors->has('current_salary') ? ' has-error' : '' }}"> {!! Form::number('current_salary', null, array('class'=>'form-control', 'id'=>'current_salary', 'placeholder'=>__('Current salary').' ('.$job->getSalaryPeriod('salary_period').')' )) !!}
+                                <div class="formrow{{ $errors->has('current_salary') ? ' has-error' : '' }}"> {!! Form::number('current_salary', null, array('required'=>'required','class'=>'form-control', 'id'=>'current_salary', 'placeholder'=>__('Current salary').' ('.$job->getSalaryPeriod('salary_period').')' )) !!}
                                     @if ($errors->has('current_salary')) <span class="help-block"> <strong>{{ $errors->first('current_salary') }}</strong> </span> @endif </div>
                             </div>
                             <div class="col-md-6">
-                                <div class="formrow{{ $errors->has('expected_salary') ? ' has-error' : '' }}"> {!! Form::number('expected_salary', null, array('class'=>'form-control', 'id'=>'expected_salary', 'placeholder'=>__('Expected salary').' ('.$job->getSalaryPeriod('salary_period').')')) !!}
+                                <div class="formrow{{ $errors->has('expected_salary') ? ' has-error' : '' }}"> {!! Form::number('expected_salary', null, array('required'=>'required','class'=>'form-control', 'id'=>'expected_salary', 'placeholder'=>__('Expected salary').' ('.$job->getSalaryPeriod('salary_period').')')) !!}
                                     @if ($errors->has('expected_salary')) <span class="help-block"> <strong>{{ $errors->first('expected_salary') }}</strong> </span> @endif </div>
                             </div>
                             <div class="col-md-12">
                                 <div class="formrow{{ $errors->has('salary_currency') ? ' has-error' : '' }}">
-                                    {!! Form::select('salary_currency', ['' =>__('Select Salary Currency')]+$currencies, Request::get('salary_currency'), array('class'=>'form-control', 'id'=>'salary_currency')) !!}
+                                    {!! Form::select('salary_currency', ['' =>__('Select Salary Currency')]+$currencies, Request::get('salary_currency'), array('required'=>'required','class'=>'form-control', 'id'=>'salary_currency')) !!}
                                     @if ($errors->has('salary_currency')) <span class="help-block"> <strong>{{ $errors->first('salary_currency') }}</strong> </span> @endif
                                 </div>
                             </div>
@@ -66,9 +72,10 @@
         </div>
     </div>
 </div>
+<div class="modal" id="add_cv_modal" role="dialog"></div>
 @include('includes.footer')
 @endsection
-@push('scripts') 
+@push('scripts')
 <script>
     $(document).ready(function () {
         $('#salary_currency').typeahead({
@@ -89,10 +96,6 @@
             if(this.checked) {
                 $('#referral_code_input').show();
             }
-        });
-
-        $('#user_id').change(function () {
-            window.location.href = "<?php echo url(Request::url());?>?user_id=" + $('#user_id').val();
         });
     });
 </script> 
