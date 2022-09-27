@@ -6,6 +6,11 @@
     <!-- Inner Page Title start -->
     @include('includes.inner_page_title', ['page_title'=>__('Referrals')])
     <!-- Inner Page Title end -->
+    <style>
+        .userbtns .nav-tabs > li {
+            width: auto;
+        }
+    </style>
     <div class="listpgWraper">
         <div class="container">
             <div class="row">
@@ -51,66 +56,57 @@
                                 </div>
                             </div>
                         </div>
-
-                        {{--<div class="userbtns">
+                        <!-- referral start -->
+                        <div class="userbtns">
                             <ul class="nav nav-tabs">
-                                <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#un-used" aria-expanded="true">{{__('Un Used')}}</a></li>
-                                <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#used" aria-expanded="false">{{__('Used')}}</a></li>
+                                @foreach($employeeReferrals as $referrals)
+                                    <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#used-{{$referrals['employee']->id}}" aria-expanded="true">{{__($referrals['employee']->name)}}</a></li>
+                                @endforeach
                             </ul>
-                        </div>--}}
+                        </div>
+
                         <div class="tab-content">
-                            <div id="used" class="formpanel tab-pane active">
-                                <ul class="searchList">
-                                    <!-- referral start -->
-                                    @if(isset($referrals['used']) && count($referrals['used']))
+                            @foreach($employeeReferrals as $referrals)
+                                @php $is_first = $loop->first; @endphp
+                                @if(isset($referrals['used']) && count($referrals['used']))
+                                    <div id="used-{{$referrals['employee']->id}}"
+                                         class="formpanel tab-pane {{$loop->first?'active':''}}">
                                         @foreach($referrals['used'] as $referral)
-                                            @php $company = $referral->getCompany(); @endphp
-                                            @if(null !== $company)
-                                                <li id="job_li_{{$referral->id}}">
-                                                    <div class="row">
-                                                        <div class="col-md-8 col-sm-8">
-                                                            <div class="jobinfo">
-                                                                <h5><i class="fa fa-random"></i> {{$referral->code}}
-                                                                </h5>
-                                                                <div class="companyName"><a
-                                                                            href="{{route('company.detail', $company->slug)}}"
-                                                                            title="{{$company->name}}">{{$company->name}}
-                                                                        -
-                                                                        <small>{{$referral->created_at->format('M d, Y H:i:s')}}</small></a>
+                                            <ul class="searchList">
+                                                @php $company = $referral->getCompany(); @endphp
+                                                @if(null !== $company)
+                                                    <li id="job_li_{{$referrals['employee']->id}}_{{$referral->id}}">
+                                                        <div class="row">
+                                                            <div class="col-md-8 col-sm-8">
+                                                                <div class="jobinfo">
+                                                                    <h5><i class="fa fa-random"></i> {{$referral->code}}
+                                                                    </h5>
+                                                                    <div class="companyName"><a
+                                                                                href="{{route('company.detail', $company->slug)}}"
+                                                                                title="{{$company->name}}">{{$company->name}}
+                                                                            -
+                                                                            <small>{{$referral->created_at->format('M d, Y H:i:s')}}</small></a>
+                                                                    </div>
+                                                                    <div>Used By - <a
+                                                                                href="{{route('user.profile', optional($referral->usedBy)->id)}}"
+                                                                                title="{{optional($referral->usedBy)->getName()}}">
+                                                                            {{optional($referral->usedBy)->getName()}}
+                                                                            - {{optional($referral->usedBy)->email}}
+                                                                        </a>
+                                                                    </div>
                                                                 </div>
-                                                                <div>Used By - <a href="{{route('user.profile', optional($referral->usedBy)->id)}}" title="{{optional($referral->usedBy)->getName()}}">
-                                                                        {{optional($referral->usedBy)->getName()}} - {{optional($referral->usedBy)->email}}
-                                                                    </a>
-                                                                </div>
+                                                                <div class="clearfix"></div>
                                                             </div>
-                                                            <div class="clearfix"></div>
                                                         </div>
-                                                    </div>
-                                                    <p>{{\Illuminate\Support\Str::limit(strip_tags($referral->description), 150, '...')}}</p>
-                                                </li>
-                                                <!-- referral end -->
-                                            @endif
+                                                        <p>{{\Illuminate\Support\Str::limit(strip_tags($referral->description), 150, '...')}}</p>
+                                                    </li>
+                                                    <!-- referral end -->
+                                                @endif
+                                            </ul>
                                         @endforeach
-                                    @endif
-                                </ul>
-                                <!-- Pagination Start -->
-                                <div class="pagiWrap">
-                                    <div class="row">
-                                        <div class="col-md-5">
-                                            <div class="showreslt">
-                                                {{__('Showing Pages')}} : {{ $referrals['used']->firstItem() }}
-                                                - {{ $referrals['used']->lastItem() }} {{__('Total')}} {{ $referrals['used']->total() }}
-                                            </div>
-                                        </div>
-                                        <div class="col-md-7 text-right">
-                                            @if(isset($referrals['used']) && count($referrals['used']))
-                                                {{ $referrals['used']->appends(request()->query())->links() }}
-                                            @endif
-                                        </div>
                                     </div>
-                                </div>
-                                <!-- Pagination end -->
-                            </div>
+                                @endif
+                            @endforeach
                         </div>
                     </div>
                 </div>

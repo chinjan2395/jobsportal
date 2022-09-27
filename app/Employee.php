@@ -25,5 +25,10 @@ class Employee extends Company
     {
         return $this->belongsTo('App\Company', 'belongs_to', 'id');
     }
+
+    public function referrals()
+    {
+        return $this->hasMany('App\CompanyReferral', 'company_id');
+    }
 }
 

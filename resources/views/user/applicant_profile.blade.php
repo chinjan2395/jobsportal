@@ -161,7 +161,25 @@ if(null!==($package)){
                 <div class="job-header">
                     <div class="contentbox">
                         <h3>{{__('Ratings')}}</h3>
-                        <div class="" id="rating_div"></div>
+{{--                        <div class="" id="rating_div"></div>--}}
+                        @foreach($user->profileRatings as $rating)
+                            <div class="row">
+                                <div class="col-md-12 col-sm-12">
+                                    <div class="jobinfo">
+                                        <h5><i class="fa fa-star-o"></i> {{$rating->getRating('title')}}
+                                        </h5>
+                                        <div class="companyName">
+                                            <div class="text">{{$rating->reason}}</div>
+                                            <br>
+                                            <small class="text-muted"
+                                                   style="float: right">{{is_null($rating->getCompany('name'))?'Anonymous':$rating->getCompany('name')}}
+                                                - {{$rating->created_at->format('M d, Y H:i:s')}}</small>
+                                        </div>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </div>
+                        @endforeach
                     </div>
                 </div>
 

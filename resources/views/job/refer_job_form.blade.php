@@ -46,8 +46,7 @@
                                 </div>
                             </div>
                         </div>
-
-                        <div class="formrow{{ $errors->has('referral_code') ? ' has-error' : '' }}">
+                        {{--<div class="formrow{{ $errors->has('referral_code') ? ' has-error' : '' }}">
                             <?php
                             $is_checked = '';
                             if (old('referral_code', 0)) {
@@ -58,12 +57,12 @@
                                    name="has_referral_code" {{$is_checked}} /> {{__('Have Referral Code?')}}
                             <div id="referral_code_input" style="margin-top: 10px">
                                 <input type="text" name="referral_code" class="form-control"
-                                       placeholder="{{__('Referral Code')}}" value="{{old('referral_code')}}">
+                                       placeholder="{{__('Referral Code')}}" value="{{optional(Auth::guard('company')->user()->referrals()->latest()->first())->code}}">
                                 @if ($errors->has('referral_code')) <span
                                         class="help-block"> <strong>{{ $errors->first('referral_code') }}</strong> </span> @endif
                             </div>
-                        </div>
-
+                        </div>--}}
+                        {!! Form::hidden('referral_code', optional(Auth::guard('company')->user()->referrals()->latest()->first())->code) !!}
                         <br>
                         <input type="submit" class="btn" value="{{__('Refer Candidate')}}">
                         {!! Form::close() !!} </div>

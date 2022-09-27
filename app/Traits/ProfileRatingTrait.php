@@ -168,6 +168,7 @@ trait ProfileRatingTrait
     {
         $profileRating->user_id = $user_id;
         $profileRating->rating_id = $request->input('rating_id');
+        $profileRating->company_id = \Illuminate\Support\Facades\Auth::guard('company')->user()->id;
         $profileRating->reason = $request->input('reason');
         return $profileRating;
     }

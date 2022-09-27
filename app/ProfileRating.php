@@ -7,8 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 class ProfileRating extends Model
 {
 
-    protected $fillable = ['user_id', 'rating_id', 'reason'];
+    protected $fillable = ['user_id', 'rating_id', 'reason', 'company_id'];
     protected $guarded = ['id'];
+    protected $appends = [];
 
     public function user()
     {
@@ -41,6 +42,22 @@ class ProfileRating extends Model
                 return $user->$field;
         } else {
             return '';
+        }
+    }
+
+    public function company()
+    {
+        return $this->belongsTo('App\Company', 'company_id', 'id');
+    }
+
+    public function getCompany($field = '')
+    {
+        if (null !== $company = $this->company()->first()) {
+            if (!empty($field)) {
+                return $company->$field;
+            } else {
+                return $company;
+            }
         }
     }
 

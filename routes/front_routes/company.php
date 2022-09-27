@@ -41,6 +41,7 @@ Route::put('update-front-event/{id}', 'Company\CompanyController@updateFrontComp
 Route::put('update-front-event-status/{id}', 'Company\CompanyController@updateFrontCompanyEventStatus')->name('update.front.status.event');
 Route::delete('delete-front-event', 'Company\CompanyController@deleteCompanyEvent')->name('delete.front.event');
 
-Route::get('referrals', 'Company\CompanyController@referrals')->name('posted.referrals');
+Route::get('referrals', 'Company\CompanyController@referrals')->name('posted.my.referrals');
+Route::get('employee-referrals', 'Company\CompanyController@employeeReferrals')->name('posted.employee.referrals');
 Route::post('store-front-referral', 'Company\CompanyController@storeFrontReferral')->name('store.front.referral');
 Route::delete('delete-front-referral', 'Company\CompanyController@deleteReferral')->name('delete.front.referral');

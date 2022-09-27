@@ -3,6 +3,7 @@
 
 namespace App\Traits;
 
+use App\Employee;
 use App\Http\Requests\ReferralFormRequest;
 use App\CompanyReferral;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -22,6 +23,22 @@ trait CompanyReferralTrait
             'used' => $company->referrals()->with('usedBy')->used()->paginate(10)
         ];
         return view('company.referrals')->with('referrals', $referrals);
+    }
+
+    public function employeeReferrals(Request $request)
+    {
+        $company = Auth::guard('company')->user();
+        $employees = Employee::where('belongs_to', $company->id)->get();
+        $referrals = [];
+
+        foreach ($employees as $employee):
+            $referrals[] = [
+                'employee' => $employee,
+                'un_used' => $employee->referrals()->with('usedBy')->unUsed()->get(),
+                'used' => $employee->referrals()->with('usedBy')->used()->get()
+            ];
+        endforeach;
+        return view('company.employee_referrals')->with('employeeReferrals', $referrals);
     }
 
     public function storeFrontReferral(ReferralFormRequest $request)
