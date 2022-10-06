@@ -2,5 +2,6 @@
     <ul class="sub-menu">
         <li class="nav-item  "> <a href="{{ route('list.jobs') }}" class="nav-link "> <span class="title">List Jobs</span> </a> </li>
         <li class="nav-item  "> <a href="{{ route('create.job') }}" class="nav-link "> <span class="title">Add new Job</span> </a> </li>
+        <li class="nav-item  "> <a href="{{ route('list.applied.jobs') }}" class="nav-link "> <span class="title">Applied Jobs</span> </a> </li>
     </ul>
 </li>

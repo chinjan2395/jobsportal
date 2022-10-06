@@ -659,5 +659,47 @@ trait JobTrait
 
     }
 
+    public function viewAppliedJob($id)
+
+    {
+
+        $companies = DataArrayHelper::companiesArray();
+        $countries = DataArrayHelper::defaultCountriesArray();
+        $currencies = DataArrayHelper::currenciesArray();
+        $careerLevels = DataArrayHelper::defaultCareerLevelsArray();
+        $functionalAreas = DataArrayHelper::defaultFunctionalAreasArray();
+        $jobTypes = DataArrayHelper::defaultJobTypesArray();
+        $jobShifts = DataArrayHelper::defaultJobShiftsArray();
+        $genders = DataArrayHelper::defaultGendersArray();
+        $jobExperiences = DataArrayHelper::defaultJobExperiencesArray();
+        $jobSkills = DataArrayHelper::defaultJobSkillsArray();
+        $degreeLevels = DataArrayHelper::defaultDegreeLevelsArray();
+        $salaryPeriods = DataArrayHelper::defaultSalaryPeriodsArray();
+
+
+        $job = Job::findOrFail($id);
+        $jobApplications = $job->jobApplications()->with(['user', 'profileCv'])->get();
+
+        $jobSkillIds = $job->getJobSkillsArray();
+
+        return view('admin.job_apply.edit')
+            ->with('companies', $companies)
+            ->with('countries', $countries)
+            ->with('currencies', array_unique($currencies))
+            ->with('careerLevels', $careerLevels)
+            ->with('functionalAreas', $functionalAreas)
+            ->with('jobTypes', $jobTypes)
+            ->with('jobShifts', $jobShifts)
+            ->with('genders', $genders)
+            ->with('jobExperiences', $jobExperiences)
+            ->with('jobSkills', $jobSkills)
+            ->with('jobSkillIds', $jobSkillIds)
+            ->with('degreeLevels', $degreeLevels)
+            ->with('salaryPeriods', $salaryPeriods)
+            ->with('applications', $jobApplications)
+            ->with('job', $job);
+
+    }
+
 }
 

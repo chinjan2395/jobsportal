@@ -33,8 +33,8 @@ class JobAppliedCompanyMailable extends Mailable
     {
         $company = $this->job->getCompany();
         $user = $this->jobApply->getUser();
-
-        return $this->from(config('mail.recieve_to.address'), config('mail.recieve_to.name'))
+        //        return $this->from($company->email, $company->name)
+        return $this->from('csr_notification@massar.com', 'CSR Notification')
                         ->replyTo(config('mail.recieve_to.address'), config('mail.recieve_to.name'))
                         ->to($company->email, $company->name)
                         ->subject('Job seeker named "' . $user->name . '" has applied on job "' . $this->job->title)

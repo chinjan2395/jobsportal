@@ -183,4 +183,67 @@ class JobController extends Controller
         }
     }
 
+    public function indexAppliedJobs()
+    {
+        $companies = DataArrayHelper::companiesArray();
+        $countries = DataArrayHelper::defaultCountriesArray();
+        return view('admin.job_apply.index')
+            ->with('companies', $companies)
+            ->with('countries', $countries);
+    }
+
+    public function fetchAppliedJobsData(Request $request)
+    {
+        $jobs = Job::select([
+            'jobs.id', 'jobs.company_id', 'jobs.title', 'jobs.description', 'jobs.country_id', 'jobs.state_id', 'jobs.city_id', 'jobs.is_freelance', 'jobs.career_level_id', 'jobs.salary_from', 'jobs.salary_to', 'jobs.hide_salary', 'jobs.functional_area_id', 'jobs.job_type_id', 'jobs.job_shift_id', 'jobs.num_of_positions', 'jobs.gender_id', 'jobs.expiry_date', 'jobs.degree_level_id', 'jobs.job_experience_id', 'jobs.is_active', 'jobs.is_featured',
+        ])->has('jobApplications');
+        return Datatables::of($jobs)
+            ->filter(function ($query) use ($request) {
+                if ($request->has('company_id') && !empty($request->company_id)) {
+                    $query->where('jobs.company_id', '=', "{$request->get('company_id')}");
+                }
+                if ($request->has('title') && !empty($request->title)) {
+                    $query->where('jobs.title', 'like', "%{$request->get('title')}%");
+                }
+                if ($request->has('description') && !empty($request->description)) {
+                    $query->where('jobs.description', 'like', "%{$request->get('description')}%");
+                }
+                if ($request->has('country_id') && !empty($request->country_id)) {
+                    $query->where('jobs.country_id', '=', "{$request->get('country_id')}");
+                }
+                if ($request->has('state_id') && !empty($request->state_id)) {
+                    $query->where('jobs.state_id', '=', "{$request->get('state_id')}");
+                }
+                if ($request->has('city_id') && !empty($request->city_id)) {
+                    $query->where('jobs.city_id', '=', "{$request->get('city_id')}");
+                }
+                if ($request->has('is_active') && $request->is_active != -1) {
+                    $query->where('jobs.is_active', '=', "{$request->get('is_active')}");
+                }
+                if ($request->has('is_featured') && $request->is_featured != -1) {
+                    $query->where('jobs.is_featured', '=', "{$request->get('is_featured')}");
+                }
+            })
+            ->addColumn('company_id', function ($jobs) {
+                return $jobs->getCompany('name');
+            })
+            ->addColumn('city_id', function ($jobs) {
+                return $jobs->getCity('city') . '(' . $jobs->getState('state') . '-' . $jobs->getCountry('country') . ')';
+            })
+            ->addColumn('description', function ($jobs) {
+                return strip_tags(Str::limit($jobs->description, 50, '...'));
+            })
+            ->addColumn('action', function ($jobs) {
+                return '
+				<div class="btn-group">
+				<a class="btn blue" href="' . route('view.applied.job', ['id' => $jobs->id]) . '"><i class="fa fa-eye" aria-hidden="true"></i> View</a>
+				</div>';
+            })
+            ->rawColumns(['action', 'company_id', 'city_id', 'description'])
+            ->setRowId(function($jobs) {
+                return 'jobDtRow' . $jobs->id;
+            })
+            ->make(true);
+    }
+
 }

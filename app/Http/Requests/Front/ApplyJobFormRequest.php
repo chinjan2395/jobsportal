@@ -31,6 +31,7 @@ class ApplyJobFormRequest extends Request
                         "current_salary" => "required|max:11",
                         "expected_salary" => "required|max:11",
                         "salary_currency" => "required|max:5",
+                        'email' => 'unique:users,email|email|max:100',
                     ];
                 }
             default:break;
@@ -43,6 +44,8 @@ class ApplyJobFormRequest extends Request
             'current_salary.required' => __('Please enter current salary'),
             'expected_salary.required' => __('Please enter expected salary'),
             'salary_currency.required' => __('Please enter salary currency'),
+            'email.email' => __('The email must be a valid email address'),
+            'email.unique' => __('This Email has already been taken'),
         ];
     }
 

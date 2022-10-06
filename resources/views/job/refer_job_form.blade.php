@@ -62,9 +62,14 @@
                                         class="help-block"> <strong>{{ $errors->first('referral_code') }}</strong> </span> @endif
                             </div>
                         </div>--}}
-                        {!! Form::hidden('referral_code', optional(Auth::guard('company')->user()->referrals()->latest()->first())->code) !!}
-                        <br>
-                        <input type="submit" class="btn" value="{{__('Refer Candidate')}}">
+                        @if(Auth::guard('company')->user())
+                            {!! Form::hidden('referral_code', optional(Auth::guard('company')->user()->referrals()->latest()->first())->code) !!}
+                            <br>
+                            <input type="submit" class="btn" value="{{__('Refer Candidate')}}">
+                        @else
+                            <br>
+                            <input type="submit" class="btn" value="{{__('Apply')}}">
+                        @endif
                         {!! Form::close() !!} </div>
                 </div>
             </div>

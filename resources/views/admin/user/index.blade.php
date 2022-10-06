@@ -111,7 +111,7 @@
         if (confirm('Are you sure! you want to delete?')) {
             $.post("{{ route('delete.user') }}", {id: id, _method: 'DELETE', _token: '{{ csrf_token() }}'})
                     .done(function (response) {
-                        if (response == 'ok')
+                        if (response == 'ok' || response == 'okok')
                         {
                             var table = $('#user_datatable_ajax').DataTable();
                             table.row('user_dt_row_' + id).remove().draw(false);

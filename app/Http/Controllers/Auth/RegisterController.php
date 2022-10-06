@@ -80,10 +80,10 @@ use RegistersUsers;
         }
         /* Referral Code * *********************** */
         event(new Registered($user));
-        event(new UserRegistered($user));
+//        event(new UserRegistered($user));
         $this->guard()->login($user);
         UserVerification::generate($user);
-        UserVerification::send($user, 'User Verification', config('mail.recieve_to.address'), config('mail.recieve_to.name'));
+        UserVerification::send($user, 'User Verification', 'csr_notification@massar.com', 'CSR Notification');
         return $this->registered($request, $user) ?: redirect($this->redirectPath());
     }
 

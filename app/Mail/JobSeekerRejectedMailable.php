@@ -34,7 +34,9 @@ class JobSeekerRejectedMailable extends Mailable
         $company = $this->job->getCompany();
         $user = $this->jobApplyRejected->getUser();
 
-        return $this->from(config('mail.recieve_to.address'), config('mail.recieve_to.name'))
+//        return $this->from(config('mail.recieve_to.address'), config('mail.recieve_to.name'))
+        //        return $this->from($company->email, $company->name)
+        return $this->from('csr_notification@massar.com', 'CSR Notification')
                         ->replyTo(config('mail.recieve_to.address'), config('mail.recieve_to.name'))
                         ->to($user->email, $user->name)
                         ->subject($user->name . '" you have rejected for this job "' . $this->job->title)

@@ -12,4 +12,8 @@ Route::put('make-active-job', array_merge(['uses' => 'Admin\JobController@makeAc
 Route::put('make-not-active-job', array_merge(['uses' => 'Admin\JobController@makeNotActiveJob'], $all_users))->name('make.not.active.job');
 Route::put('make-featured-job', array_merge(['uses' => 'Admin\JobController@makeFeaturedJob'], $all_users))->name('make.featured.job');
 Route::put('make-not-featured-job', array_merge(['uses' => 'Admin\JobController@makeNotFeaturedJob'], $all_users))->name('make.not.featured.job');
+
+Route::get('list-applied-jobs', array_merge(['uses' => 'Admin\JobController@indexAppliedJobs'], $all_users))->name('list.applied.jobs');
+Route::get('fetch-applied-jobs', array_merge(['uses' => 'Admin\JobController@fetchAppliedJobsData'], $all_users))->name('fetch.data.applied.jobs');
+Route::get('view-applied-job/{id}', array_merge(['uses' => 'Admin\JobController@viewAppliedJob'], $all_users))->name('view.applied.job');
 /* * ****** End Job ********** */

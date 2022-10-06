@@ -423,7 +423,7 @@ class JobController extends Controller
             event(new JobApplied($job, $jobApply));
         }
         if (null === Auth::guard('company')->user()) {
-            Auth::loginUsingID($user->id, true);
+//            Auth::loginUsingID($user->id, true);
             flash(__('You have successfully applied for this job'))->success();
         } else {
             flash(__('You have successfully referred for this job'))->success();

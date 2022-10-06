@@ -42,6 +42,16 @@ class Job extends Model
         }
     }
 
+    public function jobApplications()
+    {
+        return $this->hasMany('App\JobApply', 'job_id', 'id');
+    }
+
+    public function getJobApplicationsArray()
+    {
+        return $this->jobApplications->pluck('job_id')->toArray();
+    }
+
     public function jobSkills()
     {
         return $this->hasMany('App\JobSkillManager', 'job_id', 'id');
