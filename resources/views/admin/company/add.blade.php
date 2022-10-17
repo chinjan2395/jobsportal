@@ -23,12 +23,14 @@
                         <div class="caption font-red-sunglo"> <i class="icon-settings font-red-sunglo"></i> <span class="caption-subject bold uppercase">Company Form</span> </div>
                     </div>
                     <div class="portlet-body form">          
-                        <ul class="nav nav-tabs">              
-                            <li class="active"> <a href="#Details" data-toggle="tab" aria-expanded="false"> Details </a> </li>
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a href="#Details" data-toggle="tab" aria-expanded="false"> Details </a></li>
+                            <li class=""><a href="#Emails" data-toggle="tab" aria-expanded="false"> Email </a></li>
                         </ul>
                         {!! Form::open(array('method' => 'post', 'route' => 'store.company', 'class' => 'form', 'files'=>true)) !!}
                         <div class="tab-content">              
                             <div class="tab-pane fade active in" id="Details"> @include('admin.company.forms.form') </div>
+                            <div class="tab-pane fade" id="Emails"> @include('admin.company.forms.siteEmailSetting_form') </div>
                         </div>
                         {!! Form::close() !!}
                     </div>

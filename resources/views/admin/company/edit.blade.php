@@ -25,12 +25,15 @@
                     <div class="portlet-body form">
                         <ul class="nav nav-tabs">
                             <li class="active"> <a href="#Details" data-toggle="tab" aria-expanded="false"> Details </a> </li>
+                            <li class=""><a href="#Emails" data-toggle="tab" aria-expanded="false"> Email </a></li>
                         </ul>
                         {!! Form::model($company, array('method' => 'put', 'route' => array('update.company', $company->id), 'class' => 'form', 'files'=>true)) !!}
                         {!! Form::hidden('id', $company->id) !!}
                         <div class="tab-content">
                             <div class="tab-pane fade active in" id="Details"> @include('admin.company.forms.form') </div>
+                            <div class="tab-pane fade" id="Emails"> @include('admin.company.forms.siteEmailSetting_form') </div>
                         </div>
+                        <div class="form-actions"> {!! Form::button('Update <i class="fa fa-arrow-circle-right" aria-hidden="true"></i>', array('class'=>'btn btn-large btn-primary', 'type'=>'submit')) !!} </div>
                         {!! Form::close() !!} </div>
                 </div>
             </div>

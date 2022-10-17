@@ -174,6 +174,16 @@ class CompanyController extends Controller
         $industries = DataArrayHelper::defaultIndustriesArray();
         $ownershipTypes = DataArrayHelper::defaultOwnershipTypesArray();
         $company = Company::findOrFail($id);
+        $mail_drivers = [
+            'smtp' => 'SMTP',
+            'mail' => 'Mail',
+            'sendmail' => 'SendMail',
+            'mailgun' => 'MailGun',
+            'mandrill' => 'Mandrill',
+            'ses' => 'Amazon SES',
+            'sparkpost' => 'Sparkpost',
+            'log' => 'Log'
+        ];
 
         if ($company->package_id > 0) {
             $package = Package::find($company->package_id);
@@ -187,7 +197,9 @@ class CompanyController extends Controller
             ->with('countries', $countries)
             ->with('industries', $industries)
             ->with('ownershipTypes', $ownershipTypes)
-            ->with('packages', $packages);
+            ->with('packages', $packages)
+            ->with('mail_drivers', $mail_drivers)
+            ;
     }
 
 
@@ -233,6 +245,15 @@ class CompanyController extends Controller
         $company->is_active = $request->input('is_active');
         $company->is_featured = $request->input('is_featured');
         $company->slug = Str::slug($company->name, '-') . '-' . $company->id;
+
+        $company->mail_driver = $request->input('mail_driver');
+        $company->mail_host = $request->input('mail_host');
+        $company->mail_port = $request->input('mail_port');
+        $company->mail_encryption = $request->input('mail_encryption');
+        $company->mail_username = $request->input('mail_username');
+        $company->mail_password = $request->input('mail_password');
+        $company->mail_sendmail = $request->input('mail_sendmail');
+        $company->mail_pretend = $request->input('mail_pretend');
         $company->update();
 
         /*         * ************************************ */
