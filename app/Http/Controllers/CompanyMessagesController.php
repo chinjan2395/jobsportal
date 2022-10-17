@@ -8,13 +8,12 @@ use App\CompanyMessage;
 use App\User;
 use Image;
 use Auth;
-use Mail;
+use Illuminate\Support\Facades\Mail;
 use App\Mail\MessageSendCompanyMail;
 
 use Session;
 use Illuminate\Support\Facades\Input;
 use Validator;
-use Illuminate\Support\Facades\Redirect;
 
 class CompanyMessagesController extends Controller
 {
@@ -32,7 +31,8 @@ class CompanyMessagesController extends Controller
     /**
      * Show the application dashboard.
      *
-     * @return \Illuminate\Contracts\Support\Renderable
+     * @return \Illuminate\Contracts\Support\Renderable|\Illuminate\Http\JsonResponse
+     * @throws \Illuminate\Validation\ValidationException
      */
     function submitnew_message_seeker(Request $request)
     {
@@ -43,6 +43,7 @@ class CompanyMessagesController extends Controller
         ]);
         $message = new CompanyMessage();
         $message->company_id = Auth::guard('company')->user()->id;
+        $message->subject = $request->subject;
         $message->message = $request->message;
         $message->seeker_id = $request->seeker_id;
         $message->type = 'reply';
@@ -53,8 +54,8 @@ class CompanyMessagesController extends Controller
         $data['name'] = $user->name;
         $data['email'] = $user->email;
         $data['company_name'] = $company->name;
-
-        /*Mail::send(new MessageSendCompanyMail($data));*/
+        $arr = array();
+        Mail::send(new MessageSendCompanyMail($data));
         if ($message->save() == true) {
             $arr = array('msg' => 'Your message have successfully been posted. ', 'status' => true);
         }
@@ -69,6 +70,7 @@ class CompanyMessagesController extends Controller
         ]);
         $message = new CompanyMessage();
         $message->company_id = Auth::guard('company')->user()->id;
+        $message->subject = $request->subject;
         $message->message = $request->message;
         $message->seeker_id = $request->seeker_id;
         $message->type = 'reply';

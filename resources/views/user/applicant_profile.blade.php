@@ -302,6 +302,11 @@ if(null!==($package)){
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
+                        <label class="control-label" for="subject">Subject</label>
+                        <input type="text" class="form-control" name="subject" id="subject"/>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="message">Message</label>
                         <textarea class="form-control" name="message" id="message" cols="10" rows="7"></textarea>
                     </div>
                 </div>
