@@ -32,7 +32,7 @@ class MessageSendCompanyMail extends Mailable
      */
     public function build()
     {
-        return $this->from(config('mail.recieve_to.address'), config('mail.recieve_to.name'))
+        return $this->from(config('mail.from.address'), config('mail.from.name'))
             ->subject('Employer/Company "' . $this->data['company_name'] . '" has sent new message on "' . config('app.name'))
             ->to($this->data['email'], $this->data['name'])
             ->view('emails.send_email_message')

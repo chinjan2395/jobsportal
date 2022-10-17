@@ -20,6 +20,7 @@ class JobPostedMailable extends Mailable
     public function __construct($job)
     {
         $this->job = $job;
+        $this->setConfig($job);
     }
 
     /**
@@ -30,7 +31,8 @@ class JobPostedMailable extends Mailable
     public function build()
     {
         $company = $this->job->getCompany();
-        return $this->to(config('mail.recieve_to.address'), config('mail.recieve_to.name'))
+        return $this->from(config('mail.from.address'), config('mail.from.name'))
+                    ->to(config('mail.recieve_to.address'), config('mail.recieve_to.name'))
                         ->subject('Employer/Company "' . $company->name . '" has posted new job on "' . config('app.name'))
                         ->view('emails.job_posted_message')
                         ->with(
@@ -40,6 +42,23 @@ class JobPostedMailable extends Mailable
                                     'link_admin' => route('edit.job', ['id' => $this->job->id])
                                 ]
         );
+    }
+
+    private function setConfig($job)
+    {
+        $company = $job->company;
+        $config = array(
+            'driver' => $company->mail_driver,
+            'host' => $company->mail_host,
+            'port' => $company->mail_port,
+            'from' => array('address' => $company->mail_from_address, 'name' => $company->mail_from_name),
+            'encryption' => $company->mail_encryption,
+            'username' => $company->mail_username,
+            'password' => $company->mail_password,
+            'sendmail' => $company->mail_sendmail,
+            'pretend' => $company->mail_pretend,
+        );
+        \Illuminate\Support\Facades\Config::set('mail', $config);
     }
 
 }

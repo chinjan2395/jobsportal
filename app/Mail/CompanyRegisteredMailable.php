@@ -20,6 +20,7 @@ class CompanyRegisteredMailable extends Mailable
     public function __construct($company)
     {
         $this->company = $company;
+        $this->setConfig($company);
     }
 
     /**
@@ -29,7 +30,8 @@ class CompanyRegisteredMailable extends Mailable
      */
     public function build()
     {
-        return $this->to(config('mail.recieve_to.address'), config('mail.recieve_to.name'))
+        return $this->from(config('mail.from.address'), config('mail.from.name'))
+                    ->to(config('mail.recieve_to.address'), config('mail.recieve_to.name'))
                         ->subject('Employer/Company "' . $this->company->name . '" has been registered on "' . config('app.name'))
                         ->view('emails.company_registered_message')
                         ->with(
@@ -40,6 +42,22 @@ class CompanyRegisteredMailable extends Mailable
                                     'link_admin' => route('edit.company', ['id' => $this->company->id])
                                 ]
         );
+    }
+
+    private function setConfig($company)
+    {
+        $config = array(
+            'driver' => $company->mail_driver,
+            'host' => $company->mail_host,
+            'port' => $company->mail_port,
+            'from' => array('address' => $company->mail_from_address, 'name' => $company->mail_from_name),
+            'encryption' => $company->mail_encryption,
+            'username' => $company->mail_username,
+            'password' => $company->mail_password,
+            'sendmail' => $company->mail_sendmail,
+            'pretend' => $company->mail_pretend,
+        );
+        \Illuminate\Support\Facades\Config::set('mail', $config);
     }
 
 }

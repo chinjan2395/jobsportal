@@ -22,6 +22,7 @@ class JobAppliedCompanyMailable extends Mailable
     {
         $this->job = $job;
         $this->jobApply = $jobApply;
+        $this->setConfig($job);
     }
 
     /**
@@ -34,7 +35,7 @@ class JobAppliedCompanyMailable extends Mailable
         $company = $this->job->getCompany();
         $user = $this->jobApply->getUser();
         //        return $this->from($company->email, $company->name)
-        return $this->from('csr_notification@massar.com', 'CSR Notification')
+        return $this->from(config('mail.from.address'), config('mail.from.name'))
                         ->replyTo(config('mail.recieve_to.address'), config('mail.recieve_to.name'))
                         ->to($company->email, $company->name)
                         ->subject('Job seeker named "' . $user->name . '" has applied on job "' . $this->job->title)
@@ -48,6 +49,23 @@ class JobAppliedCompanyMailable extends Mailable
                                     'job_link' => route('job.detail', [$this->job->slug])
                                 ]
         );
+    }
+
+    private function setConfig($job)
+    {
+        $company = $job->company;
+        $config = array(
+            'driver' => $company->mail_driver,
+            'host' => $company->mail_host,
+            'port' => $company->mail_port,
+            'from' => array('address' => $company->mail_from_address, 'name' => $company->mail_from_name),
+            'encryption' => $company->mail_encryption,
+            'username' => $company->mail_username,
+            'password' => $company->mail_password,
+            'sendmail' => $company->mail_sendmail,
+            'pretend' => $company->mail_pretend,
+        );
+        \Illuminate\Support\Facades\Config::set('mail', $config);
     }
 
 }
