@@ -24,6 +24,7 @@
             <!-- END RESPONSIVE QUICK SEARCH FORM -->
         </li>
         <li class="nav-item start active"> <a href="{{ route('admin.home') }}" class="nav-link"> <i class="icon-home"></i> <span class="title">Dashboard</span> </a> </li>
+        <li class="nav-item start"> <a href="{{ route('admin.report') }}" class="nav-link"> <i class="icon-bar-chart"></i> <span class="title">Report</span> </a> </li>
         @include('admin/shared/side_bars/admin_user')
 
         <li class="heading">

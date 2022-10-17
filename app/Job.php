@@ -262,4 +262,15 @@ class Job extends Model
     }
 
     /*     * ***************************** */
+
+    public function shortListCandidates()
+    {
+        return $this->hasMany('App\FavouriteApplicant', 'job_id', 'id');
+    }
+
+    public function hiredCandidates()
+    {
+        return $this->hasMany('App\FavouriteApplicant', 'job_id', 'id')
+            ->where('status', '=', 'hired');
+    }
 }
