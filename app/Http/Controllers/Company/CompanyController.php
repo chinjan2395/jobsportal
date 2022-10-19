@@ -532,4 +532,31 @@ class CompanyController extends Controller
         return implode(',', $parts);
     }
 
+    public function report()
+    {
+        $jobs = Job::select([
+            'jobs.id', 'jobs.company_id', 'jobs.title', 'jobs.description', 'jobs.country_id', 'jobs.state_id', 'jobs.city_id', 'jobs.is_freelance', 'jobs.career_level_id', 'jobs.salary_from', 'jobs.salary_to', 'jobs.hide_salary', 'jobs.functional_area_id', 'jobs.job_type_id', 'jobs.job_shift_id', 'jobs.num_of_positions', 'jobs.gender_id', 'jobs.expiry_date', 'jobs.degree_level_id', 'jobs.job_experience_id', 'jobs.is_active', 'jobs.is_featured',
+        ])
+            ->with([
+                'jobSkills', 'careerLevel', 'functionalArea', 'jobType', 'jobShift', 'salaryPeriod', 'gender', 'degreeLevel',
+                'jobExperience', 'shortListCandidates', 'shortListCandidates',
+            ])
+            ->withCount(['jobApplications', 'shortListCandidates', 'hiredCandidates'])
+            ->where('jobs.company_id', '=', Auth::guard('company')->user()->id)
+            ->paginate(10);
+
+        return view('company.reports')->with('jobs', $jobs);
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\View
+     */
+    public function jobApplications(Request $request)
+    {
+        $applications = Job::findOrFail($request->get('job_id'))->jobApplications;
+        return view('admin.modal.job_application')
+            ->with('applications', $applications);
+    }
+
 }

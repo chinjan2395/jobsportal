@@ -7,6 +7,7 @@
 	<div class="usernavwrap">
     <ul class="usernavdash">
         <li class="{{ Request::url() == route('company.home') ? 'active' : '' }}"><a href="{{route('company.home')}}"><i class="fa fa-tachometer" aria-hidden="true"></i> {{__('Dashboard')}}</a></li>
+        <li class="{{ Request::url() == route('company.report') ? 'active' : '' }}"><a href="{{route('company.report')}}"><i class="fa fa-tachometer" aria-hidden="true"></i> {{__('Report')}}</a></li>
         <li class="{{ Request::url() == route('company.profile') ? 'active' : '' }}"><a href="{{ route('company.profile') }}"><i class="fa fa-pencil" aria-hidden="true"></i> {{__('Edit Profile')}}</a></li>
         <li><a href="{{ route('company.detail', $companyPublicProfile->slug) }}"><i class="fa fa-address-card-o" aria-hidden="true"></i> {{__('Company Public Profile')}}</a></li>
         <li class="{{ Request::url() == route('post.job') ? 'active' : '' }}"><a href="{{ route('post.job') }}"><i class="fa fa-desktop" aria-hidden="true"></i> {{__('Post Job')}}</a></li>

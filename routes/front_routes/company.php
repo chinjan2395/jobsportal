@@ -3,6 +3,8 @@ Route::get('company-packages', 'Company\CompanyController@resume_search_packages
 Route::get('unloced-seekers', 'Company\CompanyController@unlocked_users')->name('company.unloced-users');
 Route::get('unlock/{user}', 'Company\CompanyController@unlock')->name('company.unlock');
 Route::get('company-home', 'Company\CompanyController@index')->name('company.home');
+Route::get('company-report', 'Company\CompanyController@report')->name('company.report');
+Route::post('company-fetch-job-applications-data', array_merge(['uses' => 'Company\CompanyController@jobApplications']))->name('company.fetch.job.applications.data');
 Route::get('companies', 'Company\CompaniesController@company_listing')->name('company.listing');
 Route::get('company-profile', 'Company\CompanyController@companyProfile')->name('company.profile');
 Route::put('update-company-profile', 'Company\CompanyController@updateCompanyProfile')->name('update.company.profile');
