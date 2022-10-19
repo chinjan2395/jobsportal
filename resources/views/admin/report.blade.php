@@ -109,6 +109,7 @@
         </div>
         <!-- END CONTENT BODY -->
     </div>
+    <div id="dynamic-modal"></div>
 @endsection
 @push('scripts')
     <script>
@@ -192,6 +193,9 @@
                 e.preventDefault();
             });
             filterDefaultStates(0);
+            $('.btn-job-alert').on('click', function() {
+                $('#show_alert').modal('show');
+            })
         });
 
         function filterDefaultStates(state_id) {
@@ -222,6 +226,18 @@
                         $('#default_city_dd').html(response);
                     });
             }
+        }
+
+        function getJobApplications(jobId) {
+            $.post("{{ route('admin.fetch.job.applications.data') }}", {
+                job_id: jobId,
+                _method: 'POST',
+                _token: '{{ csrf_token() }}'
+            })
+                .done(function (response) {
+                    $('#dynamic-modal').html(response);
+                    $('#show_alert').modal('toggle');
+                });
         }
     </script>
 @endpush

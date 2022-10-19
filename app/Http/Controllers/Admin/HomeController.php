@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\CareerLevel;
 use App\Company;
 use App\Employee;
+use App\FunctionalArea;
 use App\Helpers\DataArrayHelper;
 use App\JobApply;
 use App\JobApplyRejected;
@@ -12,7 +14,6 @@ use App\Job;
 use Carbon\Carbon;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use Yajra\DataTables\Facades\DataTables;
 
 class HomeController extends Controller
@@ -149,16 +150,33 @@ class HomeController extends Controller
                 return $jobs->salary_from  . ' - ' . $jobs->salary_to;
             })
             ->addColumn('career_level', function ($jobs) {
-                return $jobs->career_level != null ? $jobs->career_level : ['career_level' => '-'];
+                return $jobs->career_level ? $jobs->career_level : (new CareerLevel(['career_level' => '-']))->toArray();
             })
             ->addColumn('functional_area', function ($jobs) {
-                return $jobs->functional_area ? $jobs->functional_area : ['functional_area' => '-'];
+                return $jobs->functional_area ? $jobs->functional_area : (new FunctionalArea(['functional_area' => '-']))->toArray();
             })
-            ->rawColumns(['company_id', 'city_id', 'description', 'salary', 'career_level', 'functional_area'])
+            ->addColumn('job_applications_count', function ($jobs) {
+                if ($jobs->job_applications_count <= 0)
+                    return $jobs->job_applications_count;
+
+                return "<a onclick='getJobApplications(".$jobs->id.")'>$jobs->job_applications_count</a>";
+            })
+            ->rawColumns(['company_id', 'city_id', 'description', 'salary', 'career_level', 'functional_area', 'job_applications_count'])
             ->setRowId(function($jobs) {
                 return 'jobDtRow' . $jobs->id;
             })
             ->make(true);
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\View
+     */
+    public function jobApplications(Request $request)
+    {
+        $applications = Job::findOrFail($request->get('job_id'))->jobApplications;
+        return view('admin.modal.job_application')
+            ->with('applications', $applications);
     }
 
 }
