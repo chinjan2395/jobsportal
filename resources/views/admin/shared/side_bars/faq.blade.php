@@ -1,3 +1,9 @@
+<li class="nav-item  "> <a href="javascript:;" class="nav-link nav-toggle"> <i class="fa fa-question-circle" aria-hidden="true"></i> <span class="title">Feedback & Enquiries</span> <span class="arrow"></span> </a>
+    <ul class="sub-menu">
+        <li class="nav-item"><a href="{{ route('list.feedback','feedback') }}" class="nav-link "> <span class="title">List Feedback</span></a></li>
+        <li class="nav-item"><a href="{{ route('list.enquiry', 'enquiry') }}" class="nav-link "> <span class="title">List Enquiry</span></a></li>
+    </ul>
+</li>
 <li class="nav-item  "> <a href="javascript:;" class="nav-link nav-toggle"> <i class="fa fa-question-circle" aria-hidden="true"></i> <span class="title">FAQs</span> <span class="arrow"></span> </a>
     <ul class="sub-menu">
         <li class="nav-item  "> <a href="{{ route('list.faqs') }}" class="nav-link "> <span class="title">List FAQs</span> </a> </li>

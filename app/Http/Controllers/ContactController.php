@@ -153,7 +153,7 @@ class ContactController extends Controller
         $data['company_url'] = $request->input('company_url');
         FeedbackAndEnquiry::create([
             'user_id' => \Illuminate\Support\Facades\Auth::id(),
-            'actionable_type' => Company::class,
+            'actionable_type' => Job::class,
             'actionable_id' => $request->input('job_id'),
             'action' => 'feedback',
             'content' => $request->input('content'),
@@ -182,7 +182,7 @@ class ContactController extends Controller
         $data['company_url'] = $request->input('company_url');
         FeedbackAndEnquiry::create([
             'user_id' => \Illuminate\Support\Facades\Auth::id(),
-            'actionable_type' => Company::class,
+            'actionable_type' => Job::class,
             'actionable_id' => $request->input('job_id'),
             'action' => 'enquiry',
             'content' => $request->input('content'),
