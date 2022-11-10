@@ -230,6 +230,7 @@
         <script src="{{ asset('/') }}admin_assets/global/scripts/datatable.js" type="text/javascript"></script> 
 
         <script src="{{ asset('/') }}admin_assets/global/plugins/datatables/datatables.min.js" type="text/javascript"></script> 
+        <script src="https://cdn.datatables.net/responsive/2.3.0/js/dataTables.responsive.min.js" type="text/javascript"></script>
 
         <script src="{{ asset('/') }}admin_assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.js" type="text/javascript"></script> 
 

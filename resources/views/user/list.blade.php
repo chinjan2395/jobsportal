@@ -80,7 +80,7 @@
                                     <div class="jobimg">{{$jobSeeker->printUserImage(100, 100)}}</div>
                                     <div class="jobinfo">
                                         <h3><a href="{{route('user.profile', $jobSeeker->id)}}">{{$jobSeeker->getName()}}</a></h3>
-                                        <div class="location"> {{$jobSeeker->getLocation()}}</div>
+                                        <div class="location"> {!! $jobSeeker->getLocation() !!}</div>
                                     </div>
                                     <div class="clearfix"></div>
                                 </div>

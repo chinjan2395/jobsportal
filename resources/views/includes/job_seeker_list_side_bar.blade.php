@@ -78,7 +78,34 @@
                 @endif
             </ul>
             <span class="text text-primary view_more hide_vm">{{__('View More')}}</span> </div>
-        <!-- Jobs By City end--> 
+        <!-- Jobs By City end-->
+
+        <!-- Jobs By Career Level -->
+        <div class="widget">
+            <h4 class="widget-title">{{__('By Rating')}}</h4>
+            <ul class="optionlist view_more_ul">
+                @if(isset($candidateRatingArray) && count($candidateRatingArray))
+                    @foreach($candidateRatingArray as $key=>$career_level_id)
+                        @php
+                            $careerLevel = App\Rating::where('id','=',$career_level_id)->active()->first();
+                        @endphp
+                        @if(null !== $careerLevel)
+                            @php
+                                $checked = (in_array($careerLevel->id, Request::get('candidate_rating', array())))? 'checked="checked"':'';
+                            @endphp
+                            <li>
+                                <input type="checkbox" name="candidate_rating[]"
+                                       id="candidate_rating_{{$careerLevel->id}}"
+                                       value="{{$careerLevel->id}}" {{$checked}}>
+                                <label for="candidate_rating_{{$careerLevel->id}}"></label>
+                                {{$careerLevel->title}}
+                                <span>{{App\User::countNumJobSeekers('rating_id', $careerLevel->career_level_id)}}</span>
+                            </li>
+                        @endif
+                    @endforeach
+                @endif
+            </ul>
+            <span class="text text-primary view_more hide_vm">{{__('View More')}}</span> </div>
 
         <!-- Jobs By Experience -->
         <div class="widget">
@@ -102,7 +129,7 @@
                 @endif
             </ul>
             <span class="text text-primary view_more hide_vm">{{__('View More')}}</span> </div>
-        <!-- Jobs By Experience end --> 
+        <!-- Jobs By Experience end -->
 
 
         <!-- Jobs By Career Level -->
@@ -241,7 +268,7 @@
                 {!! Form::number('expected_salary', Request::get('expected_salary', null), array('class'=>'form-control', 'id'=>'expected_salary', 'placeholder'=>__('Expected Salary'))) !!}
             </div>
             <div class="form-group">
-                {!! Form::select('salary_currency', ['' =>__('Select Salary Currency')]+$currencies, Request::get('salary_currency', $siteSetting->default_currency_code), array('class'=>'form-control', 'id'=>'salary_currency')) !!}
+{{--                {!! Form::select('salary_currency', ['' =>__('Select Salary Currency')]+$currencies, Request::get('salary_currency', $siteSetting->default_currency_code), array('class'=>'form-control', 'id'=>'salary_currency')) !!}--}}
             </div>
             <!-- Salary end --> 
 

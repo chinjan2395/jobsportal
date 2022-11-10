@@ -5,6 +5,8 @@ Route::get('unlock/{user}', 'Company\CompanyController@unlock')->name('company.u
 Route::get('company-home', 'Company\CompanyController@index')->name('company.home');
 Route::get('company-report', 'Company\CompanyController@report')->name('company.report');
 Route::post('company-fetch-job-applications-data', array_merge(['uses' => 'Company\CompanyController@jobApplications']))->name('company.fetch.job.applications.data');
+Route::get('company-job-export', 'Company\CompanyController@export')->name('company.job.export');
+Route::get('company-job-application-export', 'Company\CompanyController@exportJobApplications')->name('company.job.application.export');
 Route::get('companies', 'Company\CompaniesController@company_listing')->name('company.listing');
 Route::get('company-profile', 'Company\CompanyController@companyProfile')->name('company.profile');
 Route::put('update-company-profile', 'Company\CompanyController@updateCompanyProfile')->name('update.company.profile');

@@ -1,7 +1,105 @@
 <div class="header">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-lg-2 col-md-12 col-12"> <a href="{{url('/')}}" class="logo"><img src="{{ asset('/') }}sitesetting_images/thumb/{{ $siteSetting->site_logo }}" alt="{{ $siteSetting->site_name }}" /></a>
+            <div class="col-lg-2 col-md-12 col-12">
+
+                <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+                    <div class="carousel-inner">
+                        <div class="carousel-item active">
+                            <div class="logo">
+                                <img src="{{ asset('/') }}images/01.jpeg" alt="img" />
+                            </div>
+                        </div>
+                        <div class="carousel-item">
+                            <div class="logo">
+                                <img src="{{ asset('/') }}images/02.jpeg" alt="img" />
+                            </div>
+                        </div>
+                        <div class="carousel-item">
+                            <div class="logo">
+                                <img src="{{ asset('/') }}images/03.jpeg" alt="{{ $siteSetting->site_name }}" />
+                            </div>
+                        </div>
+                        <div class="carousel-item">
+                            <div class="logo">
+                                <img src="{{ asset('/') }}images/04.jpeg" alt="{{ $siteSetting->site_name }}" />
+                            </div>
+                        </div>
+                        <div class="carousel-item">
+                            <div class="logo">
+                                <img src="{{ asset('/') }}images/05.jpeg" alt="{{ $siteSetting->site_name }}" />
+                            </div>
+                        </div>
+                        <div class="carousel-item">
+                            <div class="logo">
+                                <img src="{{ asset('/') }}images/06.jpeg" alt="{{ $siteSetting->site_name }}" />
+                            </div>
+                        </div>
+                        <div class="carousel-item">
+                            <div class="logo">
+                                <img src="{{ asset('/') }}images/07.jpeg" alt="{{ $siteSetting->site_name }}" />
+                            </div>
+                        </div>
+                        <div class="carousel-item">
+                            <div class="logo">
+                                <img src="{{ asset('/') }}images/08.jpeg" alt="{{ $siteSetting->site_name }}" />
+                            </div>
+                        </div>
+                        <div class="carousel-item">
+                            <div class="logo">
+                                <img src="{{ asset('/') }}images/09.jpeg" alt="{{ $siteSetting->site_name }}" />
+                            </div>
+                        </div>
+                        <div class="carousel-item">
+                            <div class="logo">
+                                <img src="{{ asset('/') }}images/10.jpeg" alt="{{ $siteSetting->site_name }}" />
+                            </div>
+                        </div>
+                        <div class="carousel-item">
+                            <div class="logo">
+                                <img src="{{ asset('/') }}images/11.jpeg" alt="{{ $siteSetting->site_name }}" />
+                            </div>
+                        </div>
+                        <div class="carousel-item">
+                            <div class="logo">
+                                <img src="{{ asset('/') }}images/12.jpeg" alt="{{ $siteSetting->site_name }}" />
+                            </div>
+                        </div>
+                        <div class="carousel-item">
+                            <div class="logo">
+                                <img src="{{ asset('/') }}images/13.jpeg" alt="{{ $siteSetting->site_name }}" />
+                            </div>
+                        </div>
+                        <div class="carousel-item">
+                            <div class="logo">
+                                <img src="{{ asset('/') }}images/14.jpeg" alt="{{ $siteSetting->site_name }}" />
+                            </div>
+                        </div>
+                        <div class="carousel-item">
+                            <div class="logo">
+                                <img src="{{ asset('/') }}images/15.jpeg" alt="{{ $siteSetting->site_name }}" />
+                            </div>
+                        </div>
+                        <div class="carousel-item">
+                            <div class="logo">
+                                <img src="{{ asset('/') }}images/16.jpeg" alt="{{ $siteSetting->site_name }}" />
+                            </div>
+                        </div>
+                        <div class="carousel-item">
+                            <div class="logo">
+                                <img src="{{ asset('/') }}images/17.jpeg" alt="{{ $siteSetting->site_name }}" />
+                            </div>
+                        </div>
+                        <div class="carousel-item">
+                            <div class="logo">
+                                <img src="{{ asset('/') }}images/18.jpeg" alt="{{ $siteSetting->site_name }}" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--<a href="{{url('/')}}" class="logo">
+
+                </a>-->
                 <div class="navbar-header navbar-light">
                     <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#nav-main" aria-controls="nav-main" aria-expanded="false" aria-label="Toggle navigation"> <span class="navbar-toggler-icon"></span> </button>
                 </div>
@@ -60,7 +158,7 @@
                             <li class="nav-item"><a href="{{route('login')}}" class="nav-link">{{__('Sign in')}}</a> </li>
 							<li class="nav-item"><a href="{{route('register')}}" class="nav-link register">{{__('Register')}}</a> </li>                            
                             @endif
-                            {{--<li class="dropdown userbtn"><a href="{{url('/')}}"><img src="{{asset('/')}}images/lang.png" alt="" class="userimg" /></a>
+                            <li class="dropdown userbtn"><a href="{{url('/')}}"><img src="{{asset('/')}}images/lang.png" alt="" class="userimg" /></a>
                                 <ul class="dropdown-menu">
                                     @foreach($siteLanguages as $siteLang)
                                     <li><a href="javascript:;" onclick="event.preventDefault(); document.getElementById('locale-form-{{$siteLang->iso_code}}').submit();" class="nav-link">{{$siteLang->native}}</a>
@@ -73,7 +171,7 @@
                                     </li>
                                     @endforeach
                                 </ul>
-                            </li>--}}
+                            </li>
                         </ul>
 
                         <!-- Nav collapes end --> 

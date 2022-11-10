@@ -19,7 +19,7 @@
                 <div class="col-md-9 col-sm-8">
                     <div class="">
                         <h3>{{__('Referrals')}}</h3>
-                        <div class="row">
+                        {{--<div class="row">
                             <div class="col-md-12">
                                 <div class="userccount" style="padding: 20px;">
                                     <div class="formpanel">
@@ -55,7 +55,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div>--}}
                         <!-- referral start -->
                         <div class="userbtns">
                             <ul class="nav nav-tabs">
@@ -77,23 +77,26 @@
                                                 @if(null !== $company)
                                                     <li id="job_li_{{$referrals['employee']->id}}_{{$referral->id}}">
                                                         <div class="row">
-                                                            <div class="col-md-8 col-sm-8">
+                                                            <div class="col-md-12 col-sm-12">
                                                                 <div class="jobinfo">
-                                                                    <h5><i class="fa fa-random"></i> {{$referral->code}}
+                                                                    <h5>
+{{--                                                                        <i class="fa fa-user-o"></i> {!! $referral->display_code !!}--}}
+                                                                        <div class="companyName"><i class="fa fa-user"></i> <a
+                                                                                    href="{{route('company.detail', $company->slug)}}"
+                                                                                    title="{{$company->name}}">{{$company->name}}
+                                                                                -
+                                                                                <small>{{$referral->created_at->format('M d, Y H:i:s')}}</small></a>
+                                                                        </div>
                                                                     </h5>
-                                                                    <div class="companyName"><a
-                                                                                href="{{route('company.detail', $company->slug)}}"
-                                                                                title="{{$company->name}}">{{$company->name}}
-                                                                            -
-                                                                            <small>{{$referral->created_at->format('M d, Y H:i:s')}}</small></a>
-                                                                    </div>
-                                                                    <div>Used By - <a
-                                                                                href="{{route('user.profile', optional($referral->usedBy)->id)}}"
-                                                                                title="{{optional($referral->usedBy)->getName()}}">
-                                                                            {{optional($referral->usedBy)->getName()}}
-                                                                            - {{optional($referral->usedBy)->email}}
-                                                                        </a>
-                                                                    </div>
+                                                                    @if($referral->usedBy)
+                                                                        <div>Used By - <a
+                                                                                    href="{{route('user.profile', optional($referral->usedBy)->id)}}"
+                                                                                    title="{{optional($referral->usedBy)->getName()}}">
+                                                                                {{optional($referral->usedBy)->getName()}}
+                                                                                - {{optional($referral->usedBy)->email}}
+                                                                            </a>
+                                                                        </div>
+                                                                    @endif
                                                                 </div>
                                                                 <div class="clearfix"></div>
                                                             </div>

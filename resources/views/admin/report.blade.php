@@ -9,6 +9,13 @@
             font-size: 12px;
             line-height: 2.42857 !important;
         }
+        .portlet.light .dataTables_wrapper .dt-buttons {
+            margin-top: 0px;
+            margin-bottom: 20px;
+        }
+        .dt-buttons a {
+            margin-left: 10px;
+        }
     </style>
     <div class="page-content-wrapper">
         <!-- BEGIN CONTENT BODY -->
@@ -35,7 +42,7 @@
                                         class="caption-subject font-dark sbold uppercase">Reports</span></div>
                         </div>
                         <div class="portlet-body">
-                            <div class="table-container">
+                            <div class="table-container" style="width: 100%;overflow-x: scroll;">
                                 <form method="post" role="form" id="job-search-form">
                                     <table class="table table-striped table-bordered table-hover" id="jobDatatableAjax">
                                         <thead>
@@ -75,7 +82,14 @@
                                             <td></td>
                                             <td></td>
                                             <td></td>
-                                            <td></td>
+                                            <td>
+                                                <input type="tel" id="salary_from" class="form-control"/>
+                                                <input type="tel" id="salary_to" class="form-control"/>
+                                            </td>
+                                            <td>
+                                                <input type="date" id="from_date" class="form-control"/>
+                                                <input type="date" id="to_date" class="form-control"/>
+                                            </td>
 {{--                                            <td><select name="is_active" id="is_active" class="form-control">--}}
 {{--                                                    <option value="-1">Is Active?</option>--}}
 {{--                                                    <option value="1" selected="selected">Active</option>--}}
@@ -95,6 +109,7 @@
                                             <th>Shortlisted</th>
                                             <th>Hired</th>
                                             <th>Salary Criteria</th>
+                                            <th>Date</th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -140,6 +155,10 @@
                         d.job_experience_id = $('#job_experience_id').val();
                         d.career_level_id = $('#career_level_id').val();
                         d.functional_area_id = $('#functional_area_id').val();
+                        d.from_date = $('#from_date').val();
+                        d.to_date = $('#to_date').val();
+                        d.salary_from = $('#salary_from').val();
+                        d.salary_to = $('#salary_to').val();
                     }
                 }, columns: [
                     {data: 'title', name: 'title'},
@@ -154,7 +173,23 @@
                     {data: 'short_list_candidates_count', name: 'short_list_candidates_count'},
                     {data: 'hired_candidates_count', name: 'hired_candidates_count'},
                     {data: 'salary', name: 'salary'},
-                ]
+                    {data: 'date', name: 'created_at'},
+                ],
+                dom: 'Bfrtip',
+                buttons: {
+                    buttons: [
+                        {
+                            extend: 'csv', className: 'btn btn-sm btn-success', init: function (api, node, config) {
+                                $(node).removeClass('dt-button')
+                            }
+                        },
+                        {
+                            extend: 'excel', className: 'btn btn-sm btn-success', init: function (api, node, config) {
+                                $(node).removeClass('dt-button')
+                            }
+                        }
+                    ]
+                }
             });
             $('#job-search-form').on('submit', function (e) {
                 oTable.draw();
@@ -195,7 +230,15 @@
             filterDefaultStates(0);
             $('.btn-job-alert').on('click', function() {
                 $('#show_alert').modal('show');
-            })
+            });
+            $('#from_date, #to_date').on('change', function (e) {
+                oTable.draw();
+                e.preventDefault();
+            });
+            $('#salary_from, #salary_to').on('change', function (e) {
+                oTable.draw();
+                e.preventDefault();
+            });
         });
 
         function filterDefaultStates(state_id) {
@@ -228,15 +271,38 @@
             }
         }
 
-        function getJobApplications(jobId) {
+        function getJobApplications(jobId, type = 'applied-candidate') {
             $.post("{{ route('admin.fetch.job.applications.data') }}", {
                 job_id: jobId,
+                type: type,
                 _method: 'POST',
                 _token: '{{ csrf_token() }}'
             })
                 .done(function (response) {
                     $('#dynamic-modal').html(response);
                     $('#show_alert').modal('toggle');
+
+                    $('#jobApplicationDatatable').DataTable({
+                        processing: false,
+                        serverSide: false,
+                        stateSave: true,
+                        searching: false,
+                        dom: 'Bfrtip',
+                        buttons: {
+                            buttons: [
+                                {
+                                    extend: 'csv', className: 'btn btn-sm btn-success', init: function (api, node, config) {
+                                        $(node).removeClass('dt-button')
+                                    }
+                                },
+                                {
+                                    extend: 'excel', className: 'btn btn-sm btn-success', init: function (api, node, config) {
+                                        $(node).removeClass('dt-button')
+                                    }
+                                }
+                            ]
+                        }
+                    });
                 });
         }
     </script>
