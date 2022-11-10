@@ -149,13 +149,20 @@ trait CountryStateCity
         $state = $this->getState('state');
         $city = $this->getCity('city');
 
+        if (empty($city) && empty($state) && empty($country))
+            return "Location information not available";
+
         $str = '';
         if (!empty($city))
             $str .= $city;
-        if (!empty($state))
-            $str .= ', ' . $state;
-        if (!empty($country))
-            $str .= ', ' . $country;
+        if (!empty($state)) {
+            $str .= !empty($city) ? ', ' : ' ';
+            $str .= $state;
+        }
+        if (!empty($country)) {
+            $str .= !empty($state) ? ', ' : ' ';
+            $str .= $country;
+        }
 
         return $str;
     }

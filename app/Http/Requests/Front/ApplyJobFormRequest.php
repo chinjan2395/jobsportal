@@ -31,7 +31,7 @@ class ApplyJobFormRequest extends Request
                         "current_salary" => "required|max:11",
                         "expected_salary" => "required|max:11",
                         "salary_currency" => "required|max:5",
-                        'email' => 'unique:users,email|email|max:100',
+                        'email' => 'email|max:100',
                     ];
                 }
             default:break;

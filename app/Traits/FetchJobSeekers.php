@@ -2,7 +2,7 @@
 
 namespace App\Traits;
 
-use DB;
+use Illuminate\Support\Facades\DB;
 use App\User;
 use App\Country;
 use App\State;
@@ -63,27 +63,27 @@ trait FetchJobSeekers
         'users.search'
     );
 
-    public function fetchJobSeekers($search = '', $industry_ids = array(), $functional_area_ids = array(), $country_ids = array(), $state_ids = array(), $city_ids = array(), $career_level_ids = array(), $gender_ids = array(), $job_experience_ids = array(), $current_salary = 0, $expected_salary = 0, $salary_currency = '', $order_by = 'id', $limit = 10)
+    public function fetchJobSeekers($search = '', $industry_ids = array(), $functional_area_ids = array(), $country_ids = array(), $state_ids = array(), $city_ids = array(), $career_level_ids = array(), $gender_ids = array(), $job_experience_ids = array(), $current_salary = 0, $expected_salary = 0, $salary_currency = '', $candidate_rating = array(), $order_by = 'id', $limit = 10)
     {
         $asc_desc = 'DESC';
         $query = User::select($this->fields);
-        $query = $this->createQuery($query, $search, $industry_ids, $functional_area_ids, $country_ids, $state_ids, $city_ids, $career_level_ids, $gender_ids, $job_experience_ids, $current_salary, $expected_salary, $salary_currency);
+        $query = $this->createQuery($query, $search, $industry_ids, $functional_area_ids, $country_ids, $state_ids, $city_ids, $career_level_ids, $gender_ids, $job_experience_ids, $current_salary, $expected_salary, $salary_currency, $candidate_rating);
 
         $query->orderBy('users.id', 'DESC');
         //echo $query->toSql();exit;
         return $query->paginate($limit);
     }
 
-    public function fetchIdsArray($search = '', $industry_ids = array(), $functional_area_ids = array(), $country_ids = array(), $state_ids = array(), $city_ids = array(), $career_level_ids = array(), $gender_ids = array(), $job_experience_ids = array(), $current_salary = 0, $expected_salary = 0, $salary_currency = '', $field = 'users.id')
+    public function fetchIdsArray($search = '', $industry_ids = array(), $functional_area_ids = array(), $country_ids = array(), $state_ids = array(), $city_ids = array(), $career_level_ids = array(), $gender_ids = array(), $job_experience_ids = array(), $current_salary = 0, $expected_salary = 0, $salary_currency = '', $candidate_rating = array(), $field = 'users.id')
     {
         $query = User::select($field);
-        $query = $this->createQuery($query, $search, $industry_ids, $functional_area_ids, $country_ids, $state_ids, $city_ids, $career_level_ids, $gender_ids, $job_experience_ids, $current_salary, $expected_salary, $salary_currency);
+        $query = $this->createQuery($query, $search, $industry_ids, $functional_area_ids, $country_ids, $state_ids, $city_ids, $career_level_ids, $gender_ids, $job_experience_ids, $current_salary, $expected_salary, $salary_currency, $candidate_rating);
 
         $array = $query->pluck($field)->toArray();
         return array_unique($array);
     }
 
-    public function createQuery($query, $search = '', $industry_ids = array(), $functional_area_ids = array(), $country_ids = array(), $state_ids = array(), $city_ids = array(), $career_level_ids = array(), $gender_ids = array(), $job_experience_ids = array(), $current_salary = 0, $expected_salary = 0, $salary_currency = '')
+    public function createQuery($query, $search = '', $industry_ids = array(), $functional_area_ids = array(), $country_ids = array(), $state_ids = array(), $city_ids = array(), $career_level_ids = array(), $gender_ids = array(), $job_experience_ids = array(), $current_salary = 0, $expected_salary = 0, $salary_currency = '', $candidate_rating = array())
     {
         $query->where('users.is_active', 1);
         if ($search != '') {
@@ -122,6 +122,14 @@ trait FetchJobSeekers
         }
         if (!empty(trim($salary_currency))) {
             $query->where('users.salary_currency', 'like', $salary_currency);
+        }
+        if (isset($candidate_rating[0])) {
+            $query
+                ->addSelect(DB::raw('ROUND(AVG(profile_ratings.rating_id)) AS AverageRating'))
+                ->join('profile_ratings', 'users.id', '=', 'profile_ratings.user_id')
+                ->groupBy('users.id')
+                ->havingRaw("ROUND(AVG(profile_ratings.rating_id)) >= " . $candidate_rating[0] . " and ROUND(AVG(profile_ratings.rating_id)) <=" . $candidate_rating[count($candidate_rating) - 1])
+            ;
         }
         return $query;
     }

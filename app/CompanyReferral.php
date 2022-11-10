@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class CompanyReferral extends Model
 {
 
-    protected $fillable = ['company_id', 'code', 'is_used', 'used_by'];
+    protected $fillable = ['company_id', 'code', 'is_used', 'used_by', 'name', 'email'];
     protected $guarded = ['id'];
 
     public function company()
@@ -39,6 +39,10 @@ class CompanyReferral extends Model
     public function scopeUsed($query)
     {
         return $query->where('is_used', '=', 1);
+    }
+
+    public function getDisplayCodeAttribute(){
+        return ($this->email == null && $this->name == null) ? $this->company->name . " - " . $this->company->email: $this->name . " - " . $this->email;
     }
 
 }

@@ -126,6 +126,10 @@ class JobApply extends Model
 
     }
 
+    public function favouriteApplicants()
+    {
+        return $this->hasMany('App\FavouriteApplicant', 'job_id', 'job_id');
+    }
 
 
 }
