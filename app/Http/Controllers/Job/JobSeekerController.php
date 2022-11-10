@@ -47,16 +47,17 @@ class JobSeekerController extends Controller
         $gender_ids = $request->query('gender_id', array());
         $industry_ids = $request->query('industry_ids', array());
         $job_experience_ids = $request->query('job_experience_id', array());
+        $candidate_rating = $request->query('candidate_rating', array());
         $current_salary = $request->query('current_salary', '');
         $expected_salary = $request->query('expected_salary', '');
         $salary_currency = $request->query('salary_currency', '');
         $order_by = $request->query('order_by', 'id');
         $limit = 10;
-        $jobSeekers = $this->fetchJobSeekers($search, $industry_ids, $functional_area_ids, $country_ids, $state_ids, $city_ids, $career_level_ids, $gender_ids, $job_experience_ids, $current_salary, $expected_salary, $salary_currency, $order_by, $limit);
+        $jobSeekers = $this->fetchJobSeekers($search, $industry_ids, $functional_area_ids, $country_ids, $state_ids, $city_ids, $career_level_ids, $gender_ids, $job_experience_ids, $current_salary, $expected_salary, $salary_currency, $candidate_rating, $order_by, $limit);
 
         /*         * ************************************************** */
 
-        $jobSeekerIdsArray = $this->fetchIdsArray($search, $industry_ids, $functional_area_ids, $country_ids, $state_ids, $city_ids, $career_level_ids, $gender_ids, $job_experience_ids, $current_salary, $expected_salary, $salary_currency, 'users.id');
+        $jobSeekerIdsArray = $this->fetchIdsArray($search, $industry_ids, $functional_area_ids, $country_ids, $state_ids, $city_ids, $career_level_ids, $gender_ids, $job_experience_ids, $current_salary, $expected_salary, $salary_currency, $candidate_rating,'users.id');
 
         /*         * ************************************************** */
 
@@ -64,42 +65,42 @@ class JobSeekerController extends Controller
 
         /*         * ************************************************** */
 
-        $countryIdsArray = $this->fetchIdsArray($search, $industry_ids, $functional_area_ids, $country_ids, $state_ids, $city_ids, $career_level_ids, $gender_ids, $job_experience_ids, $current_salary, $expected_salary, $salary_currency, 'users.country_id');
+        $countryIdsArray = $this->fetchIdsArray($search, $industry_ids, $functional_area_ids, $country_ids, $state_ids, $city_ids, $career_level_ids, $gender_ids, $job_experience_ids, $current_salary, $expected_salary, $salary_currency, $candidate_rating,'users.country_id');
 
         /*         * ************************************************** */
 
-        $stateIdsArray = $this->fetchIdsArray($search, $industry_ids, $functional_area_ids, $country_ids, $state_ids, $city_ids, $career_level_ids, $gender_ids, $job_experience_ids, $current_salary, $expected_salary, $salary_currency, 'users.state_id');
+        $stateIdsArray = $this->fetchIdsArray($search, $industry_ids, $functional_area_ids, $country_ids, $state_ids, $city_ids, $career_level_ids, $gender_ids, $job_experience_ids, $current_salary, $expected_salary, $salary_currency, $candidate_rating,'users.state_id');
 
         /*         * ************************************************** */
 
-        $cityIdsArray = $this->fetchIdsArray($search, $industry_ids, $functional_area_ids, $country_ids, $state_ids, $city_ids, $career_level_ids, $gender_ids, $job_experience_ids, $current_salary, $expected_salary, $salary_currency, 'users.city_id');
+        $cityIdsArray = $this->fetchIdsArray($search, $industry_ids, $functional_area_ids, $country_ids, $state_ids, $city_ids, $career_level_ids, $gender_ids, $job_experience_ids, $current_salary, $expected_salary, $salary_currency, $candidate_rating,'users.city_id');
 
         /*         * ************************************************** */
 
-        $industryIdsArray = $this->fetchIdsArray($search, $industry_ids, $functional_area_ids, $country_ids, $state_ids, $city_ids, $career_level_ids, $gender_ids, $job_experience_ids, $current_salary, $expected_salary, $salary_currency, 'users.industry_id');
+        $industryIdsArray = $this->fetchIdsArray($search, $industry_ids, $functional_area_ids, $country_ids, $state_ids, $city_ids, $career_level_ids, $gender_ids, $job_experience_ids, $current_salary, $expected_salary, $salary_currency, $candidate_rating,'users.industry_id');
 
         /*         * ************************************************** */
 
+        $functionalAreaIdsArray = $this->fetchIdsArray($search, $industry_ids, $functional_area_ids, $country_ids, $state_ids, $city_ids, $career_level_ids, $gender_ids, $job_experience_ids, $current_salary, $expected_salary, $salary_currency, $candidate_rating, 'users.functional_area_id');
+
+        /*         * ************************************************** */
+        $careerLevelIdsArray = $this->fetchIdsArray($search, $industry_ids, $functional_area_ids, $country_ids, $state_ids, $city_ids, $career_level_ids, $gender_ids, $job_experience_ids, $current_salary, $expected_salary, $salary_currency, $candidate_rating,'users.career_level_id');
 
         /*         * ************************************************** */
 
-        $functionalAreaIdsArray = $this->fetchIdsArray($search, $industry_ids, $functional_area_ids, $country_ids, $state_ids, $city_ids, $career_level_ids, $gender_ids, $job_experience_ids, $current_salary, $expected_salary, $salary_currency, 'users.functional_area_id');
+        $genderIdsArray = $this->fetchIdsArray($search, $industry_ids, $functional_area_ids, $country_ids, $state_ids, $city_ids, $career_level_ids, $gender_ids, $job_experience_ids, $current_salary, $expected_salary, $salary_currency, $candidate_rating,'users.gender_id');
 
         /*         * ************************************************** */
 
-        $careerLevelIdsArray = $this->fetchIdsArray($search, $industry_ids, $functional_area_ids, $country_ids, $state_ids, $city_ids, $career_level_ids, $gender_ids, $job_experience_ids, $current_salary, $expected_salary, $salary_currency, 'users.career_level_id');
-
-        /*         * ************************************************** */
-
-        $genderIdsArray = $this->fetchIdsArray($search, $industry_ids, $functional_area_ids, $country_ids, $state_ids, $city_ids, $career_level_ids, $gender_ids, $job_experience_ids, $current_salary, $expected_salary, $salary_currency, 'users.gender_id');
-
-        /*         * ************************************************** */
-
-        $jobExperienceIdsArray = $this->fetchIdsArray($search, $industry_ids, $functional_area_ids, $country_ids, $state_ids, $city_ids, $career_level_ids, $gender_ids, $job_experience_ids, $current_salary, $expected_salary, $salary_currency, 'users.job_experience_id');
+        $jobExperienceIdsArray = $this->fetchIdsArray($search, $industry_ids, $functional_area_ids, $country_ids, $state_ids, $city_ids, $career_level_ids, $gender_ids, $job_experience_ids, $current_salary, $expected_salary, $salary_currency, $candidate_rating,'users.job_experience_id');
 
         /*         * ************************************************** */
 
         $seoArray = $this->getSEO($functional_area_ids, $country_ids, $state_ids, $city_ids, $career_level_ids, $gender_ids, $job_experience_ids);
+
+        /*         * ************************************************** */
+
+        $candidateRatingArray = $this->fetchIdsArray($search, $industry_ids, $functional_area_ids, $country_ids, $state_ids, $city_ids, $career_level_ids, $gender_ids, $job_experience_ids, $current_salary, $expected_salary, $salary_currency, $candidate_rating);
 
         /*         * ************************************************** */
 
@@ -127,6 +128,7 @@ class JobSeekerController extends Controller
                         ->with('careerLevelIdsArray', $careerLevelIdsArray)
                         ->with('genderIdsArray', $genderIdsArray)
                         ->with('jobExperienceIdsArray', $jobExperienceIdsArray)
+                        ->with('candidateRatingArray', DataArrayHelper::defaultRatingsArray())
                         ->with('seo', $seo);
     }
 

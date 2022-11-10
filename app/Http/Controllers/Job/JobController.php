@@ -367,15 +367,19 @@ class JobController extends Controller
     public function postReferJob(ApplyJobFormRequest $request, $job_slug)
     {
         $name = $request->get('name');
-        $user = new User();
-        $user->name = $name;
-        $user->email = $request->get('email');
-        $user->first_name = Str::before($name, ' ');
-        $user->last_name = Str::after($name, ' ');
-        $user->is_active = 1;
-        $user->password = Hash::make($request->input('password'));
+        if (User::where('email', $request->get('email'))->get()->count() > 0) {
+            $user = User::where('email', $request->get('email'))->first();
+        } else {
+            $user = new User();
+            $user->name = $name;
+            $user->email = $request->get('email');
+            $user->first_name = Str::before($name, ' ');
+            $user->last_name = Str::after($name, ' ');
+            $user->is_active = 1;
+            $user->password = Hash::make($request->input('password'));
 
-        $user->saveOrFail();
+            $user->saveOrFail();
+        }
 
         $user_id = $user->id;
         $job = Job::where('slug', 'like', $job_slug)->first();
@@ -414,7 +418,22 @@ class JobController extends Controller
                     ->withInput($request->all())
                     ->withErrors(['referral_code' => 'Referral Code not found']);
             }
+        } elseif ($request->input('employee_email') != null || $request->input('employee_email') != "") {
+            $employee = Auth::guard('company')->user();
+            $referral_code = new CompanyReferral();
+            if ($employee) {
+                $referral_code->company_id = $employee->is_employee ? $employee->belongs_to : $employee->id;
+            } else {
+                $referral_code->company_id = $job->company_id;
+            }
+            $referral_code->used_by = $user_id;
+            $referral_code->is_used = 1;
+            $referral_code->code = Str::uuid();
+            $referral_code->email = $request->input('employee_email');
+            $referral_code->name = $request->input('employee_name');
+            $referral_code->save();
         }
+        /* *********************** */
 
         $jobApply->save();
 

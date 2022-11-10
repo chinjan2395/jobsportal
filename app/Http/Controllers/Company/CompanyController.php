@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers\Company;
 
+use App\Exports\Company\JobApplicationReportExport;
+use App\Exports\Company\JobReportExport;
+use App\Exports\Company\ShortListedAndHiredReportExport;
 use App\Job;
 use App\Mail\HireFromAppliedJobMailable;
 use App\Traits\CompanyEventTrait;
@@ -9,6 +12,7 @@ use App\Traits\CompanyReferralTrait;
 use Illuminate\Support\Facades\Mail;
 use Hash;
 use File;
+use Illuminate\Support\Facades\Storage;
 use ImgUploader;
 use Auth;
 use Validator;
@@ -534,8 +538,12 @@ class CompanyController extends Controller
 
     public function report()
     {
+        $degreeLevels = DataArrayHelper::defaultDegreelevelsArray();
+        $jobTypes = DataArrayHelper::defaultJobTypesArray();
+        $jobExperiences = DataArrayHelper::defaultJobExperiencesArray();
+
         $jobs = Job::select([
-            'jobs.id', 'jobs.company_id', 'jobs.title', 'jobs.description', 'jobs.country_id', 'jobs.state_id', 'jobs.city_id', 'jobs.is_freelance', 'jobs.career_level_id', 'jobs.salary_from', 'jobs.salary_to', 'jobs.hide_salary', 'jobs.functional_area_id', 'jobs.job_type_id', 'jobs.job_shift_id', 'jobs.num_of_positions', 'jobs.gender_id', 'jobs.expiry_date', 'jobs.degree_level_id', 'jobs.job_experience_id', 'jobs.is_active', 'jobs.is_featured',
+            'jobs.id', 'jobs.company_id', 'jobs.title', 'jobs.description', 'jobs.country_id', 'jobs.state_id', 'jobs.city_id', 'jobs.is_freelance', 'jobs.career_level_id', 'jobs.salary_from', 'jobs.salary_to', 'jobs.hide_salary', 'jobs.functional_area_id', 'jobs.job_type_id', 'jobs.job_shift_id', 'jobs.num_of_positions', 'jobs.gender_id', 'jobs.expiry_date', 'jobs.degree_level_id', 'jobs.job_experience_id', 'jobs.is_active', 'jobs.is_featured','jobs.created_at',
         ])
             ->with([
                 'jobSkills', 'careerLevel', 'functionalArea', 'jobType', 'jobShift', 'salaryPeriod', 'gender', 'degreeLevel',
@@ -543,9 +551,36 @@ class CompanyController extends Controller
             ])
             ->withCount(['jobApplications', 'shortListCandidates', 'hiredCandidates'])
             ->where('jobs.company_id', '=', Auth::guard('company')->user()->id)
+            ->when(request()->has('title'), function ($query) {
+                $query->where('jobs.title', 'like', "%" . request()->get('title') . "%");
+            })
+            ->when(request()->has('degree_level_id') && request()->get('degree_level_id') != null, function ($query) {
+                $query->where('jobs.degree_level_id', request()->get('degree_level_id'));
+            })
+            ->when(request()->has('job_type_id') && request()->get('job_type_id') != null, function ($query) {
+                $query->where('jobs.job_type_id', request()->get('job_type_id'));
+            })
+            ->when(request()->has('job_experience_id') && request()->get('job_experience_id') != null, function ($query) {
+                $query->where('jobs.job_experience_id', request()->get('job_experience_id'));
+            })
+            ->when(request()->has('salary_from') && request()->get('salary_from') != null, function ($query) {
+                $query->where('jobs.salary_from', '>=', request()->get('salary_from'));
+            })
+            ->when(request()->has('salary_to') && request()->get('salary_to') != null, function ($query) {
+                $query->where('jobs.salary_to', '<=', request()->get('salary_to'));
+            })
+            ->when(request()->has('from_date') && request()->has('to_date'), function ($query) {
+                if (request()->get('from_date') != null && request()->get('to_date') != null) {
+                    $query->whereBetween('created_at', [request()->get('from_date'), request()->get('to_date')]);
+                }
+            })
             ->paginate(10);
 
-        return view('company.reports')->with('jobs', $jobs);
+        return view('company.reports')->with('jobs', $jobs)
+            ->with('degreeLevels', $degreeLevels)
+            ->with('jobTypes', $jobTypes)
+            ->with('jobExperiences', $jobExperiences)
+            ;
     }
 
     /**
@@ -555,8 +590,52 @@ class CompanyController extends Controller
     public function jobApplications(Request $request)
     {
         $applications = Job::findOrFail($request->get('job_id'))->jobApplications;
+        if ($request->get('type') == 'applied-candidate') {
+            return view('admin.modal.job_application')->with('applications', $applications)->with('type', $request->get('type'));
+        }
+        $applications = Job::where('id', $request->get('job_id'))->whereHas('jobApplications', function ($query) use ($request) {
+            $query->whereHas('favouriteApplicants', function ($q) use ($request) {
+                switch ($request->get('type')) {
+                    case 'short-listed-candidate':
+                        $q->where('job_id', '=', $request->get('job_id'));
+                        break;
+                    case 'hired-candidate':
+                        $q->where('status', 'hired')->where('job_id', '=', $request->get('job_id'));
+                        break;
+                }
+            });
+        })
+            ->with([
+                'jobApplications',
+                'jobApplications.user',
+                'jobApplications.user.careerLevel', 'jobApplications.user.functionalArea', 'jobApplications.user.industry', 'jobApplications.user.jobExperience'
+            ])
+            ->get();
+
         return view('admin.modal.job_application')
-            ->with('applications', $applications);
+            ->with('applications', $applications->map(fn ($m)=>$m->jobApplications->flatten())->flatten())
+            ->with('type', $request->get('type'))
+            ;
+    }
+
+    public function export()
+    {
+        $fileFormat     = Str::lower(\Maatwebsite\Excel\Excel::XLSX);
+        $file           = now()->format('Ymd') . '_' . Str::uuid() . '.' . $fileFormat;
+        $fileName       = 'public/exports/' . $file;
+        (new JobReportExport)->store($fileName);
+        return response()->json(['data' => base64_encode(Storage::disk('local')->get($fileName))]);
+    }
+
+    public function exportJobApplications(Request $request)
+    {
+        $fileFormat     = Str::lower(\Maatwebsite\Excel\Excel::XLSX);
+        $file           = now()->format('Ymd') . '_' . Str::uuid() . '.' . $fileFormat;
+        $fileName       = 'public/exports/' . $file;
+        $request->type == 'applied-candidate'
+            ? (new JobApplicationReportExport($request->job_id))->store($fileName)
+            : (new ShortListedAndHiredReportExport($request->job_id, $request->type))->store($fileName);
+        return response()->json(['data' => base64_encode(Storage::disk('local')->get($fileName))]);
     }
 
 }

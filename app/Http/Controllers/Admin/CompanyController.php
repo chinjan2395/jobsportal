@@ -97,11 +97,23 @@ class CompanyController extends Controller
         $ownershipTypes = DataArrayHelper::defaultOwnershipTypesArray();
         $packages = Package::select('id', DB::raw("CONCAT(`package_title`, ', $', `package_price`, ', Days:', `package_num_days`, ', Listings:', `package_num_listings`) AS package_detail"))->where('package_for', 'like', 'employer')->pluck('package_detail', 'id')->toArray();
 
+        $mail_drivers = [
+            'smtp' => 'SMTP',
+            'mail' => 'Mail',
+            'sendmail' => 'SendMail',
+            'mailgun' => 'MailGun',
+            'mandrill' => 'Mandrill',
+            'ses' => 'Amazon SES',
+            'sparkpost' => 'Sparkpost',
+            'log' => 'Log'
+        ];
+
         return view('admin.company.add')
             ->with('countries', $countries)
             ->with('industries', $industries)
             ->with('ownershipTypes', $ownershipTypes)
-            ->with('packages', $packages);
+            ->with('packages', $packages)
+            ->with('mail_drivers', $mail_drivers);
     }
 
 

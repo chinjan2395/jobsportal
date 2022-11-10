@@ -96,7 +96,7 @@ class HomeController extends Controller
     public function fetchData(Request $request)
     {
         $jobs = Job::select([
-            'jobs.id', 'jobs.company_id', 'jobs.title', 'jobs.description', 'jobs.country_id', 'jobs.state_id', 'jobs.city_id', 'jobs.is_freelance', 'jobs.career_level_id', 'jobs.salary_from', 'jobs.salary_to', 'jobs.hide_salary', 'jobs.functional_area_id', 'jobs.job_type_id', 'jobs.job_shift_id', 'jobs.num_of_positions', 'jobs.gender_id', 'jobs.expiry_date', 'jobs.degree_level_id', 'jobs.job_experience_id', 'jobs.is_active', 'jobs.is_featured',
+            'jobs.id', 'jobs.company_id', 'jobs.title', 'jobs.description', 'jobs.country_id', 'jobs.state_id', 'jobs.city_id', 'jobs.is_freelance', 'jobs.career_level_id', 'jobs.salary_from', 'jobs.salary_to', 'jobs.hide_salary', 'jobs.functional_area_id', 'jobs.job_type_id', 'jobs.job_shift_id', 'jobs.num_of_positions', 'jobs.gender_id', 'jobs.expiry_date', 'jobs.degree_level_id', 'jobs.job_experience_id', 'jobs.is_active', 'jobs.is_featured','jobs.created_at',
         ])
             ->with([
                 'jobSkills', 'careerLevel', 'functionalArea', 'jobType', 'jobShift', 'salaryPeriod', 'gender', 'degreeLevel',
@@ -139,6 +139,17 @@ class HomeController extends Controller
                 if ($request->has('functional_area_id') && $request->functional_area_id != null) {
                     $query->where('jobs.functional_area_id', '=', "{$request->get('functional_area_id')}");
                 }
+                if ($request->has('from_date') && $request->has('to_date')) {
+                    if ($request->get('from_date') != null && $request->get('to_date') != null) {
+                        $query->whereBetween('created_at', [$request->get('from_date'), $request->get('to_date')]);
+                    }
+                }
+                if ($request->has('salary_from') && $request->get('salary_from') != null) {
+                    $query->where('salary_from', '>=', $request->get('salary_from'));
+                }
+                if ($request->has('salary_to') && $request->get('salary_to') != null) {
+                    $query->where('salary_to', '<=', $request->get('salary_to'));
+                }
             })
             ->addColumn('company_id', function ($jobs) {
                 return $jobs->getCompany('name');
@@ -161,7 +172,22 @@ class HomeController extends Controller
 
                 return "<a onclick='getJobApplications(".$jobs->id.")'>$jobs->job_applications_count</a>";
             })
-            ->rawColumns(['company_id', 'city_id', 'description', 'salary', 'career_level', 'functional_area', 'job_applications_count'])
+            ->addColumn('short_list_candidates_count', function ($jobs) {
+                if ($jobs->short_list_candidates_count <= 0)
+                    return $jobs->short_list_candidates_count;
+
+                return "<a onclick='getJobApplications(".$jobs->id.", `short-listed-candidate`)'>$jobs->short_list_candidates_count</a>";
+            })
+            ->addColumn('hired_candidates_count', function ($jobs) {
+                if ($jobs->hired_candidates_count <= 0)
+                    return $jobs->hired_candidates_count;
+
+                return "<a onclick='getJobApplications(".$jobs->id.", `hired-candidate`)'>$jobs->hired_candidates_count</a>";
+            })
+            ->addColumn('date', function ($jobs) {
+                return $jobs->created_at->format('d M, Y');
+            })
+            ->rawColumns(['company_id', 'city_id', 'description', 'salary', 'career_level', 'functional_area', 'job_applications_count', 'hired_candidates_count', 'short_list_candidates_count', 'date'])
             ->setRowId(function($jobs) {
                 return 'jobDtRow' . $jobs->id;
             })
@@ -175,8 +201,33 @@ class HomeController extends Controller
     public function jobApplications(Request $request)
     {
         $applications = Job::findOrFail($request->get('job_id'))->jobApplications;
+        if ($request->get('type') == 'applied-candidate') {
+            return view('admin.modal.job_application')->with('applications', $applications)->with('type', $request->get('type'));
+        }
+
+        $applications = Job::whereHas('jobApplications', function ($query) use ($request) {
+            $query->whereHas('favouriteApplicants', function ($q) use ($request) {
+                switch ($request->get('type')) {
+                    case 'short-listed-candidate':
+                        $q->where('job_id', '=', $request->get('job_id'));
+                        break;
+                    case 'hired-candidate':
+                        $q->where('status', 'hired')->where('job_id', '=', $request->get('job_id'));
+                        break;
+                }
+            });
+        })
+            ->with([
+                'jobApplications',
+                'jobApplications.user',
+                'jobApplications.user.careerLevel', 'jobApplications.user.functionalArea', 'jobApplications.user.industry', 'jobApplications.user.jobExperience'
+            ])
+            ->get();
+
         return view('admin.modal.job_application')
-            ->with('applications', $applications);
+                ->with('applications', $applications->map(fn ($m)=>$m->jobApplications->flatten())->flatten())
+                ->with('type', $request->get('type'))
+            ;
     }
 
 }
