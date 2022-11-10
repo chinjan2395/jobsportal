@@ -273,6 +273,12 @@ class DataArrayHelper
         return $array;
     }
 
+    public static function defaultRatingsArray()
+    {
+        $array = Rating::select('ratings.id', 'ratings.title')->active()->pluck('ratings.id', 'ratings.title')->toArray();
+        return $array;
+    }
+
     /*     * **************************** */
 
     public static function ratingsArray()
@@ -373,7 +379,8 @@ class DataArrayHelper
 
     public static function currenciesArray()
     {
-        $array = CountryDetail::select('countries_details.code')->whereNotNull('countries_details.code')->orderBy('countries_details.code')->pluck('countries_details.code', 'countries_details.code')->toArray();
+        $array = CountryDetail::select('countries_details.code')->whereIn('code', ['ILS', 'USD', 'JOD'])
+            ->whereNotNull('countries_details.code')->orderBy('countries_details.code')->pluck('countries_details.code', 'countries_details.code')->toArray();
         return $array;
     }
 
