@@ -4349,7 +4349,12 @@ blockquote:after {
 }
 
 .help-block-error{color: #FE0004}
-
+.header .logo img {
+	max-width: 190px;
+}
+.header nav.navbar {
+	padding-top: 10px;
+}
 /*******************
 
 	Large Screen
@@ -4430,11 +4435,11 @@ body {
 	text-align: center;
 	float: left;
 }
-.navbar-header {
-	float: right;
-	display: block;
-	margin-top: 5px;
-}
+	.navbar-header {
+		float: right;
+		display: block;
+		margin-top: 15px;
+	}
 .navbar-toggle {
 	background: #ccc;
 }
@@ -4629,7 +4634,10 @@ Large Mobile Screen
 	margin-left: 0;
 }
 }
-
+#carouselExampleIndicators {
+	width: 80%;
+	float: left;
+}
 /*******************
 
 	Mobiles Screen
