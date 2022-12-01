@@ -28,31 +28,43 @@
                 <div class="portlet light portlet-fit portlet-datatable bordered">
                     <div class="portlet-title">
                         <div class="caption"> <i class="icon-settings font-dark"></i> <span class="caption-subject font-dark sbold uppercase">Users</span> </div>
-                        <div class="actions">
+                        {{--<div class="actions">
                             <a href="{{ route('create.user') }}" class="btn btn-xs btn-success"><i class="glyphicon glyphicon-plus"></i> Add New User</a>
-                        </div>
+                        </div>--}}
                     </div>
                     <div class="portlet-body">
                         <div class="table-container">
                             <form method="post" role="form" id="user-search-form">
-                                <table class="table table-striped table-bordered table-hover"  id="user_datatable_ajax">
+                                <table class="table table-striped table-bordered table-hover" id="user_datatable_ajax">
                                     <thead>
-                                        <tr role="row" class="filter">                  
-                                            <td><input type="text" class="form-control" name="id" id="id" autocomplete="off"></td>                    
-                                            <td><input type="text" class="form-control" name="name" id="name" autocomplete="off"></td>
-                                            <td><input type="text" class="form-control" name="email" id="email" autocomplete="off"></td>
-                                            <td></td>
-                                        </tr>
-                                        <tr role="row" class="heading"> 
-                                            <th>Id</th>                                        
-                                            <th>Name</th>
-                                            <th>Email</th>                                        
-                                            <th>Actions</th>
-                                        </tr>
+                                    <tr role="row" class="filter">
+                                        <td><input type="text" class="form-control" name="id" id="id"
+                                                   autocomplete="off"></td>
+                                        <td><input type="text" class="form-control" name="name" id="name"
+                                                   autocomplete="off"></td>
+                                        <td><input type="text" class="form-control" name="email" id="email"
+                                                   autocomplete="off"></td>
+                                        <td>
+                                            {!! Form::select('ratings', [''=>'Select rating']+$ratings, null, array('class'=>'form-control', 'id'=>'ratings')) !!}
+                                            {{--<input type="text" class="form-control" name="ratings" id="ratings"
+                                                   autocomplete="off">--}}
+                                        </td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr role="row" class="heading">
+                                        <th>Id</th>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Ratings</th>
+                                        <th>Date</th>
+                                        <th>Actions</th>
+                                    </tr>
                                     </thead>
                                     <tbody>
                                     </tbody>
-                                </table></form>
+                                </table>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -71,24 +83,58 @@
             stateSave: true,
             searching: false,
             "order": [[0, "desc"]],
-            /*		
-             paging: true,
-             info: true,
-             */
             ajax: {
                 url: '{!! route('fetch.data.users') !!}',
                 data: function (d) {
                     d.id = $('input[name=id]').val();
                     d.name = $('input[name=name]').val();
                     d.email = $('input[name=email]').val();
+                    d.ratings = $('select[name=ratings]').val();
                 }
-            }, columns: [
-                /*{data: 'id_checkbox', name: 'id_checkbox', orderable: false, searchable: false},*/
+            },
+            columns: [
                 {data: 'id', name: 'id'},
                 {data: 'name', name: 'name'},
                 {data: 'email', name: 'email'},
+                {data: 'ratings', name: 'AverageRating'},
+                {data: 'date', name: 'created_at'},
                 {data: 'action', name: 'action', orderable: false, searchable: false}
-            ]
+            ],
+            dom: 'Bfrtip',
+            buttons: {
+                buttons: [
+                    {
+                        extend: 'csv', className: 'btn btn-sm btn-success', init: function (api, node) {
+                            $(node).removeClass('dt-button')
+                        },
+                        exportOptions: {
+                            columns: [ 1, 2, 3, 4 ]
+                        }
+                    },
+                    {
+                        extend: 'excel', className: 'btn btn-sm btn-success', init: function (api, node) {
+                            $(node).removeClass('dt-button')
+                        },
+                        exportOptions: {
+                            columns: [ 1, 2, 3, 4 ]
+                        }
+                    },
+                    {
+                        text: '<i class="glyphicon glyphicon-plus"></i> Add New User',
+                        className: 'btn btn-sm btn-success',
+                        init: function (api, node) {
+                            $(node).removeClass('dt-button')
+                        },
+                        action: function (e, dt, node, config) {
+                            location.href = "{{ route('create.user') }}";
+                        }
+                    }
+                ],
+                columnDefs: [{
+                    targets: -1,
+                    visible: false
+                }]
+            }
         });
         $('#user-search-form').on('submit', function (e) {
             oTable.draw();
@@ -103,6 +149,10 @@
             e.preventDefault();
         });
         $('#email').on('keyup', function (e) {
+            oTable.draw();
+            e.preventDefault();
+        });
+        $('#ratings').on('change', function (e) {
             oTable.draw();
             e.preventDefault();
         });

@@ -8,33 +8,15 @@ use ImgUploader;
 use Auth;
 use DB;
 use Input;
-use Carbon\Carbon;
 use Redirect;
 use App\User;
-use App\Gender;
-use App\MaritalStatus;
-use App\Country;
-use App\State;
-use App\City;
-use App\JobExperience;
-use App\CareerLevel;
-use App\Industry;
-use App\FunctionalArea;
-use App\ProfileSummary;
-use App\ProfileProject;
-use App\ProfileExperience;
-use App\ProfileEducation;
-use App\ProfileSkill;
-use App\ProfileLanguage;
 use App\Package;
-use App\Http\Requests;
+use App\Rating;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use DataTables;
 use App\Http\Requests\UserFormRequest;
-use App\Http\Requests\ProfileProjectFormRequest;
-use App\Http\Requests\ProfileProjectImageFormRequest;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use App\Traits\CommonUserFunctions;
@@ -77,11 +59,11 @@ class UserController extends Controller
     /**
      * Show the application dashboard.
      *
-     * @return \Illuminate\Http\Response
      */
     public function indexUsers()
     {
-        return view('admin.user.index');
+        $ratings = DataArrayHelper::ratingsArray();
+        return view('admin.user.index')->with('ratings', $ratings);
     }
 
     public function createUser()
@@ -292,7 +274,16 @@ class UserController extends Controller
                             'users.verified',
                             'users.created_at',
                             'users.updated_at'
-        ]);
+        ])
+            ->addSelect(\Illuminate\Support\Facades\DB::raw('ROUND(AVG(profile_ratings.rating_id)) AS AverageRating'))
+            ->leftJoin('profile_ratings', 'users.id', '=', 'profile_ratings.user_id')
+            ->groupBy('users.id')
+            ->withCount(['profileRatings']);
+
+        $users = $request->has('ratings') && $request->get('ratings') != null
+            ? $users->havingRaw("ROUND(AVG(profile_ratings.rating_id)) = " . $request->get('ratings'))
+            : $users;
+
         return Datatables::of($users)
                         ->filter(function ($query) use ($request) {
                             if ($request->has('id') && !empty($request->id)) {
@@ -311,6 +302,13 @@ class UserController extends Controller
                         })
                         ->addColumn('name', function ($users) {
                             return $users->first_name . ' ' . $users->middle_name . ' ' . $users->last_name;
+                        })
+                        ->addColumn('ratings', function ($users) {
+                            $ratings = Rating::where('stars', $users->AverageRating)->get();
+                            return $ratings->count() > 0 ? $ratings->first()->title : "<span class='text-muted'>Not Available</span>";
+                        })
+                        ->addColumn('date', function ($users) {
+                            return $users->created_at->format('d M, Y');
                         })
                         ->addColumn('action', function ($users) {
                             /*                             * ************************* */
@@ -354,7 +352,7 @@ class UserController extends Controller
 					</ul>
 				</div>';
                         })
-                        ->rawColumns(['action', 'name'])
+                        ->rawColumns(['action', 'name', 'date', 'ratings'])
                         ->setRowId(function($users) {
                             return 'user_dt_row_' . $users->id;
                         })
