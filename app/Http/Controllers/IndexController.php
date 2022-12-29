@@ -41,7 +41,7 @@ class IndexController extends Controller
     /**
      * Show the application dashboard.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\View\View
      */
     public function index()
     {
@@ -59,6 +59,7 @@ class IndexController extends Controller
         $functionalAreas = DataArrayHelper::langFunctionalAreasArray();
         $countries = DataArrayHelper::langCountriesArray();
         $sliders = Slider::langSliders();
+        $companyWithJobs = $this->getCompanyWithJobs();
 
         $seo = SEO::where('seo.page_title', 'like', 'front_index_page')->first();
         return view('welcome')
@@ -74,6 +75,7 @@ class IndexController extends Controller
             ->with('sliders', $sliders)
             ->with('video', $video)
             ->with('testimonials', $testimonials)
+            ->with('companyWithJobs', $companyWithJobs)
             ->with('seo', $seo);
     }
 

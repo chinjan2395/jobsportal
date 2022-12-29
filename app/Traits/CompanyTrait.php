@@ -37,6 +37,21 @@ trait CompanyTrait
                         ->get();
     }
 
+    private function getCompanyWithJobs($limit = 10)
+    {
+        return Company::has('jobs', '>=', 2)
+            ->with('jobs')
+            /*->with(['jobs' => function ($query) {
+                $query->active()->notExpire();
+            }])*/
+            ->limit($limit)
+            ->get(['id', 'name', 'logo', 'slug'])
+            ->map(function ($company){
+                $company->setRelation('jobs', $company->jobs->take(2));
+                return $company;
+            });
+    }
+
     private function getIndustryIdsFromCompanies($limit = 16)
     {
         $companies = Company::select('industry_id')->active()->whereHas('jobs', function ($query) {

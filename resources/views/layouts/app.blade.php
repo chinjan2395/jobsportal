@@ -40,7 +40,9 @@ if (!isset($seo)) {
 
     <!-- Owl carousel -->
 
-    <link href="{{asset('/')}}css/owl.carousel.css" rel="stylesheet">
+<!--    <link href="{{asset('/')}}css/owl.carousel.css" rel="stylesheet">-->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css" rel="stylesheet">
 
     <!-- Bootstrap -->
 
@@ -104,7 +106,8 @@ if (!isset($seo)) {
 
     <!-- Owl carousel -->
 
-    <script src="{{asset('/')}}js/owl.carousel.js"></script>
+<!--    <script src="{{asset('/')}}js/owl.carousel.js"></script>-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
 
     <script src="{{ asset('/') }}admin_assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js" type="text/javascript"></script>
 
@@ -128,13 +131,51 @@ if (!isset($seo)) {
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/additional-methods.min.js"></script>
 
+
+
+
     {!! NoCaptcha::renderJs() !!}
 
+
+
     @stack('scripts')
+    <script>
+
+        $(function() {
+            // Owl Carousel
+            var owl = $(".desk-slider");
+            owl.owlCarousel({
+                items: 5,
+                margin: 10,
+                dots:false,
+                loop: true,
+                nav: true,
+                responsive:{
+                    0:{
+                        items:1
+                    },
+                    600:{
+                        items:2
+                    },
+                    1000:{
+                        items:4
+                    },
+                    1200:{
+                        items:5
+                    }
+                }
+            });
+        });
+
+    </script>
 
     <!-- Custom js -->
 
+
+
     <script src="{{asset('/')}}js/script.js"></script>
+
+
 
     <script type="text/JavaScript">
 
@@ -187,6 +228,14 @@ if (!isset($seo)) {
 		
 
         </script>
+
+<script>
+    $('#carouselExampleIndicators').carousel({
+        interval: 3000,
+        cycle: true
+    });
+</script>
+
 
 </body>
 
